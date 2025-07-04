@@ -1,0 +1,9 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Mountain background -->
+  <path d="M4 24 L8 16 L12 20 L16 12 L20 16 L24 8 L28 12" stroke="#2563eb" stroke-width="1.5" fill="none"/>
+  
+  <!-- Graduation cap -->
+  <path d="M10 12 L18 12 L18 15 L16 18 L12 18 L10 15 Z" fill="#2563eb"/>
+  <rect x="14" y="9" width="1" height="3" fill="#2563eb"/>
+  <circle cx="15" cy="7" r="1.5" fill="#2563eb"/>
+</svg> 
