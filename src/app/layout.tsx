@@ -86,7 +86,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ClientRoot>
           <Header />
-          <main className="pt-16 lg:pt-20">
+          <main>
             {children}
           </main>
           <Footer />

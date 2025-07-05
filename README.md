@@ -1,6 +1,6 @@
 # Alpine Education & Visa Services Website
 
-A modern, responsive website for Alpine Education & Visa Services - a leading study abroad consultancy in Nepal. Built with Next.js 14, TypeScript, Tailwind CSS, and shadcn/ui.
+A modern, responsive website for Alpine Education & Visa Services - a leading study abroad consultancy in Nepal. Built with Next.js 15, TypeScript, Tailwind CSS, and shadcn/ui.
 
 ## 🚀 Features
 
@@ -11,18 +11,22 @@ A modern, responsive website for Alpine Education & Visa Services - a leading st
 - **PWA Ready**: Progressive Web App support with offline capabilities
 - **Analytics**: Google Analytics and Meta Pixel integration
 - **Newsletter**: Mailchimp integration for email marketing
+- **Sticky Navigation**: Modern navbar with dropdown menus and CTA buttons
+- **Floating Actions**: WhatsApp and AI Chatbot positioned cleanly
 
 ### Pages & Components
 - **Homepage**: Hero section, services overview, testimonials, country grid
-- **Header**: Sticky navigation with mobile menu
+- **Header**: Sticky navigation with mobile menu and CTA buttons
 - **Footer**: Comprehensive sitemap and contact information
-- **Floating Actions**: WhatsApp, Quiz, and Apply Now buttons
+- **Floating Actions**: WhatsApp and AI Chatbot buttons
 - **Contact Page**: Contact form and office information
-- **Quiz Page**: Study abroad assessment (placeholder)
-- **Apply Page**: Application form (placeholder)
+- **Quiz Page**: Study abroad assessment with personalized results
+- **Apply Page**: Application form with guidance
+- **Countries**: Study destinations with filters and search
+- **About**: Company information and team details
 
 ### Technical Features
-- **Next.js 14**: App Router with TypeScript
+- **Next.js 15**: App Router with TypeScript
 - **Tailwind CSS**: Utility-first styling
 - **shadcn/ui**: Modern component library
 - **Framer Motion**: Smooth animations and transitions
@@ -31,7 +35,7 @@ A modern, responsive website for Alpine Education & Visa Services - a leading st
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 14 (App Router)
+- **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **Components**: shadcn/ui
@@ -45,8 +49,8 @@ A modern, responsive website for Alpine Education & Visa Services - a leading st
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd alpine-website
+   git clone https://github.com/sangam150/alpine-website-final.git
+   cd alpine-website-final
    ```
 
 2. **Install dependencies**
@@ -108,6 +112,11 @@ src/
 │   ├── contact/           # Contact page
 │   ├── quiz/              # Quiz page
 │   ├── apply/             # Apply page
+│   ├── countries/         # Study destinations
+│   ├── about/             # About page
+│   ├── services/          # Student services
+│   ├── test-preparation/  # Test prep pages
+│   ├── resources/         # Resources pages
 │   ├── globals.css        # Global styles
 │   ├── layout.tsx         # Root layout
 │   └── page.tsx           # Homepage
@@ -148,6 +157,10 @@ The website uses a blue-based color scheme. To customize:
 2. Connect your repository to Vercel
 3. Add environment variables in Vercel dashboard
 4. Deploy automatically
+
+**Environment Variables for Vercel:**
+- Add all environment variables from `.env.local` to Vercel dashboard
+- Ensure `NEXT_PUBLIC_*` variables are set for client-side access
 
 ### Other Platforms
 The website can be deployed to any platform that supports Next.js:
@@ -199,56 +212,42 @@ The website includes PWA support with:
 
 ## 📧 Newsletter Integration
 
-### Mailchimp Setup
-1. Create Mailchimp account
-2. Get API key and audience ID
-3. Configure in `src/lib/mailchimp.ts`
-4. Test newsletter signup functionality
+### Mailchimp
+- Configured in `src/lib/mailchimp.ts`
+- Newsletter signup form
+- Set Mailchimp environment variables
 
-## 🔐 Security
+## 🎯 Key Improvements Made
 
-- Environment variables for sensitive data
-- Input validation on forms
-- Secure headers configuration
-- HTTPS enforcement in production
+### Navigation & UI
+- **Sticky Navbar**: Modern navigation with dropdown menus
+- **CTA Buttons**: "Book Free Counselling", "Apply Now", "Take Free Quiz"
+- **Mobile Responsive**: Perfect mobile experience with hamburger menu
+- **Floating Actions**: WhatsApp and AI Chatbot positioned cleanly
 
-## 📈 Performance
+### Content & SEO
+- **Country Pages**: Detailed information for each study destination
+- **Search & Filters**: Country search and filtering functionality
+- **Meta Tags**: Comprehensive SEO optimization
+- **Structured Data**: Schema.org markup for better search visibility
 
-- Image optimization with Next.js Image component
-- Code splitting and lazy loading
-- Optimized fonts and CSS
-- Lighthouse score optimization
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License.
+### Performance & Accessibility
+- **Fast Loading**: Optimized images and code splitting
+- **Keyboard Navigation**: Full keyboard accessibility
+- **Screen Reader Support**: ARIA labels and semantic HTML
+- **Mobile Optimization**: Touch-friendly interface
 
 ## 📞 Support
 
-For support and questions:
+For technical support or questions:
 - Email: info@alpineeducation.com
-- Phone: +977-1-4XXXXXXX
 - WhatsApp: +977-XXXXXXXXX
+- Website: https://alpineeducation.com
 
-## 🎯 Roadmap
+## 📄 License
 
-- [ ] Interactive quiz with results
-- [ ] Student dashboard
-- [ ] Document upload functionality
-- [ ] Payment integration
-- [ ] Blog system
-- [ ] Multi-language support
-- [ ] Advanced analytics
-- [ ] Chat bot integration
+This project is proprietary software owned by Alpine Education & Visa Services.
 
 ---
 
-**Built with ❤️ for Alpine Education & Visa Services**
+**Built with ❤️ by Alpine Education & Visa Services**

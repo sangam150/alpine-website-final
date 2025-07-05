@@ -68,20 +68,32 @@ export default function Chatbot() {
   return (
     <>
       {/* Chat Toggle Button */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <Button
-          onClick={() => setIsOpen(!isOpen)}
-          className="bg-blue-600 hover:bg-blue-700 p-4 rounded-full shadow-lg"
-          aria-label="Open chat"
+      <div className="fixed bottom-20 right-6 z-40">
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
         >
-          <MessageCircle className="w-6 h-6 text-white" />
-        </Button>
+          <Button
+            onClick={() => setIsOpen(!isOpen)}
+            className="bg-blue-600 hover:bg-blue-700 p-3 rounded-full shadow-lg transition-all duration-200 group relative"
+            aria-label="Open chat"
+          >
+            <MessageCircle className="w-6 h-6 text-white" />
+            {/* Tooltip */}
+            <div className="absolute right-full mr-2 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+              Chat with AI Assistant
+            </div>
+          </Button>
+        </motion.div>
       </div>
 
       {/* Chat Window */}
       <AnimatePresence>
         {isOpen && (
-          <div className="fixed bottom-4 right-4 z-50">
+          <div className="fixed bottom-20 right-6 z-40">
             <motion.div
               initial={{ opacity: 0, y: 20, scale: 0.8 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
