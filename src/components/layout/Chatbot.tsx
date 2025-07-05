@@ -68,7 +68,7 @@ export default function Chatbot() {
   return (
     <>
       {/* Chat Toggle Button */}
-      <div className="fixed bottom-20 right-6 z-40">
+      <div className="fixed bottom-24 right-6 z-40">
         <motion.div
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
