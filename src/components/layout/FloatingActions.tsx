@@ -1,17 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { 
-  MessageCircle, 
-  HelpCircle, 
-  FileText, 
-  ChevronUp,
-  X,
-  Plus
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 export default function FloatingActions() {
   const [isVisible, setIsVisible] = useState(false);
