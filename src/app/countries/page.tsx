@@ -4,6 +4,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Study Destinations - Alpine Education & Visa Services',
@@ -76,10 +77,10 @@ export default function CountriesPage() {
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white py-20 overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none select-none">
-          <img src="/globe.svg" alt="World Map" className="w-full max-w-4xl mx-auto animate-spin-slow" loading="lazy" />
+          <Image src="/globe.svg" alt="World Map" className="w-full max-w-4xl mx-auto animate-spin-slow" width={800} height={400} loading="lazy" />
         </div>
         <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
-          <img src="/logo.png" alt="Alpine Education Logo" className="w-16 h-16 object-contain mx-auto mb-4" />
+          <Image src="/logo.png" alt="Alpine Education Logo" className="w-16 h-16 object-contain mx-auto mb-4" width={64} height={64} loading="lazy" />
           <h1 className="text-4xl lg:text-6xl font-bold mb-6">Study Destinations</h1>
           <p className="text-xl lg:text-2xl mb-8">Find your perfect country for studying abroad. Filter by tuition, visa, IELTS, and more.</p>
         </div>
