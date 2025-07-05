@@ -74,7 +74,7 @@ export default function CountriesClient() {
           <Image src="/globe.svg" alt="World Map" className="w-full max-w-4xl mx-auto animate-spin-slow" width={800} height={400} loading="lazy" />
         </div>
         <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
-          <Image src="/logo.png" alt="Alpine Education Logo" className="w-16 h-16 object-contain mx-auto mb-4" width={64} height={64} loading="lazy" />
+          <Image src="/logo.svg" alt="Alpine Education Logo" className="w-16 h-16 object-contain mx-auto mb-4" width={64} height={64} loading="lazy" />
           <h1 className="text-4xl lg:text-6xl font-bold mb-6">Study Destinations</h1>
           <p className="text-xl lg:text-2xl mb-8">Find your perfect country for studying abroad. Filter by tuition, visa, IELTS, and more.</p>
         </div>

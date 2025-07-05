@@ -80,8 +80,7 @@ export default function Header() {
         <Link href="/" className="flex items-center gap-3 group focus:outline-none" aria-label="Alpine Education Home">
           <div className="w-12 h-12 flex items-center justify-center">
             <Image 
-              src="/logo.png" 
-              onError={(e) => { e.currentTarget.src = '/logo.svg'; }} 
+              src="/logo.svg" 
               alt="Alpine Education Logo" 
               width={48} 
               height={48} 
@@ -222,7 +221,7 @@ export default function Header() {
               {/* Mobile Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
                 <div className="flex items-center gap-3">
-                  <Image src="/logo.png" alt="Alpine Education Logo" width={32} height={32} className="w-8 h-8 object-contain" />
+                  <Image src="/logo.svg" alt="Alpine Education Logo" width={32} height={32} className="w-8 h-8 object-contain" />
                   <span className="font-bold text-lg text-gray-900">Alpine Education</span>
                 </div>
                 <button 

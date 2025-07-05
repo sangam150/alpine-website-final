@@ -12,7 +12,9 @@ import {
   CheckCircle,
   Users,
   Clock,
-  Award
+  Award,
+  BookOpen,
+  GraduationCap
 } from 'lucide-react';
 
 const ctaOptions = [
@@ -84,32 +86,16 @@ export default function CTASection() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              asChild
-              size="lg"
-              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8"
-            >
-              <Link href="/apply">
-                Apply Now <ArrowRight className="w-5 h-5 ml-2" />
+            <Button size="lg" asChild className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white">
+              <Link href="/contact">
+                <BookOpen className="w-5 h-5 mr-2" />
+                Book Free Counselling
               </Link>
             </Button>
-            <Button
-              onClick={handleWhatsAppClick}
-              size="lg"
-              variant="outline"
-              className="border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white px-8"
-            >
-              <MessageCircle className="w-5 h-5 mr-2" />
-              WhatsApp
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8"
-            >
-              <Link href="/quiz">
-                Take Free Quiz <ArrowRight className="w-5 h-5 ml-2" />
+            <Button size="lg" variant="outline" asChild className="border-2 border-white text-white hover:bg-white hover:text-blue-900">
+              <Link href="/apply">
+                <GraduationCap className="w-5 h-5 mr-2" />
+                Apply Now
               </Link>
             </Button>
           </div>
@@ -235,23 +221,16 @@ export default function CTASection() {
             study abroad dreams. Your journey starts with a simple conversation.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              asChild
-              size="lg"
-              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8"
-            >
-              <Link href="/apply">
-                Apply Now <ArrowRight className="w-5 h-5 ml-2" />
+            <Button size="lg" asChild className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white">
+              <Link href="/contact">
+                <BookOpen className="w-5 h-5 mr-2" />
+                Book Free Counselling
               </Link>
             </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8"
-            >
-              <Link href="/quiz">
-                Take Free Quiz <ArrowRight className="w-5 h-5 ml-2" />
+            <Button size="lg" variant="outline" asChild className="border-2 border-white text-white hover:bg-white hover:text-blue-900">
+              <Link href="/apply">
+                <GraduationCap className="w-5 h-5 mr-2" />
+                Apply Now
               </Link>
             </Button>
           </div>

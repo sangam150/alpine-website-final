@@ -108,14 +108,17 @@ export default function ServicesOverview() {
                     ))}
                   </div>
                   
-                  <Button
-                    asChild
-                    className={`w-full bg-gradient-to-r ${service.gradient} hover:from-blue-700 hover:to-blue-800 text-white`}
-                  >
-                    <Link href={service.href}>
-                      Learn More <ArrowRight className="w-4 h-4 ml-2" />
-                    </Link>
-                  </Button>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Button
+                      asChild
+                      size="lg"
+                      className="bg-white text-blue-600 hover:bg-gray-100"
+                    >
+                      <Link href="/contact">
+                        Get Free Consultation
+                      </Link>
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>
@@ -147,16 +150,6 @@ export default function ServicesOverview() {
                 >
                   <Link href="/contact">
                     Get Free Consultation
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  size="lg"
-                  variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-blue-600"
-                >
-                  <Link href="/quiz">
-                    Take Assessment Quiz
                   </Link>
                 </Button>
               </div>

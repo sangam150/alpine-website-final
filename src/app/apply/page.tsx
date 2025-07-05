@@ -53,11 +53,6 @@ export default function ApplyPage() {
                     Contact Us for Application
                   </Link>
                 </Button>
-                <Button asChild variant="outline" className="w-full">
-                  <Link href="/quiz">
-                    Take Assessment Quiz First
-                  </Link>
-                </Button>
               </div>
             </div>
           </CardContent>

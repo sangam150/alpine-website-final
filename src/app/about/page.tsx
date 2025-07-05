@@ -247,9 +247,6 @@ export default function AboutPage() {
             <Button asChild className="bg-white text-green-600 hover:bg-gray-100">
               <Link href="/contact">Get Free Consultation</Link>
             </Button>
-            <Button asChild variant="outline" className="border-white text-white hover:bg-white hover:text-green-600">
-              <Link href="/quiz">Take Assessment Quiz</Link>
-            </Button>
           </div>
         </div>
       </div>
