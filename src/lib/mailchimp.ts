@@ -33,7 +33,7 @@ export const checkNewsletterStatus = async (email: string) => {
       email
     );
     return { success: true, status: response.status };
-  } catch (error: unknown) {
+  } catch {
     return { success: false, status: 'not_found' };
   }
 }; 

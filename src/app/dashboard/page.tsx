@@ -22,7 +22,7 @@ import { motion } from 'framer-motion';
 import { db, storage } from '@/lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { useForm, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider, FieldValues } from 'react-hook-form';
 
 type Document = {
   name: string;
@@ -57,23 +57,23 @@ export default function DashboardPage() {
     fetchDocuments();
   }, [user]);
 
-  const handleDocumentUpload = async (data: any) => {
+  const handleDocumentUpload = async (data: FieldValues) => {
+    const { file, docName } = data as { file: File[]; docName: string };
     if (!user) return;
     setUploading(true);
     try {
-      const file = data.file[0];
-      const docName = data.docName;
+      const selectedFile = file[0];
       const storageRef = ref(storage, `documents/${user.uid}/${docName}`);
-      await uploadBytes(storageRef, file);
+      await uploadBytes(storageRef, selectedFile);
       const url = await getDownloadURL(storageRef);
       const userDocRef = doc(db, 'users', user.uid);
-      const updatedDocs = documents.map((d: any) =>
+      const updatedDocs = documents.map((d) =>
         d.name === docName ? { ...d, status: 'uploaded', url } : d
       );
       await setDoc(userDocRef, { documents: updatedDocs }, { merge: true });
       setDocuments(updatedDocs);
       methods.reset();
-    } catch (e) {
+    } catch {
       alert('Upload failed. Please try again.');
     } finally {
       setUploading(false);

@@ -12,12 +12,14 @@ type Lead = {
   status?: string;
 };
 
+type Analytics = { users: number; leads: number };
+
 export default function AdminPage() {
   const { user, loading, signInWithGoogle } = useAuth();
   const [isAdmin, setIsAdmin] = React.useState(false);
   const [leads, setLeads] = React.useState<Lead[]>([]);
   const [loadingLeads, setLoadingLeads] = React.useState(true);
-  const [analytics, setAnalytics] = React.useState<unknown>({});
+  const [analytics, setAnalytics] = React.useState<Analytics>({ users: 0, leads: 0 });
 
   React.useEffect(() => {
     if (!user) return;

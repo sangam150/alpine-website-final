@@ -5,7 +5,7 @@ import { GA_TRACKING_ID, PIXEL_ID } from '@/lib/analytics';
 
 declare global {
   interface Window {
-    dataLayer: any[];
+    dataLayer: unknown[];
     gtag: (...args: unknown[]) => void;
   }
 }

@@ -253,7 +253,7 @@ export default function UKPage() {
             Ready to Study in the UK?
           </h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Apply now or book a free counseling session with Alpine's expert team.
+            Apply now or book a free counseling session with Alpine&apos;s expert team.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild className="bg-white text-blue-900 hover:bg-gray-100">
