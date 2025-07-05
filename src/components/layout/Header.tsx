@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 
-import { Menu, X, ChevronDown, ArrowRight, BookOpen, GraduationCap, Brain } from 'lucide-react';
+import { Menu, X, ChevronDown, BookOpen, GraduationCap, LogIn } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
@@ -170,7 +170,6 @@ export default function Header() {
               Book Free Counselling
             </Link>
           </Button>
-          
           <Button 
             asChild 
             size="sm"
@@ -181,16 +180,15 @@ export default function Header() {
               Apply Now
             </Link>
           </Button>
-          
           <Button 
             asChild 
             size="sm"
             variant="outline"
             className="bg-white border-2 border-blue-500 text-blue-600 hover:bg-blue-50 rounded-xl px-4 py-2 font-semibold flex items-center gap-2 transition-all duration-200 shadow-sm"
           >
-            <Link href="/quiz">
-              <Brain className="w-4 h-4" />
-              Take Free Quiz
+            <Link href="/student-portal">
+              <LogIn className="w-4 h-4" />
+              Student Portal
             </Link>
           </Button>
         </div>
@@ -316,9 +314,9 @@ export default function Header() {
                   variant="outline"
                   className="w-full bg-white border-2 border-blue-500 text-blue-600 hover:bg-blue-50 rounded-xl py-3 font-semibold flex items-center justify-center gap-2 transition-all duration-200 shadow-sm"
                 >
-                  <Link href="/quiz" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Brain className="w-4 h-4" />
-                    Take Free Quiz
+                  <Link href="/student-portal" onClick={() => setIsMobileMenuOpen(false)}>
+                    <LogIn className="w-4 h-4" />
+                    Student Portal
                   </Link>
                 </Button>
               </div>

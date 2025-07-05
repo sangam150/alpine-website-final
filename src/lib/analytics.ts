@@ -37,7 +37,7 @@ export const pixelPageView = () => {
 };
 
 // Meta Pixel event
-export const pixelEvent = (eventName: string, parameters?: Record<string, any>) => {
+export const pixelEvent = (eventName: string, parameters?: Record<string, unknown>) => {
   if (typeof window !== 'undefined' && window.fbq) {
     window.fbq('track', eventName, parameters);
   }

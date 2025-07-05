@@ -7,7 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { 
-  Upload, 
   FileText, 
   Globe, 
   BookOpen, 
@@ -18,18 +17,24 @@ import {
   Mail,
   User,
   LogOut,
-  Eye
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { db, storage } from '@/lib/firebase';
-import { collection, doc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useForm, FormProvider } from 'react-hook-form';
+
+type Document = {
+  name: string;
+  status?: string;
+  url?: string | null;
+  date?: string | null;
+};
 
 export default function DashboardPage() {
   const { user, loading, signInWithGoogle, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState("overview");
-  const [documents, setDocuments] = useState<any[]>([]);
+  const [documents, setDocuments] = useState<Document[]>([]);
   const [uploading, setUploading] = useState(false);
   const methods = useForm();
 
@@ -62,7 +67,7 @@ export default function DashboardPage() {
       await uploadBytes(storageRef, file);
       const url = await getDownloadURL(storageRef);
       const userDocRef = doc(db, 'users', user.uid);
-      let updatedDocs = documents.map((d) =>
+      const updatedDocs = documents.map((d: any) =>
         d.name === docName ? { ...d, status: 'uploaded', url } : d
       );
       await setDoc(userDocRef, { documents: updatedDocs }, { merge: true });

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Clock, Users, Award, CheckCircle, BookOpen, Target } from 'lucide-react';
+import { ArrowLeft, Clock, Users, Award, CheckCircle, Target } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'IELTS Test Preparation - Alpine Education',
@@ -90,7 +90,7 @@ export default function IELTSPage() {
             <div>
               <h2 className="text-3xl font-bold mb-4">Master IELTS with Confidence</h2>
               <p className="text-blue-100 mb-6">
-                Join thousands of successful students who achieved their target scores with Alpine Education's proven IELTS preparation program.
+                Join thousands of successful students who achieved their target scores with Alpine Education&apos;s proven IELTS preparation program.
               </p>
               <div className="flex flex-wrap gap-4">
                 <div className="flex items-center space-x-2">

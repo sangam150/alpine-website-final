@@ -130,7 +130,7 @@ export default function MockTestSection() {
                     </div>
 
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">What's Included:</h4>
+                      <h4 className="font-semibold text-gray-900 mb-2">What&apos;s Included:</h4>
                       <div className="space-y-2">
                         {test.features.map((feature) => (
                           <div key={feature} className="flex items-center space-x-2">

@@ -38,8 +38,6 @@ export default function ContactFormClient() {
       } else {
         setSubmitStatus('error');
       }
-    } catch (error) {
-      setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
     }

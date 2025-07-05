@@ -6,7 +6,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, recommendation, answers } = body;
+    const { email, recommendation } = body;
 
     if (!email || !recommendation) {
       return NextResponse.json(
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Send email with personalized handbook content
-    const { data, error } = await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: 'Alpine Education <noreply@alpineeducation.com.np>',
       to: [email],
       subject: `Your Personalized Study Abroad Handbook - ${recommendation.country}`,
@@ -33,14 +33,14 @@ export async function POST(request: NextRequest) {
           <div style="margin: 20px 0;">
             <h3 style="color: #374151;">Recommended Universities</h3>
             <ul style="color: #6b7280;">
-              ${recommendation.universities.map(uni => `<li>${uni}</li>`).join('')}
+              ${recommendation.universities.map((uni: string) => `<li>${uni}</li>`).join('')}
             </ul>
           </div>
           
           <div style="margin: 20px 0;">
             <h3 style="color: #374151;">Requirements</h3>
             <ul style="color: #6b7280;">
-              ${recommendation.requirements.map(req => `<li>${req}</li>`).join('')}
+              ${recommendation.requirements.map((req: string) => `<li>${req}</li>`).join('')}
             </ul>
           </div>
           
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
           <div style="margin: 20px 0;">
             <h3 style="color: #374151;">Next Steps</h3>
             <ol style="color: #6b7280;">
-              ${recommendation.nextSteps.map(step => `<li>${step}</li>`).join('')}
+              ${recommendation.nextSteps.map((step: string) => `<li>${step}</li>`).join('')}
             </ol>
           </div>
           

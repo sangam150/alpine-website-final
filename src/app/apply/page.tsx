@@ -30,7 +30,7 @@ export default function ApplyPage() {
           <CardHeader>
             <CardTitle className="text-2xl">Application Form Coming Soon</CardTitle>
             <CardDescription>
-              We're building a comprehensive application form to collect your information and preferences.
+              We&apos;re building a comprehensive application form to collect your information and preferences.
             </CardDescription>
           </CardHeader>
           <CardContent>

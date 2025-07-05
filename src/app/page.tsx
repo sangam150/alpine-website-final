@@ -49,7 +49,7 @@ export default function Home() {
               Why Choose Alpine Education?
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              We've helped thousands of students achieve their study abroad dreams with 
+              We&apos;ve helped thousands of students achieve their study abroad dreams with 
               personalized guidance and proven success rates.
             </p>
           </div>

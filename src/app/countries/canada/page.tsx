@@ -2,8 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ArrowRight, GraduationCap, DollarSign, FileText, Users, BookOpen, CheckCircle, Globe, Star, Clock } from 'lucide-react';
+import { GraduationCap, DollarSign, FileText, Users, BookOpen, Star, Clock } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Study in Canada from Nepal - Tuition, Scholarships, Visa, PGWP | Alpine Education',
@@ -252,7 +251,7 @@ export default function CanadaPage() {
             Ready to Study in Canada?
           </h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Apply now or book a free counseling session with Alpine's expert team.
+            Apply now or book a free counseling session with Alpine&apos;s expert team.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild className="bg-white text-red-700 hover:bg-gray-100">

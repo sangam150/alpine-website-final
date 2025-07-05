@@ -2,8 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ArrowRight, GraduationCap, DollarSign, FileText, Users, BookOpen, CheckCircle, Globe, Star, Clock } from 'lucide-react';
+import { GraduationCap, DollarSign, FileText, Users, BookOpen, Star, Clock } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Study in USA from Nepal - Tuition, Scholarships, Visa, OPT | Alpine Education',

@@ -18,10 +18,10 @@ export const addToNewsletter = async (email: string, firstName?: string) => {
       }
     );
     return { success: true, data: response };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return { 
       success: false, 
-      error: error.response?.body?.detail || 'Failed to subscribe to newsletter' 
+      error: error instanceof Error ? error.message : 'Failed to subscribe to newsletter' 
     };
   }
 };
@@ -33,7 +33,7 @@ export const checkNewsletterStatus = async (email: string) => {
       email
     );
     return { success: true, status: response.status };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return { success: false, status: 'not_found' };
   }
 }; 

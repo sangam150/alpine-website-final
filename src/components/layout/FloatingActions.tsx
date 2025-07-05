@@ -4,29 +4,18 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 export default function FloatingActions() {
-  const [isVisible, setIsVisible] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [hoveredButton, setHoveredButton] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
     
     const handleScroll = () => {
-      setIsVisible(window.scrollY > 300);
+      // Remove: isVisible, isExpanded, setIsExpanded, hoveredButton, setHoveredButton, handleWhatsAppClick
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const handleWhatsAppClick = () => {
-    if (typeof window !== 'undefined') {
-      const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+977-XXXXXXXXX';
-      const message = encodeURIComponent('Hi! I\'m interested in studying abroad. Can you help me?');
-      window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
-    }
-  };
 
   // Don't render until mounted to prevent hydration mismatch
   if (!isMounted) {

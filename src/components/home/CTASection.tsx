@@ -117,12 +117,12 @@ export default function CTASection() {
 
         {/* CTA Options */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          {ctaOptions.map((option, index) => (
+          {ctaOptions.map((option) => (
             <motion.div
               key={option.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: index * 0.1 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
               viewport={{ once: true }}
             >
               <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 group">
@@ -178,7 +178,7 @@ export default function CTASection() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {benefits.map((benefit, index) => (
+            {benefits.map((benefit) => (
               <div key={benefit} className="flex items-center space-x-3">
                 <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
                 <span className="text-gray-700 font-medium">{benefit}</span>

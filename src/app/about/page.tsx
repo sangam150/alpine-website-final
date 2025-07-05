@@ -1,12 +1,12 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Users, Award, Globe, Heart, Target, CheckCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'About Us - Alpine Education & Visa Services',
-  description: 'Learn about Alpine Education & Visa Services - Nepal\'s leading study abroad consultancy. Our mission, team, and commitment to student success.',
+  description: 'Learn about Alpine Education & Visa Services - Nepal&apos;s leading study abroad consultancy. Our mission, team, and commitment to student success.',
 };
 
 const teamMembers = [
@@ -83,7 +83,7 @@ export default function AboutPage() {
             About Alpine Education & Visa Services
           </h1>
           <p className="text-lg text-gray-600">
-            Nepal's leading study abroad consultancy, helping students achieve their international education dreams since 2009.
+            Nepal&apos;s leading study abroad consultancy, helping students achieve their international education dreams since 2009.
           </p>
         </div>
 

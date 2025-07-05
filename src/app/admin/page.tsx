@@ -5,12 +5,19 @@ import { Button } from "@/components/ui/button";
 import { db } from '@/lib/firebase';
 import { doc, getDoc, collection, getDocs, updateDoc } from 'firebase/firestore';
 
+type Lead = {
+  id: string;
+  name: string;
+  email: string;
+  status?: string;
+};
+
 export default function AdminPage() {
   const { user, loading, signInWithGoogle } = useAuth();
   const [isAdmin, setIsAdmin] = React.useState(false);
-  const [leads, setLeads] = React.useState<any[]>([]);
+  const [leads, setLeads] = React.useState<Lead[]>([]);
   const [loadingLeads, setLoadingLeads] = React.useState(true);
-  const [analytics, setAnalytics] = React.useState<any>({});
+  const [analytics, setAnalytics] = React.useState<unknown>({});
 
   React.useEffect(() => {
     if (!user) return;
@@ -26,7 +33,7 @@ export default function AdminPage() {
     const fetchLeads = async () => {
       setLoadingLeads(true);
       const leadsSnap = await getDocs(collection(db, 'leads'));
-      setLeads(leadsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      setLeads(leadsSnap.docs.map(doc => ({ id: doc.id, ...(doc.data() as Omit<Lead, 'id'>) })));
       setLoadingLeads(false);
     };
     fetchLeads();
@@ -66,8 +73,8 @@ export default function AdminPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl mb-8">
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-lg font-semibold mb-2">Analytics</h2>
-          <div>Users: {analytics.users || 0}</div>
-          <div>Leads: {analytics.leads || 0}</div>
+          <div>Users: {analytics?.users || 0}</div>
+          <div>Leads: {analytics?.leads || 0}</div>
         </div>
         <div className="bg-white rounded-lg shadow p-6 md:col-span-2">
           <h2 className="text-lg font-semibold mb-2">Leads</h2>

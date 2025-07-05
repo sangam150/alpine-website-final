@@ -112,7 +112,7 @@ export default function CountriesClient() {
             {filteredCountries.map((country) => (
               <div key={country.slug} className="bg-white rounded-xl shadow hover:shadow-xl transition-all duration-200 hover:-translate-y-1 flex flex-col items-center p-0 text-center border border-blue-50">
                 <div className="w-full h-32 bg-gray-100 rounded-t-xl flex items-center justify-center overflow-hidden relative">
-                  <img
+                  <Image
                     src={country.banner}
                     alt={country.name + ' Banner'}
                     className="object-cover w-full h-full absolute inset-0"
