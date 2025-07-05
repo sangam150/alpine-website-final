@@ -1,7 +1,11 @@
 'use client';
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, User, signOut as firebaseSignOut, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth } from "@/lib/firebase-config";
+import type { Auth } from "firebase/auth";
+
+// Type the auth variable
+const typedAuth = auth as Auth | null;
 
 interface AuthContextType {
   user: User | null;
@@ -17,7 +21,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    if (!typedAuth) {
+      setLoading(false);
+      return;
+    }
+
+    const unsubscribe = onAuthStateChanged(typedAuth, (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
     });
@@ -25,12 +34,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const signOut = async () => {
-    await firebaseSignOut(auth);
+    if (typedAuth) {
+      await firebaseSignOut(typedAuth);
+    }
   };
 
   const signInWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
+    if (typedAuth) {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(typedAuth, provider);
+    }
   };
 
   return (

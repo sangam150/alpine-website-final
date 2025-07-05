@@ -4,7 +4,6 @@ import "./globals.css";
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import FloatingActions from '@/components/layout/FloatingActions';
-import Chatbot from '@/components/layout/Chatbot';
 import Analytics from '@/components/layout/Analytics';
 import ClientRoot from "./client-root";
 
@@ -90,8 +89,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
-          <FloatingActions />
-          <Chatbot />
+                  <FloatingActions />
           <Analytics />
         </ClientRoot>
       </body>

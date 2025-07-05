@@ -1,228 +1,245 @@
 # Alpine Education Website - Deployment Guide
 
-## 🚀 Deployment Checklist
+## 🚀 Production Deployment
 
-### ✅ Completed Features
-- [x] **Frontend**: Next.js 15 with TypeScript, Tailwind CSS, shadcn/ui
-- [x] **Backend**: Firebase (Auth, Firestore, Storage)
-- [x] **Email**: Resend integration for contact forms and handbook delivery
-- [x] **SEO**: Complete metadata, Open Graph, Twitter cards, sitemap
-- [x] **Performance**: Optimized images, lazy loading, minified assets
-- [x] **Security**: Secure headers, environment variables, Firebase Auth rules
-- [x] **Responsive**: Mobile-first design, all breakpoints tested
-- [x] **Accessibility**: ARIA labels, keyboard navigation, focus states
+### Prerequisites
+- Vercel account
+- Firebase project
+- GitHub repository
 
-### ✅ Core Pages Implemented
-- [x] Homepage with hero, services, testimonials, country grid
-- [x] Countries pages (Australia, UK, Canada, USA, Germany, France, NZ)
-- [x] Test Preparation (IELTS, PTE, TOEFL)
-- [x] Student Dashboard with document upload and progress tracking
-- [x] Admin Panel with lead management and analytics
-- [x] Contact page with Google Maps and Resend integration
-- [x] Interactive Quiz with PDF handbook generation
-- [x] About page with team and company information
-- [x] Resources (Blog, Downloads, Handbooks, Mock Tests, FAQs)
-- [x] Services (Profile Evaluation, Visa, SOP, Scholarships)
+### 1. Firebase Setup
 
-## 🌐 Deployment Steps
+1. **Create Firebase Project**
+   - Go to [Firebase Console](https://console.firebase.google.com/)
+   - Create new project: `alpine-website-final`
+   - Enable Firestore Database
+   - Enable Storage
+   - Enable Authentication
 
-### 1. Environment Variables Setup
-
-Create `.env.local` with the following variables:
-
-```env
-# Firebase Configuration
-NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyBRUIo7fIVU_5RN3QSh9SWMF7FsHSXUXX8
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=alpine-website-final.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=alpine-website-final
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=alpine-website-final.firebasestorage.app
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=717233032769
-NEXT_PUBLIC_FIREBASE_APP_ID=1:717233032769:web:1432b2b3889b5c2123c0c0
-
-# Resend Email Service
-RESEND_API_KEY=your_resend_api_key
-
-# Google Analytics
-NEXT_PUBLIC_GA_ID=G-6ZDBWCRWMT
-
-# Contact Information
-NEXT_PUBLIC_CONTACT_EMAIL=info@alpineeducation.com.np
-NEXT_PUBLIC_CONTACT_PHONE=+977-1-4XXXXXXX
-NEXT_PUBLIC_WHATSAPP_NUMBER=+977-XXXXXXXXX
-
-# Social Media
-NEXT_PUBLIC_FACEBOOK_URL=https://facebook.com/alpineeducation
-NEXT_PUBLIC_INSTAGRAM_URL=https://instagram.com/alpineeducation
-NEXT_PUBLIC_LINKEDIN_URL=https://linkedin.com/company/alpineeducation
-```
-
-### 2. Vercel Deployment
-
-1. **Push to GitHub**:
+2. **Configure Firestore Collections**
    ```bash
-   git remote add origin https://github.com/your-username/alpine-education.git
-   git push -u origin main
+   # Required collections:
+   - countries
+   - students
+   - uploads
+   - pages
+   - adminUsers
    ```
 
-2. **Connect to Vercel**:
-   - Go to [vercel.com](https://vercel.com)
-   - Import your GitHub repository
-   - Configure environment variables in Vercel dashboard
+3. **Set up Firebase Admin SDK**
+   - Go to Project Settings > Service Accounts
+   - Generate new private key
+   - Download JSON file
+
+### 2. Environment Variables
+
+Add these to your Vercel project:
+
+```bash
+# Firebase Configuration
+NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+
+# Firebase Admin (Server-side)
+FIREBASE_PROJECT_ID=your_project_id
+FIREBASE_CLIENT_EMAIL=your_service_account_email
+FIREBASE_PRIVATE_KEY=your_private_key
+FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+
+# Email Configuration
+RESEND_API_KEY=your_resend_api_key
+
+# Base URL
+NEXT_PUBLIC_BASE_URL=https://alpine-website-final.vercel.app
+```
+
+### 3. Vercel Deployment
+
+1. **Connect GitHub Repository**
+   ```bash
+   # Push to GitHub
+   git add .
+   git commit -m "Production ready admin panel and CMS"
+   git push origin main
+   ```
+
+2. **Deploy on Vercel**
+   - Connect your GitHub repo to Vercel
+   - Set environment variables
    - Deploy
 
-3. **Custom Domain Setup**:
-   - Add domain: `www.alpineeducation.com.np`
-   - Configure DNS records as per Vercel instructions
-   - Enable SSL certificate
+3. **Custom Domain (Optional)**
+   - Add custom domain in Vercel settings
+   - Update DNS records
 
-### 3. Firebase Configuration
+### 4. Admin Panel Setup
 
-1. **Firebase Console**:
-   - Go to [console.firebase.google.com](https://console.firebase.google.com)
-   - Select project: `alpine-website-final`
-   - Enable Authentication (Google provider)
-   - Set up Firestore rules
-   - Configure Storage rules
-
-2. **Firestore Rules**:
+1. **Create Admin User**
    ```javascript
+   // In Firebase Console > Authentication
+   // Add user: admin@alpineedu.com
+   // Set custom claims for admin role
+   ```
+
+2. **Initialize Firestore Data**
+   ```javascript
+   // Add sample countries data
+   // Add sample students data
+   // Add admin users
+   ```
+
+### 5. Testing Checklist
+
+- [ ] Homepage loads correctly
+- [ ] Admin login works
+- [ ] Countries CRUD operations
+- [ ] Students CRUD operations
+- [ ] File uploads work
+- [ ] Content management works
+- [ ] User management works
+- [ ] Student portal authentication
+- [ ] Mobile responsiveness
+- [ ] API routes function
+- [ ] SEO metadata is correct
+
+### 6. Performance Optimization
+
+1. **Image Optimization**
+   - Use Next.js Image component
+   - Optimize logo and banner images
+   - Compress PDFs and documents
+
+2. **Caching Strategy**
+   - Implement ISR for static pages
+   - Cache API responses
+   - Use CDN for static assets
+
+3. **Bundle Optimization**
+   - Analyze bundle size
+   - Remove unused dependencies
+   - Implement code splitting
+
+### 7. Security Measures
+
+1. **Firebase Security Rules**
+   ```javascript
+   // Firestore rules
    rules_version = '2';
    service cloud.firestore {
      match /databases/{database}/documents {
-       // Users can read/write their own data
-       match /users/{userId} {
-         allow read, write: if request.auth != null && request.auth.uid == userId;
+       // Admin access
+       match /adminUsers/{userId} {
+         allow read, write: if request.auth != null && 
+           request.auth.token.role == 'admin';
        }
        
-       // Admins can read all leads
-       match /leads/{leadId} {
+       // Student access
+       match /students/{studentId} {
          allow read, write: if request.auth != null && 
-           get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+           (request.auth.uid == studentId || 
+            request.auth.token.role == 'admin');
        }
      }
    }
    ```
 
-3. **Storage Rules**:
+2. **Storage Security**
    ```javascript
+   // Storage rules
    rules_version = '2';
    service firebase.storage {
      match /b/{bucket}/o {
-       match /documents/{userId}/{allPaths=**} {
-         allow read, write: if request.auth != null && request.auth.uid == userId;
+       match /uploads/{allPaths=**} {
+         allow read: if true;
+         allow write: if request.auth != null && 
+           request.auth.token.role == 'admin';
        }
      }
    }
    ```
 
-### 4. Email Service Setup
+### 8. Monitoring & Analytics
 
-1. **Resend Configuration**:
-   - Sign up at [resend.com](https://resend.com)
-   - Get API key
-   - Verify domain: `alpineeducation.com.np`
-   - Add to environment variables
+1. **Vercel Analytics**
+   - Enable Vercel Analytics
+   - Monitor performance metrics
+   - Track user behavior
 
-2. **Custom Email Domain**:
-   - Set up MX records for `alpineeducation.com.np`
-   - Configure SPF and DKIM records
-   - Test email delivery
+2. **Firebase Analytics**
+   - Enable Firebase Analytics
+   - Track user engagement
+   - Monitor conversion rates
 
-### 5. Analytics & Monitoring
+3. **Error Monitoring**
+   - Set up error tracking
+   - Monitor API failures
+   - Track user feedback
 
-1. **Google Analytics**:
-   - Create GA4 property
-   - Add tracking code (already implemented)
-   - Set up goals and conversions
+### 9. Maintenance
 
-2. **Error Monitoring**:
-   - Set up Sentry or similar service
-   - Monitor for JavaScript errors
-   - Track performance metrics
+1. **Regular Updates**
+   - Update dependencies monthly
+   - Monitor security advisories
+   - Backup Firestore data
 
-## 🔧 Post-Deployment Checklist
+2. **Content Updates**
+   - Use admin panel for content
+   - Regular SEO optimization
+   - Update country information
 
-### ✅ Functionality Testing
-- [ ] All pages load correctly
-- [ ] Navigation works on all devices
-- [ ] Contact form sends emails
-- [ ] Quiz generates PDF handbooks
-- [ ] Student dashboard uploads documents
-- [ ] Admin panel manages leads
-- [ ] WhatsApp floating button works
-- [ ] Chatbot responds correctly
+3. **Performance Monitoring**
+   - Monitor Core Web Vitals
+   - Optimize loading times
+   - Improve user experience
 
-### ✅ Performance Testing
-- [ ] Lighthouse score 90+ (Mobile & Desktop)
-- [ ] Images load quickly
-- [ ] No console errors
-- [ ] Responsive on all screen sizes
-- [ ] Fast loading times (<3s)
+### 10. Support & Documentation
 
-### ✅ SEO Verification
-- [ ] Meta tags present on all pages
-- [ ] Open Graph images load
-- [ ] Sitemap accessible at `/sitemap.xml`
-- [ ] Robots.txt configured
-- [ ] Google Search Console setup
+1. **Admin Documentation**
+   - Create admin user guide
+   - Document CMS features
+   - Provide troubleshooting guide
 
-### ✅ Security Verification
-- [ ] HTTPS enabled
-- [ ] Firebase Auth working
-- [ ] No sensitive data exposed
-- [ ] Form validation working
-- [ ] CSRF protection active
+2. **Technical Documentation**
+   - API documentation
+   - Database schema
+   - Deployment procedures
 
-## 📊 Monitoring & Maintenance
-
-### Daily Checks
-- Monitor website uptime
-- Check for new leads in admin panel
-- Review contact form submissions
-- Monitor error logs
-
-### Weekly Tasks
-- Update content if needed
-- Review analytics data
-- Check for broken links
-- Test all forms
-
-### Monthly Tasks
-- Update testimonials
-- Add new country information
-- Review and update pricing
-- Performance optimization
-
-## 🆘 Troubleshooting
-
-### Common Issues
-1. **Build Errors**: Check environment variables
-2. **Email Not Sending**: Verify Resend API key
-3. **Firebase Errors**: Check authentication rules
-4. **Performance Issues**: Optimize images and code
-
-### Support Contacts
-- Technical Issues: [your-email@domain.com]
-- Content Updates: [content-team@alpineeducation.com.np]
-- Domain Issues: [domain-provider-support]
+3. **User Support**
+   - Contact forms
+   - FAQ section
+   - Live chat integration
 
 ## 🎯 Success Metrics
 
-### Target KPIs
-- Website load time: <3 seconds
-- Mobile usability score: 95+
-- Contact form conversion: >5%
-- Student signups: Track monthly
-- Admin panel usage: Monitor daily
+- **Performance**: < 3s load time
+- **Uptime**: > 99.9%
+- **SEO**: Top 10 for target keywords
+- **User Engagement**: > 60s average session
+- **Conversion Rate**: > 5% contact form submissions
 
-### Analytics Goals
-- Monthly visitors: 10,000+
-- Contact form submissions: 500+
-- Quiz completions: 200+
-- Student registrations: 100+
+## 🚨 Emergency Procedures
+
+1. **Site Down**
+   - Check Vercel status
+   - Verify environment variables
+   - Rollback if necessary
+
+2. **Data Loss**
+   - Restore from Firestore backups
+   - Check version history
+   - Contact Firebase support
+
+3. **Security Breach**
+   - Change admin passwords
+   - Review access logs
+   - Update security rules
 
 ---
 
-**Deployment Status**: ✅ Ready for Production
-**Last Updated**: [Current Date]
-**Next Review**: [30 days from deployment] 
+**Deployment Status**: ✅ Production Ready
+**Last Updated**: January 2024
+**Version**: 1.0.0 
