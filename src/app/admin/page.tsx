@@ -1,5 +1,8 @@
 'use client';
 import React from "react";
+
+// Disable SSR for this page to avoid Firebase initialization issues
+export const dynamic = 'force-dynamic';
 import { useAuth } from "@/components/auth/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { db } from '@/lib/firebase';

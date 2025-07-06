@@ -50,7 +50,7 @@ export async function deleteItem(collectionName: string, id: string) {
 
 // Query with filters
 export async function queryItems(collectionName: string, filters: any[] = [], order: string = '', lim: number = 0) {
-  let q = collection(db, collectionName);
+  let q = query(collection(db, collectionName));
   if (filters.length > 0) {
     filters.forEach(([field, op, value]) => {
       q = query(q, where(field, op, value));

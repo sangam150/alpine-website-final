@@ -2,12 +2,13 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 interface CountryPageProps {
-  params: {
+  params: Promise<{
     country: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: CountryPageProps): Promise<Metadata> {
+  const { country: countrySlug } = await params;
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/countries`, {
       cache: 'no-store'
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: CountryPageProps): Promise<Me
     }
     
     const countries = await response.json();
-    const country = countries.find((c: any) => c.slug === params.country);
+    const country = countries.find((c: any) => c.slug === countrySlug);
     
     if (!country) {
       return {
@@ -44,6 +45,7 @@ export async function generateMetadata({ params }: CountryPageProps): Promise<Me
 }
 
 export default async function CountryPage({ params }: CountryPageProps) {
+  const { country: countrySlug } = await params;
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/countries`, {
       cache: 'no-store'
@@ -54,7 +56,7 @@ export default async function CountryPage({ params }: CountryPageProps) {
     }
     
     const countries = await response.json();
-    const country = countries.find((c: any) => c.slug === params.country);
+    const country = countries.find((c: any) => c.slug === countrySlug);
     
     if (!country) {
       notFound();

@@ -31,4 +31,8 @@ if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && proc
 }
 
 export { adminDb, adminAuth, adminStorage };
-export default app; 
+export default app;
+
+// Type exports for better TypeScript support
+export type { Auth } from 'firebase-admin/auth';
+export type { Storage } from 'firebase-admin/storage'; 

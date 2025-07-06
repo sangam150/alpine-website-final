@@ -18,18 +18,31 @@ let db: any = null;
 let auth: any = null;
 let storage: any = null;
 
-try {
-  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-  db = getFirestore(app);
-  auth = getAuth(app);
-  storage = getStorage(app);
-} catch (error) {
-  console.warn('Firebase initialization failed:', error);
-  // Create mock objects for development
-  app = null;
-  db = null;
-  auth = null;
-  storage = null;
+// For build purposes, create mock objects to avoid Firebase initialization issues
+// In production, this will be properly initialized
+app = null;
+db = null;
+auth = null;
+storage = null;
+
+// Only initialize Firebase in browser environment
+if (typeof window !== 'undefined') {
+  try {
+    const existingApps = getApps();
+    if (existingApps.length > 0) {
+      app = existingApps[0];
+      db = getFirestore(app);
+      auth = getAuth(app);
+      storage = getStorage(app);
+    } else {
+      app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      auth = getAuth(app);
+      storage = getStorage(app);
+    }
+  } catch (error) {
+    console.warn('Firebase initialization failed:', error);
+  }
 }
 
 export { db, auth, storage };

@@ -201,11 +201,18 @@ const filters = [
 
 type FilterKey = typeof filters[number]['key'];
 
-export default function CountriesClient() {
+interface CountriesClientProps {
+  countries?: any[];
+}
+
+export default function CountriesClient({ countries: apiCountries }: CountriesClientProps) {
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState<FilterKey | null>(null);
+  
+  // Use API countries if provided, otherwise use hardcoded countries
+  const displayCountries = apiCountries && apiCountries.length > 0 ? apiCountries : countries;
 
-  const filteredCountries = countries.filter((country) => {
+  const filteredCountries = displayCountries.filter((country) => {
     let match = true;
     if (activeFilter) {
       switch (activeFilter) {
