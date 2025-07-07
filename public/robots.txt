@@ -2,17 +2,24 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://your-domain.com/sitemap.xml
+Sitemap: https://alpine-website-final.vercel.app/sitemap.xml
 
 # Disallow admin and private areas
 Disallow: /admin/
-Disallow: /dashboard/
 Disallow: /api/
+Disallow: /_next/
+Disallow: /student-portal/
 
 # Allow important pages
 Allow: /
+Allow: /about/
+Allow: /contact/
 Allow: /countries/
-Allow: /contact
-Allow: /apply
-Allow: /quiz
-Allow: /about 
+Allow: /test-preparation/
+Allow: /student-services/
+Allow: /study-destinations/
+Allow: /blog/
+Allow: /apply/
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1 

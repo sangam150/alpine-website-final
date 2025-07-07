@@ -1,19 +1,16 @@
 {
-  "name": "Alpine Education & Visa Services",
+  "name": "Alpine Education - Study Abroad Consultants",
   "short_name": "Alpine Education",
-  "description": "Leading study abroad consultancy in Nepal - Australia, UK, Canada, and more. Free counseling, test preparation, and visa assistance.",
+  "description": "Your trusted partner for study abroad opportunities, visa guidance, and educational consulting services",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
   "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["education", "business"],
   "icons": [
-    {
-      "src": "/icons/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
@@ -27,7 +24,42 @@
       "purpose": "maskable any"
     }
   ],
-  "categories": ["education", "business", "productivity"],
-  "lang": "en",
-  "dir": "ltr"
+  "shortcuts": [
+    {
+      "name": "Apply Now",
+      "short_name": "Apply",
+      "description": "Start your study abroad journey",
+      "url": "/apply",
+      "icons": [
+        {
+          "src": "/icons/icon-144x144.png",
+          "sizes": "144x144"
+        }
+      ]
+    },
+    {
+      "name": "Countries",
+      "short_name": "Countries",
+      "description": "Explore study destinations",
+      "url": "/countries",
+      "icons": [
+        {
+          "src": "/icons/icon-144x144.png",
+          "sizes": "144x144"
+        }
+      ]
+    },
+    {
+      "name": "Contact",
+      "short_name": "Contact",
+      "description": "Get in touch with us",
+      "url": "/contact",
+      "icons": [
+        {
+          "src": "/icons/icon-144x144.png",
+          "sizes": "144x144"
+        }
+      ]
+    }
+  ]
 } 
