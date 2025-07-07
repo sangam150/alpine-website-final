@@ -9,35 +9,41 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Search, UserPlus, Shield, User, Users, Mail, Calendar, Lock, Trash2 } from 'lucide-react';
-import { fetchAll, addItem, updateItem, deleteItem } from '@/lib/firestore-admin';
 
-interface AdminUser {
+interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'counselor' | 'staff';
+  role: 'admin' | 'counselor' | 'student';
   status: 'active' | 'inactive' | 'pending';
-  lastLogin: string;
   createdAt: string;
-  permissions: string[];
+  lastLogin: string;
 }
 
 export default function UsersManagement() {
-  const [users, setUsers] = useState<AdminUser[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isAddUserDialogOpen, setIsAddUserDialogOpen] = useState(false);
 
-  // Fetch users from Firestore
+  // Fetch users from API
   useEffect(() => {
     setLoading(true);
-    fetchAll('adminUsers').then((data) => {
-      setUsers(data as AdminUser[]);
-      setLoading(false);
-    });
+    fetch('/api/users')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setUsers(data.data);
+        }
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching users:', error);
+        setLoading(false);
+      });
   }, []);
 
   const filteredUsers = users.filter(user => {
@@ -53,7 +59,7 @@ export default function UsersManagement() {
     switch (role) {
       case 'admin': return 'bg-red-100 text-red-800';
       case 'counselor': return 'bg-blue-100 text-blue-800';
-      case 'staff': return 'bg-green-100 text-green-800';
+      case 'student': return 'bg-green-100 text-green-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -67,34 +73,64 @@ export default function UsersManagement() {
     }
   };
 
-  const handleAddUser = async (userData: Omit<AdminUser, 'id' | 'createdAt' | 'lastLogin'>) => {
+  const handleSave = async (user: User) => {
     setLoading(true);
-    const newUser = {
-      ...userData,
-      createdAt: new Date().toISOString().split('T')[0],
-      lastLogin: 'Never'
-    };
-    await addItem('adminUsers', newUser);
-    const data = await fetchAll('adminUsers');
-    setUsers(data as AdminUser[]);
+    try {
+      if (selectedUser) {
+        const response = await fetch('/api/users', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(user)
+        });
+        
+        if (response.ok) {
+          const data = await fetch('/api/users');
+          const result = await data.json();
+          if (result.success) {
+            setUsers(result.data);
+          }
+        }
+      } else {
+        const response = await fetch('/api/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(user)
+        });
+        
+        if (response.ok) {
+          const data = await fetch('/api/users');
+          const result = await data.json();
+          if (result.success) {
+            setUsers(result.data);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error saving user:', error);
+    }
+    
+    setSelectedUser(null);
     setIsAddUserDialogOpen(false);
     setLoading(false);
   };
 
-  const handleUpdateUser = async (id: string, updates: Partial<AdminUser>) => {
+  const handleDelete = async (id: string) => {
     setLoading(true);
-    await updateItem('adminUsers', id, updates);
-    const data = await fetchAll('adminUsers');
-    setUsers(data as AdminUser[]);
-    setSelectedUser(null);
-    setLoading(false);
-  };
-
-  const handleDeleteUser = async (id: string) => {
-    setLoading(true);
-    await deleteItem('adminUsers', id);
-    const data = await fetchAll('adminUsers');
-    setUsers(data as AdminUser[]);
+    try {
+      const response = await fetch(`/api/users?id=${id}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        const data = await fetch('/api/users');
+        const result = await data.json();
+        if (result.success) {
+          setUsers(result.data);
+        }
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
     setLoading(false);
   };
 
@@ -119,7 +155,7 @@ export default function UsersManagement() {
                 Create a new admin user account
               </DialogDescription>
             </DialogHeader>
-            <UserForm onSave={handleAddUser} onCancel={() => setIsAddUserDialogOpen(false)} />
+            <UserForm onSave={handleSave} onCancel={() => setIsAddUserDialogOpen(false)} />
           </DialogContent>
         </Dialog>
       </div>
@@ -198,7 +234,7 @@ export default function UsersManagement() {
                 <SelectItem value="all">All Roles</SelectItem>
                 <SelectItem value="admin">Admin</SelectItem>
                 <SelectItem value="counselor">Counselor</SelectItem>
-                <SelectItem value="staff">Staff</SelectItem>
+                <SelectItem value="student">Student</SelectItem>
               </SelectContent>
             </Select>
 
@@ -278,7 +314,7 @@ export default function UsersManagement() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleDeleteUser(user.id)}
+                          onClick={() => handleDelete(user.id)}
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -304,10 +340,7 @@ export default function UsersManagement() {
           {selectedUser && (
             <UserForm
               user={selectedUser}
-              onSave={(userData) => {
-                handleUpdateUser(selectedUser.id, userData);
-                setSelectedUser(null);
-              }}
+              onSave={handleSave}
               onCancel={() => setSelectedUser(null)}
             />
           )}
@@ -318,8 +351,8 @@ export default function UsersManagement() {
 }
 
 function UserForm({ user, onSave, onCancel }: {
-  user?: AdminUser;
-  onSave: (userData: Omit<AdminUser, 'id' | 'createdAt' | 'lastLogin'>) => void;
+  user?: User;
+  onSave: (user: User) => void;
   onCancel: () => void;
 }) {
   const [formData, setFormData] = useState({
@@ -327,12 +360,31 @@ function UserForm({ user, onSave, onCancel }: {
     email: user?.email || '',
     role: user?.role || 'counselor' as const,
     status: user?.status || 'active' as const,
-    permissions: user?.permissions || []
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    if (user) {
+      // Update existing user
+      onSave({
+        ...user,
+        name: formData.name,
+        email: formData.email,
+        role: formData.role,
+        status: formData.status
+      });
+    } else {
+      // Create new user
+      onSave({
+        id: '',
+        name: formData.name,
+        email: formData.email,
+        role: formData.role,
+        status: formData.status,
+        createdAt: new Date().toISOString(),
+        lastLogin: 'Never'
+      });
+    }
   };
 
   return (
@@ -372,7 +424,7 @@ function UserForm({ user, onSave, onCancel }: {
             <SelectContent>
               <SelectItem value="admin">Admin</SelectItem>
               <SelectItem value="counselor">Counselor</SelectItem>
-              <SelectItem value="staff">Staff</SelectItem>
+              <SelectItem value="student">Student</SelectItem>
             </SelectContent>
           </Select>
         </div>

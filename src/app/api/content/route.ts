@@ -1,83 +1,207 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllContentBlocks, createContentBlock, updateContentBlock, deleteContentBlock } from '@/lib/content-management';
+import { db } from '@/lib/firebase-config';
+import { collection, getDocs, getDoc, addDoc, doc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
 
+// GET - Fetch page content
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const page = searchParams.get('page');
-    
-    if (page) {
-      // Return content for specific page
-      const blocks = await getAllContentBlocks();
-      const pageBlocks = blocks.filter(block => block.page === page && block.isActive);
-      return NextResponse.json(pageBlocks);
+    if (!db) {
+      return NextResponse.json(
+        { success: false, error: 'Firestore is not initialized' },
+        { status: 500 }
+      );
     }
+
+    const { searchParams } = new URL(request.url);
+    const pageId = searchParams.get('pageId');
     
-    // Return all content blocks
-    const blocks = await getAllContentBlocks();
-    return NextResponse.json(blocks);
+    if (pageId) {
+      // Fetch specific page content
+      const pageRef = doc(db, 'pages', pageId);
+      const pageSnap = await getDoc(pageRef);
+      
+      if (pageSnap.exists()) {
+        return NextResponse.json({
+          success: true,
+          data: { id: pageSnap.id, ...pageSnap.data() }
+        });
+      } else {
+        return NextResponse.json(
+          { success: false, error: 'Page not found' },
+          { status: 404 }
+        );
+      }
+    } else {
+      // Fetch all pages
+      const pagesRef = collection(db, 'pages');
+      const querySnapshot = await getDocs(pagesRef);
+      
+      const pages = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        lastUpdated: doc.data().lastUpdated?.toDate?.() || doc.data().lastUpdated
+      }));
+
+      return NextResponse.json({
+        success: true,
+        data: pages,
+        count: pages.length
+      });
+    }
   } catch (error) {
     console.error('Error fetching content:', error);
-    return NextResponse.json({ error: 'Failed to fetch content' }, { status: 500 });
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Failed to fetch content',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
+    );
   }
 }
 
+// POST - Create or update page content
 export async function POST(request: NextRequest) {
   try {
+    if (!db) {
+      return NextResponse.json(
+        { success: false, error: 'Firestore is not initialized' },
+        { status: 500 }
+      );
+    }
+
     const body = await request.json();
-    const { type, value, page, section, order, isActive, metadata } = body;
+    const { pageId, title, content, seo } = body;
     
-    if (!type || !value || !page || !section) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    if (!pageId) {
+      return NextResponse.json(
+        { success: false, error: 'Page ID is required' },
+        { status: 400 }
+      );
+    }
+
+    const pageData = {
+      title: title || '',
+      content: content || {},
+      seo: seo || {
+        title: '',
+        description: '',
+        keywords: []
+      },
+      lastUpdated: new Date()
+    };
+
+    // Check if page exists
+    const pageRef = doc(db, 'pages', pageId);
+    const pageSnap = await getDoc(pageRef);
+    
+    if (pageSnap.exists()) {
+      // Update existing page
+      await updateDoc(pageRef, pageData);
+    } else {
+      // Create new page
+      await updateDoc(pageRef, pageData);
     }
     
-    const blockId = await createContentBlock({
-      type,
-      value,
-      page,
-      section,
-      order: order || 0,
-      isActive: isActive !== false,
-      metadata
+    return NextResponse.json({
+      success: true,
+      message: pageSnap.exists() ? 'Page updated successfully' : 'Page created successfully',
+      data: { id: pageId, ...pageData }
     });
-    
-    return NextResponse.json({ id: blockId, success: true });
   } catch (error) {
-    console.error('Error creating content block:', error);
-    return NextResponse.json({ error: 'Failed to create content block' }, { status: 500 });
+    console.error('Error saving content:', error);
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Failed to save content',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
+    );
   }
 }
 
+// PUT - Update specific page content
 export async function PUT(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { id, ...updates } = body;
-    
-    if (!id) {
-      return NextResponse.json({ error: 'Missing content block ID' }, { status: 400 });
+    if (!db) {
+      return NextResponse.json(
+        { success: false, error: 'Firestore is not initialized' },
+        { status: 500 }
+      );
     }
+
+    const body = await request.json();
+    const { pageId, ...updateData } = body;
     
-    await updateContentBlock(id, updates);
-    return NextResponse.json({ success: true });
+    if (!pageId) {
+      return NextResponse.json(
+        { success: false, error: 'Page ID is required' },
+        { status: 400 }
+      );
+    }
+
+    const pageRef = doc(db, 'pages', pageId);
+    const updatePayload = {
+      ...updateData,
+      lastUpdated: new Date()
+    };
+
+    await updateDoc(pageRef, updatePayload);
+    
+    return NextResponse.json({
+      success: true,
+      message: 'Page updated successfully'
+    });
   } catch (error) {
-    console.error('Error updating content block:', error);
-    return NextResponse.json({ error: 'Failed to update content block' }, { status: 500 });
+    console.error('Error updating content:', error);
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Failed to update content',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
+    );
   }
 }
 
+// DELETE - Delete page content
 export async function DELETE(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
-    
-    if (!id) {
-      return NextResponse.json({ error: 'Missing content block ID' }, { status: 400 });
+    if (!db) {
+      return NextResponse.json(
+        { success: false, error: 'Firestore is not initialized' },
+        { status: 500 }
+      );
     }
+
+    const { searchParams } = new URL(request.url);
+    const pageId = searchParams.get('pageId');
     
-    await deleteContentBlock(id);
-    return NextResponse.json({ success: true });
+    if (!pageId) {
+      return NextResponse.json(
+        { success: false, error: 'Page ID is required' },
+        { status: 400 }
+      );
+    }
+
+    await deleteDoc(doc(db, 'pages', pageId));
+    
+    return NextResponse.json({
+      success: true,
+      message: 'Page deleted successfully'
+    });
   } catch (error) {
-    console.error('Error deleting content block:', error);
-    return NextResponse.json({ error: 'Failed to delete content block' }, { status: 500 });
+    console.error('Error deleting content:', error);
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Failed to delete content',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
+    );
   }
 } 

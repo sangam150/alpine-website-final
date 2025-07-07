@@ -5,11 +5,27 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search, Filter, Mail, Phone, Calendar, User, BookOpen, FileText } from 'lucide-react';
-import { fetchAll, addItem, updateItem, deleteItem, queryItems } from '@/lib/firestore-admin';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Users, 
+  Plus, 
+  Search, 
+  Edit, 
+  Trash2, 
+  Eye, 
+  Filter,
+  GraduationCap,
+  Mail,
+  Phone,
+  Calendar,
+  MapPin,
+  BookOpen,
+  FileText,
+  CheckCircle,
+  Clock,
+  AlertCircle
+} from 'lucide-react';
 
 interface Student {
   id: string;
@@ -18,41 +34,143 @@ interface Student {
   phone: string;
   country: string;
   course: string;
+  university: string;
   status: 'pending' | 'in-progress' | 'completed' | 'rejected';
-  registrationDate: string;
+  progress: number;
   documents: string[];
-  counselor: string;
-  lastContact: string;
+  counselorId: string;
+  counselorName: string;
+  createdAt: string;
+  updatedAt: string;
+  notes: string;
 }
 
-export default function StudentsManagement() {
-  const [students, setStudents] = useState<Student[]>([]);
-  const [loading, setLoading] = useState(true);
+const mockStudents: Student[] = [
+  {
+    id: '1',
+    name: 'Priya Sharma',
+    email: 'priya@example.com',
+    phone: '+977-9841234567',
+    country: 'Australia',
+    course: 'Computer Science',
+    university: 'University of Melbourne',
+    status: 'in-progress',
+    progress: 65,
+    documents: ['passport.pdf', 'transcript.pdf', 'ielts.pdf'],
+    counselorId: 'counselor1',
+    counselorName: 'John Doe',
+    createdAt: '2024-01-15',
+    updatedAt: '2024-01-20',
+    notes: 'Student is progressing well. IELTS score submitted.'
+  },
+  {
+    id: '2',
+    name: 'Rajesh Kumar',
+    email: 'rajesh@example.com',
+    phone: '+977-9841234568',
+    country: 'Canada',
+    course: 'Business Administration',
+    university: 'University of Toronto',
+    status: 'completed',
+    progress: 100,
+    documents: ['passport.pdf', 'transcript.pdf', 'ielts.pdf', 'visa.pdf'],
+    counselorId: 'counselor2',
+    counselorName: 'Jane Smith',
+    createdAt: '2024-01-10',
+    updatedAt: '2024-01-25',
+    notes: 'Visa approved. Student will start in September 2024.'
+  },
+  {
+    id: '3',
+    name: 'Anita Patel',
+    email: 'anita@example.com',
+    phone: '+977-9841234569',
+    country: 'UK',
+    course: 'Law',
+    university: 'University of Manchester',
+    status: 'pending',
+    progress: 25,
+    documents: ['passport.pdf'],
+    counselorId: 'counselor1',
+    counselorName: 'John Doe',
+    createdAt: '2024-01-20',
+    updatedAt: '2024-01-20',
+    notes: 'Initial consultation completed. Waiting for IELTS results.'
+  }
+];
+
+export default function StudentsPage() {
+  const [students, setStudents] = useState<Student[]>(mockStudents);
+  const [filteredStudents, setFilteredStudents] = useState<Student[]>(mockStudents);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [countryFilter, setCountryFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'in-progress' | 'completed' | 'rejected'>('all');
+  const [countryFilter, setCountryFilter] = useState('all');
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [isAddStudentDialogOpen, setIsAddStudentDialogOpen] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
 
-  // Fetch students from Firestore
+  // Get unique countries for filter
+  const countries = [...new Set(students.map(student => student.country))];
+
+  // Filter students based on search and filters
   useEffect(() => {
-    setLoading(true);
-    fetchAll('students').then((data) => {
-      setStudents(data as Student[]);
-      setLoading(false);
-    });
-  }, []);
-
-  const filteredStudents = students.filter(student => {
-    const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         student.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || student.status === statusFilter;
-    const matchesCountry = countryFilter === 'all' || student.country === countryFilter;
+    let filtered = students;
     
-    return matchesSearch && matchesStatus && matchesCountry;
-  });
+    if (searchTerm) {
+      filtered = filtered.filter(student => 
+        student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        student.course.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(student => student.status === statusFilter);
+    }
+    
+    if (countryFilter !== 'all') {
+      filtered = filtered.filter(student => student.country === countryFilter);
+    }
+    
+    setFilteredStudents(filtered);
+  }, [students, searchTerm, statusFilter, countryFilter]);
 
-  const getStatusColor = (status: string) => {
+  const handleAddStudent = (studentData: Omit<Student, 'id' | 'createdAt' | 'updatedAt'>) => {
+    const newStudent: Student = {
+      ...studentData,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    setStudents([...students, newStudent]);
+    setIsAddDialogOpen(false);
+  };
+
+  const handleEditStudent = (studentData: Omit<Student, 'id' | 'createdAt' | 'updatedAt'>) => {
+    if (!selectedStudent) return;
+    
+    setStudents(students.map(student => 
+      student.id === selectedStudent.id 
+        ? { 
+            ...studentData, 
+            id: selectedStudent.id,
+            createdAt: selectedStudent.createdAt,
+            updatedAt: new Date().toISOString() 
+          }
+        : student
+    ));
+    setIsEditDialogOpen(false);
+    setSelectedStudent(null);
+  };
+
+  const handleDeleteStudent = (id: string) => {
+    if (confirm('Are you sure you want to delete this student?')) {
+      setStudents(students.filter(student => student.id !== id));
+    }
+  };
+
+  const getStatusColor = (status: Student['status']) => {
     switch (status) {
       case 'pending': return 'bg-yellow-100 text-yellow-800';
       case 'in-progress': return 'bg-blue-100 text-blue-800';
@@ -62,71 +180,28 @@ export default function StudentsManagement() {
     }
   };
 
-  const getStatusText = (status: string) => {
+  const getStatusIcon = (status: Student['status']) => {
     switch (status) {
-      case 'pending': return 'Pending';
-      case 'in-progress': return 'In Progress';
-      case 'completed': return 'Completed';
-      case 'rejected': return 'Rejected';
-      default: return status;
+      case 'pending': return <Clock className="w-4 h-4" />;
+      case 'in-progress': return <BookOpen className="w-4 h-4" />;
+      case 'completed': return <CheckCircle className="w-4 h-4" />;
+      case 'rejected': return <AlertCircle className="w-4 h-4" />;
+      default: return <Clock className="w-4 h-4" />;
     }
   };
 
-  const handleAddStudent = async (studentData: Omit<Student, 'id' | 'registrationDate' | 'lastContact'>) => {
-    setLoading(true);
-    const newStudent = {
-      ...studentData,
-      registrationDate: new Date().toISOString().split('T')[0],
-      lastContact: new Date().toISOString().split('T')[0]
-    };
-    await addItem('students', newStudent);
-    const data = await fetchAll('students');
-    setStudents(data as Student[]);
-    setIsAddStudentDialogOpen(false);
-    setLoading(false);
-  };
-
-  const handleUpdateStudent = async (id: string, updates: Partial<Student>) => {
-    setLoading(true);
-    await updateItem('students', id, updates);
-    const data = await fetchAll('students');
-    setStudents(data as Student[]);
-    setSelectedStudent(null);
-    setLoading(false);
-  };
-
-  const handleDeleteStudent = async (id: string) => {
-    setLoading(true);
-    await deleteItem('students', id);
-    const data = await fetchAll('students');
-    setStudents(data as Student[]);
-    setLoading(false);
-  };
-
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Students Management</h1>
-          <p className="text-gray-600">Manage student applications and track their progress</p>
+          <p className="text-gray-600 mt-2">Manage student applications and track their progress</p>
         </div>
-        <Dialog open={isAddStudentDialogOpen} onOpenChange={setIsAddStudentDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <User className="w-4 h-4 mr-2" />
-              Add Student
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add New Student</DialogTitle>
-              <DialogDescription>
-                Create a new student record
-              </DialogDescription>
-            </DialogHeader>
-            <StudentForm onSave={handleAddStudent} onCancel={() => setIsAddStudentDialogOpen(false)} />
-          </DialogContent>
-        </Dialog>
+        <Button onClick={() => setIsAddDialogOpen(true)} className="flex items-center gap-2">
+          <Plus className="w-4 h-4" />
+          Add Student
+        </Button>
       </div>
 
       {/* Stats Cards */}
@@ -134,46 +209,41 @@ export default function StudentsManagement() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Students</CardTitle>
-            <User className="h-4 w-4 text-muted-foreground" />
+            <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{students.length}</div>
+            <p className="text-xs text-muted-foreground">Active applications</p>
           </CardContent>
         </Card>
-
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">In Progress</CardTitle>
             <BookOpen className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {students.filter(s => s.status === 'in-progress').length}
-            </div>
+            <div className="text-2xl font-bold">{students.filter(s => s.status === 'in-progress').length}</div>
+            <p className="text-xs text-muted-foreground">Currently processing</p>
           </CardContent>
         </Card>
-
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Completed</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
+            <CheckCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {students.filter(s => s.status === 'completed').length}
-            </div>
+            <div className="text-2xl font-bold">{students.filter(s => s.status === 'completed').length}</div>
+            <p className="text-xs text-muted-foreground">Successfully placed</p>
           </CardContent>
         </Card>
-
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Pending</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {students.filter(s => s.status === 'pending').length}
-            </div>
+            <div className="text-2xl font-bold">{students.filter(s => s.status === 'pending').length}</div>
+            <p className="text-xs text-muted-foreground">Awaiting documents</p>
           </CardContent>
         </Card>
       </div>
@@ -184,178 +254,260 @@ export default function StudentsManagement() {
           <CardTitle>Filters</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                placeholder="Search students..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  placeholder="Search students..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
             </div>
-            
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="in-progress">In Progress</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-                <SelectItem value="rejected">Rejected</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={countryFilter} onValueChange={setCountryFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="Filter by country" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Countries</SelectItem>
-                <SelectItem value="Australia">Australia</SelectItem>
-                <SelectItem value="Canada">Canada</SelectItem>
-                <SelectItem value="UK">UK</SelectItem>
-                <SelectItem value="USA">USA</SelectItem>
-                <SelectItem value="Germany">Germany</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Button variant="outline" onClick={() => {
-              setSearchTerm('');
-              setStatusFilter('all');
-              setCountryFilter('all');
-            }}>
-              Clear Filters
-            </Button>
+            <div className="flex gap-2">
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value as any)}
+                className="px-3 py-2 border rounded-md"
+              >
+                <option value="all">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
+                <option value="rejected">Rejected</option>
+              </select>
+              <select
+                value={countryFilter}
+                onChange={(e) => setCountryFilter(e.target.value)}
+                className="px-3 py-2 border rounded-md"
+              >
+                <option value="all">All Countries</option>
+                {countries.map(country => (
+                  <option key={country} value={country}>{country}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Students Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Students ({filteredStudents.length})</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="text-center py-12 text-gray-500">Loading students...</div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Student</TableHead>
-                  <TableHead>Country</TableHead>
-                  <TableHead>Course</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Counselor</TableHead>
-                  <TableHead>Last Contact</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredStudents.map((student) => (
-                  <TableRow key={student.id}>
-                    <TableCell>
-                      <div>
-                        <div className="font-medium">{student.name}</div>
-                        <div className="text-sm text-gray-500">{student.email}</div>
+      {/* Students List */}
+      <div className="space-y-4">
+        {filteredStudents.map((student) => (
+          <Card key={student.id} className="hover:shadow-lg transition-shadow">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                    <Users className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold">{student.name}</h3>
+                    <p className="text-sm text-gray-600">{student.email}</p>
+                    <div className="flex items-center gap-4 mt-1">
+                      <div className="flex items-center gap-1 text-sm text-gray-500">
+                        <MapPin className="w-3 h-3" />
+                        {student.country}
                       </div>
-                    </TableCell>
-                    <TableCell>{student.country}</TableCell>
-                    <TableCell>
-                      <div className="max-w-xs truncate">{student.course}</div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getStatusColor(student.status)}>
-                        {getStatusText(student.status)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{student.counselor}</TableCell>
-                    <TableCell>{student.lastContact}</TableCell>
-                    <TableCell>
-                      <div className="flex space-x-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setSelectedStudent(student)}
-                        >
-                          View Details
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <Mail className="w-4 h-4" />
-                        </Button>
+                      <div className="flex items-center gap-1 text-sm text-gray-500">
+                        <GraduationCap className="w-3 h-3" />
+                        {student.course}
                       </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+                      <div className="flex items-center gap-1 text-sm text-gray-500">
+                        <BookOpen className="w-3 h-3" />
+                        {student.university}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-4">
+                  <div className="text-right">
+                    <Badge className={`${getStatusColor(student.status)} flex items-center gap-1`}>
+                      {getStatusIcon(student.status)}
+                      {student.status}
+                    </Badge>
+                    <div className="text-sm text-gray-500 mt-1">
+                      Progress: {student.progress}%
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        setSelectedStudent(student);
+                        setIsViewDialogOpen(true);
+                      }}
+                    >
+                      <Eye className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        setSelectedStudent(student);
+                        setIsEditDialogOpen(true);
+                      }}
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleDeleteStudent(student.id)}
+                      className="text-red-600 hover:text-red-700"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Progress Bar */}
+              <div className="mt-4">
+                <div className="flex justify-between text-sm text-gray-600 mb-1">
+                  <span>Application Progress</span>
+                  <span>{student.progress}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${student.progress}%` }}
+                  ></div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
-      {/* Student Details Dialog */}
-      <Dialog open={!!selectedStudent} onOpenChange={() => setSelectedStudent(null)}>
+      {/* Add Student Dialog */}
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Add New Student</DialogTitle>
+            <DialogDescription>
+              Add a new student application with all relevant information.
+            </DialogDescription>
+          </DialogHeader>
+          <StudentForm
+            onSubmit={handleAddStudent}
+            onCancel={() => setIsAddDialogOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Student Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Student</DialogTitle>
+            <DialogDescription>
+              Update the student information.
+            </DialogDescription>
+          </DialogHeader>
+          {selectedStudent && (
+            <StudentForm
+              student={selectedStudent}
+              onSubmit={handleEditStudent}
+              onCancel={() => {
+                setIsEditDialogOpen(false);
+                setSelectedStudent(null);
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* View Student Dialog */}
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Student Details</DialogTitle>
             <DialogDescription>
-              Detailed information about the student
+              View detailed information about the student.
             </DialogDescription>
           </DialogHeader>
           {selectedStudent && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Name</label>
-                  <p className="text-sm">{selectedStudent.name}</p>
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Users className="w-8 h-8 text-blue-600" />
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-700">Email</label>
-                  <p className="text-sm">{selectedStudent.email}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Phone</label>
-                  <p className="text-sm">{selectedStudent.phone}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Country</label>
-                  <p className="text-sm">{selectedStudent.country}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Course</label>
-                  <p className="text-sm">{selectedStudent.course}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Status</label>
-                  <Badge className={getStatusColor(selectedStudent.status)}>
-                    {getStatusText(selectedStudent.status)}
+                  <h3 className="text-xl font-semibold">{selectedStudent.name}</h3>
+                  <p className="text-gray-600">{selectedStudent.email}</p>
+                  <Badge className={`${getStatusColor(selectedStudent.status)} mt-2`}>
+                    {selectedStudent.status}
                   </Badge>
                 </div>
               </div>
-
-              <div>
-                <label className="text-sm font-medium text-gray-700">Documents</label>
-                <div className="mt-2 space-y-1">
-                  {selectedStudent.documents.map((doc) => (
-                    <div key={doc} className="flex items-center space-x-2">
-                      <FileText className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm">{doc}</span>
+              
+              <Tabs defaultValue="overview">
+                <TabsList>
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="documents">Documents</TabsTrigger>
+                  <TabsTrigger value="notes">Notes</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="overview" className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center gap-2">
+                      <Phone className="w-4 h-4 text-blue-500" />
+                      <span className="text-sm">{selectedStudent.phone}</span>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex justify-end space-x-2">
-                <Button variant="outline" onClick={() => setSelectedStudent(null)}>
-                  Close
-                </Button>
-                <Button onClick={() => handleUpdateStudent(selectedStudent.id, { status: 'completed' })}>
-                  Mark Complete
-                </Button>
-              </div>
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-green-500" />
+                      <span className="text-sm">{selectedStudent.country}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <GraduationCap className="w-4 h-4 text-purple-500" />
+                      <span className="text-sm">{selectedStudent.course}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <BookOpen className="w-4 h-4 text-orange-500" />
+                      <span className="text-sm">{selectedStudent.university}</span>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-semibold mb-2">Progress</h4>
+                    <div className="w-full bg-gray-200 rounded-full h-3">
+                      <div 
+                        className="bg-blue-600 h-3 rounded-full transition-all duration-300"
+                        style={{ width: `${selectedStudent.progress}%` }}
+                      ></div>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1">{selectedStudent.progress}% complete</p>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="documents" className="space-y-4">
+                  <h4 className="font-semibold">Uploaded Documents</h4>
+                  <div className="space-y-2">
+                    {selectedStudent.documents.map((doc, index) => (
+                      <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded">
+                        <FileText className="w-4 h-4 text-blue-500" />
+                        <span className="text-sm">{doc}</span>
+                      </div>
+                    ))}
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="notes" className="space-y-4">
+                  <h4 className="font-semibold">Counselor Notes</h4>
+                  <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded">
+                    {selectedStudent.notes}
+                  </p>
+                  <div className="text-xs text-gray-500">
+                    Counselor: {selectedStudent.counselorName}
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
           )}
         </DialogContent>
@@ -364,35 +516,42 @@ export default function StudentsManagement() {
   );
 }
 
-function StudentForm({ onSave, onCancel }: {
-  onSave: (student: Omit<Student, 'id' | 'registrationDate' | 'lastContact'>) => void;
+// Student Form Component
+interface StudentFormProps {
+  student?: Student;
+  onSubmit: (data: Omit<Student, 'id' | 'createdAt' | 'updatedAt'>) => void;
   onCancel: () => void;
-}) {
+}
+
+function StudentForm({ student, onSubmit, onCancel }: StudentFormProps) {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    country: '',
-    course: '',
-    status: 'pending' as const,
-    counselor: '',
-    documents: [] as string[]
+    name: student?.name || '',
+    email: student?.email || '',
+    phone: student?.phone || '',
+    country: student?.country || '',
+    course: student?.course || '',
+    university: student?.university || '',
+    status: student?.status || 'pending' as const,
+    progress: student?.progress || 0,
+    documents: student?.documents || [],
+    counselorId: student?.counselorId || '',
+    counselorName: student?.counselorName || '',
+    notes: student?.notes || ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    onSubmit(formData);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="text-sm font-medium">Name</label>
+          <label className="text-sm font-medium">Full Name</label>
           <Input
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder="Full name"
             required
           />
         </div>
@@ -402,71 +561,109 @@ function StudentForm({ onSave, onCancel }: {
             type="email"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            placeholder="email@example.com"
             required
           />
         </div>
       </div>
-
+      
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="text-sm font-medium">Phone</label>
           <Input
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-            placeholder="+1234567890"
             required
           />
         </div>
         <div>
           <label className="text-sm font-medium">Country</label>
-          <Select
+          <select
             value={formData.country}
-            onValueChange={(value) => setFormData({ ...formData, country: value })}
+            onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+            className="w-full p-2 border rounded-md"
+            required
           >
-            <SelectTrigger>
-              <SelectValue placeholder="Select country" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Australia">Australia</SelectItem>
-              <SelectItem value="Canada">Canada</SelectItem>
-              <SelectItem value="UK">UK</SelectItem>
-              <SelectItem value="USA">USA</SelectItem>
-              <SelectItem value="Germany">Germany</SelectItem>
-              <SelectItem value="France">France</SelectItem>
-              <SelectItem value="New Zealand">New Zealand</SelectItem>
-            </SelectContent>
-          </Select>
+            <option value="">Select Country</option>
+            <option value="Australia">Australia</option>
+            <option value="Canada">Canada</option>
+            <option value="UK">UK</option>
+            <option value="Germany">Germany</option>
+            <option value="USA">USA</option>
+          </select>
         </div>
       </div>
-
+      
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="text-sm font-medium">Course</label>
           <Input
             value={formData.course}
             onChange={(e) => setFormData({ ...formData, course: e.target.value })}
-            placeholder="Master of Computer Science"
             required
           />
         </div>
         <div>
-          <label className="text-sm font-medium">Counselor</label>
+          <label className="text-sm font-medium">University</label>
           <Input
-            value={formData.counselor}
-            onChange={(e) => setFormData({ ...formData, counselor: e.target.value })}
-            placeholder="Counselor name"
+            value={formData.university}
+            onChange={(e) => setFormData({ ...formData, university: e.target.value })}
             required
           />
         </div>
       </div>
-
-      <div className="flex justify-end space-x-2">
-        <Button variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
+      
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="text-sm font-medium">Status</label>
+          <select
+            value={formData.status}
+            onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+            className="w-full p-2 border rounded-md"
+          >
+            <option value="pending">Pending</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+        <div>
+          <label className="text-sm font-medium">Progress (%)</label>
+          <Input
+            type="number"
+            min="0"
+            max="100"
+            value={formData.progress}
+            onChange={(e) => setFormData({ ...formData, progress: parseInt(e.target.value) })}
+            required
+          />
+        </div>
+      </div>
+      
+      <div>
+        <label className="text-sm font-medium">Counselor Name</label>
+        <Input
+          value={formData.counselorName}
+          onChange={(e) => setFormData({ ...formData, counselorName: e.target.value })}
+          required
+        />
+      </div>
+      
+      <div>
+        <label className="text-sm font-medium">Notes</label>
+        <textarea
+          value={formData.notes}
+          onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+          className="w-full p-2 border rounded-md"
+          rows={3}
+        />
+      </div>
+      
+      <div className="flex gap-2">
         <Button type="submit">
-          Add Student
+          {student ? 'Update Student' : 'Add Student'}
+        </Button>
+        <Button type="button" variant="outline" onClick={onCancel}>
+          Cancel
         </Button>
       </div>
     </form>

@@ -10,27 +10,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Edit, Save, Eye, Globe, FileText, Users, MessageSquare, Settings, Plus, Trash2 } from 'lucide-react';
-import { fetchAll, addItem, updateItem, deleteItem } from '@/lib/firestore-admin';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Search, Filter } from 'lucide-react';
 
-interface PageContent {
+interface Page {
   id: string;
   title: string;
   slug: string;
-  content: string;
-  metaDescription: string;
+  content: any;
+  seo: {
+    title: string;
+    description: string;
+    keywords: string[];
+  };
   lastUpdated: string;
   status: 'published' | 'draft' | 'archived';
   type: 'page' | 'blog' | 'resource';
 }
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'published': return 'bg-green-100 text-green-800';
-    case 'draft': return 'bg-yellow-100 text-yellow-800';
-    case 'archived': return 'bg-gray-100 text-gray-800';
-    default: return 'bg-gray-100 text-gray-800';
-  }
-};
 
 const getTypeIcon = (type: string) => {
   switch (type) {
@@ -41,40 +37,105 @@ const getTypeIcon = (type: string) => {
   }
 };
 
-export default function ContentManagement() {
-  const [pages, setPages] = useState<PageContent[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [editingPage, setEditingPage] = useState<PageContent | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+function getStatusColor(status: string) {
+  switch (status) {
+    case 'published': return 'bg-green-100 text-green-800';
+    case 'draft': return 'bg-yellow-100 text-yellow-800';
+    case 'archived': return 'bg-gray-100 text-gray-800';
+    default: return 'bg-gray-100 text-gray-800';
+  }
+}
 
-  // Fetch pages from Firestore
+export default function ContentManagement() {
+  const [pages, setPages] = useState<Page[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [selectedPage, setSelectedPage] = useState<Page | null>(null);
+  const [isAddPageDialogOpen, setIsAddPageDialogOpen] = useState(false);
+
+  // Fetch pages from API
   useEffect(() => {
     setLoading(true);
-    fetchAll('pages').then((data) => {
-      setPages(data as PageContent[]);
-      setLoading(false);
-    });
+    fetch('/api/content')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setPages(data.data);
+        }
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching pages:', error);
+        setLoading(false);
+      });
   }, []);
 
-  const handleSave = async (page: PageContent) => {
+  const filteredPages = pages.filter(page => {
+    const matchesSearch = page.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || page.status === statusFilter;
+    
+    return matchesSearch && matchesStatus;
+  });
+
+  const handleSave = async (page: Page) => {
     setLoading(true);
-    if (editingPage) {
-      await updateItem('pages', page.id, page);
-    } else {
-      await addItem('pages', page);
+    try {
+      if (selectedPage) {
+        const response = await fetch('/api/content', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(page)
+        });
+        
+        if (response.ok) {
+          const data = await fetch('/api/content');
+          const result = await data.json();
+          if (result.success) {
+            setPages(result.data);
+          }
+        }
+      } else {
+        const response = await fetch('/api/content', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(page)
+        });
+        
+        if (response.ok) {
+          const data = await fetch('/api/content');
+          const result = await data.json();
+          if (result.success) {
+            setPages(result.data);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error saving page:', error);
     }
-    const data = await fetchAll('pages');
-    setPages(data as PageContent[]);
-    setEditingPage(null);
-    setIsDialogOpen(false);
+    
+    setSelectedPage(null);
+    setIsAddPageDialogOpen(false);
     setLoading(false);
   };
 
   const handleDelete = async (id: string) => {
     setLoading(true);
-    await deleteItem('pages', id);
-    const data = await fetchAll('pages');
-    setPages(data as PageContent[]);
+    try {
+      const response = await fetch(`/api/content?pageId=${id}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        const data = await fetch('/api/content');
+        const result = await data.json();
+        if (result.success) {
+          setPages(result.data);
+        }
+      }
+    } catch (error) {
+      console.error('Error deleting page:', error);
+    }
     setLoading(false);
   };
 
@@ -85,7 +146,7 @@ export default function ContentManagement() {
           <h1 className="text-3xl font-bold text-gray-900">Content Management</h1>
           <p className="text-gray-600">Manage website pages, blog posts, and resources</p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog open={isAddPageDialogOpen} onOpenChange={setIsAddPageDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="w-4 h-4 mr-2" />
@@ -94,17 +155,17 @@ export default function ContentManagement() {
           </DialogTrigger>
           <DialogContent className="max-w-4xl">
             <DialogHeader>
-              <DialogTitle>{editingPage ? 'Edit Content' : 'Add New Content'}</DialogTitle>
+              <DialogTitle>{selectedPage ? 'Edit Content' : 'Add New Content'}</DialogTitle>
               <DialogDescription>
                 Create a new page, blog post, or resource
               </DialogDescription>
             </DialogHeader>
             <ContentForm
-              page={editingPage}
+              page={selectedPage}
               onSave={handleSave}
               onCancel={() => {
-                setEditingPage(null);
-                setIsDialogOpen(false);
+                setSelectedPage(null);
+                setIsAddPageDialogOpen(false);
               }}
             />
           </DialogContent>
@@ -165,10 +226,10 @@ export default function ContentManagement() {
 
         <TabsContent value="all" className="space-y-4">
           <ContentList 
-            pages={pages} 
+            pages={filteredPages} 
             onEdit={(page) => {
-              setEditingPage(page);
-              setIsDialogOpen(true);
+              setSelectedPage(page);
+              setIsAddPageDialogOpen(true);
             }}
             onDelete={handleDelete}
             loading={loading}
@@ -177,10 +238,10 @@ export default function ContentManagement() {
 
         <TabsContent value="pages" className="space-y-4">
           <ContentList 
-            pages={pages.filter(p => p.type === 'page')} 
+            pages={filteredPages.filter(p => p.type === 'page')} 
             onEdit={(page) => {
-              setEditingPage(page);
-              setIsDialogOpen(true);
+              setSelectedPage(page);
+              setIsAddPageDialogOpen(true);
             }}
             onDelete={handleDelete}
             loading={loading}
@@ -189,10 +250,10 @@ export default function ContentManagement() {
 
         <TabsContent value="blog" className="space-y-4">
           <ContentList 
-            pages={pages.filter(p => p.type === 'blog')} 
+            pages={filteredPages.filter(p => p.type === 'blog')} 
             onEdit={(page) => {
-              setEditingPage(page);
-              setIsDialogOpen(true);
+              setSelectedPage(page);
+              setIsAddPageDialogOpen(true);
             }}
             onDelete={handleDelete}
             loading={loading}
@@ -201,10 +262,10 @@ export default function ContentManagement() {
 
         <TabsContent value="resources" className="space-y-4">
           <ContentList 
-            pages={pages.filter(p => p.type === 'resource')} 
+            pages={filteredPages.filter(p => p.type === 'resource')} 
             onEdit={(page) => {
-              setEditingPage(page);
-              setIsDialogOpen(true);
+              setSelectedPage(page);
+              setIsAddPageDialogOpen(true);
             }}
             onDelete={handleDelete}
             loading={loading}
@@ -216,8 +277,8 @@ export default function ContentManagement() {
 }
 
 function ContentList({ pages, onEdit, onDelete, loading }: { 
-  pages: PageContent[]; 
-  onEdit: (page: PageContent) => void;
+  pages: Page[]; 
+  onEdit: (page: Page) => void;
   onDelete: (id: string) => void;
   loading: boolean;
 }) {
@@ -273,16 +334,20 @@ function ContentList({ pages, onEdit, onDelete, loading }: {
 }
 
 function ContentForm({ page, onSave, onCancel }: {
-  page: PageContent | null;
-  onSave: (page: PageContent) => void;
+  page: Page | null;
+  onSave: (page: Page) => void;
   onCancel: () => void;
 }) {
-  const [formData, setFormData] = useState<PageContent>(page || {
+  const [formData, setFormData] = useState<Page>(page || {
     id: '',
     title: '',
     slug: '',
     content: '',
-    metaDescription: '',
+    seo: {
+      title: '',
+      description: '',
+      keywords: []
+    },
     lastUpdated: new Date().toISOString().split('T')[0],
     status: 'draft',
     type: 'page'
@@ -347,8 +412,8 @@ function ContentForm({ page, onSave, onCancel }: {
       <div>
         <label className="text-sm font-medium">Meta Description</label>
         <Input
-          value={formData.metaDescription}
-          onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
+          value={formData.seo.description}
+          onChange={(e) => setFormData({ ...formData, seo: { ...formData.seo, description: e.target.value } })}
           placeholder="SEO meta description"
         />
       </div>

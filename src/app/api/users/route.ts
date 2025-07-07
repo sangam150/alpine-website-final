@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db, isFirebaseInitialized } from '@/lib/firebase-config';
-import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
+import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 
-// GET - Fetch all countries
+// GET - Fetch all users
 export async function GET() {
   try {
     if (!db) {
@@ -12,25 +12,26 @@ export async function GET() {
       );
     }
 
-    const countriesRef = collection(db, 'countries');
-    const querySnapshot = await getDocs(countriesRef);
+    const usersRef = collection(db, 'users');
+    const querySnapshot = await getDocs(usersRef);
     
-    const countries = querySnapshot.docs.map(doc => ({
+    const users = querySnapshot.docs.map(doc => ({
       id: doc.id,
-      ...doc.data()
+      ...doc.data(),
+      createdAt: doc.data().createdAt?.toDate?.() || doc.data().createdAt
     }));
 
     return NextResponse.json({ 
       success: true, 
-      data: countries,
-      count: countries.length 
+      data: users,
+      count: users.length 
     });
   } catch (error) {
-    console.error('Error fetching countries:', error);
+    console.error('Error fetching users:', error);
     return NextResponse.json(
       { 
         success: false, 
-        error: 'Failed to fetch countries',
+        error: 'Failed to fetch users',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
@@ -38,7 +39,7 @@ export async function GET() {
   }
 }
 
-// POST - Add new country
+// POST - Add new user
 export async function POST(request: NextRequest) {
   try {
     if (!isFirebaseInitialized() || !db) {
@@ -51,67 +52,36 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     
     // Validate required fields
-    const { name, slug, description, universities, avgTuition, visaSuccess, duration, popularCourses, pros, visaInfo, image } = body;
+    const { email, role, name } = body;
     
-    if (!name || !slug) {
+    if (!email || !role) {
       return NextResponse.json(
-        { success: false, error: 'Name and slug are required' },
+        { success: false, error: 'Email and role are required' },
         { status: 400 }
       );
     }
 
-    // Validate slug format
-    if (!/^[a-z0-9-]+$/.test(slug)) {
-      return NextResponse.json(
-        { success: false, error: 'Slug must contain only lowercase letters, numbers, and hyphens' },
-        { status: 400 }
-      );
-    }
-
-    // Check if country with same slug already exists
-    const existingQuery = query(collection(db, 'countries'), where('slug', '==', slug));
-    const existingSnapshot = await getDocs(existingQuery);
-    
-    if (!existingSnapshot.empty) {
-      return NextResponse.json(
-        { success: false, error: 'Country with this slug already exists' },
-        { status: 409 }
-      );
-    }
-
-    const countryData = {
-      name,
-      slug,
-      description: description || '',
-      universities: universities || 0,
-      avgTuition: avgTuition || '',
-      visaSuccess: visaSuccess || '',
-      duration: duration || '',
-      popularCourses: popularCourses || [],
-      pros: pros || [],
-      visaInfo: visaInfo || {
-        requirements: [],
-        processingTime: '',
-        documents: []
-      },
-      image: image || '',
+    const userData = {
+      email,
+      role,
+      name: name || '',
       createdAt: new Date(),
       updatedAt: new Date()
     };
 
-    const docRef = await addDoc(collection(db, 'countries'), countryData);
+    const docRef = await addDoc(collection(db, 'users'), userData);
     
     return NextResponse.json({
       success: true,
-      data: { id: docRef.id, ...countryData },
-      message: 'Country added successfully'
+      data: { id: docRef.id, ...userData },
+      message: 'User added successfully'
     });
   } catch (error) {
-    console.error('Error adding country:', error);
+    console.error('Error adding user:', error);
     return NextResponse.json(
       { 
         success: false, 
-        error: 'Failed to add country',
+        error: 'Failed to add user',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
@@ -119,7 +89,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// PUT - Update country
+// PUT - Update user
 export async function PUT(request: NextRequest) {
   try {
     if (!isFirebaseInitialized() || !db) {
@@ -134,29 +104,29 @@ export async function PUT(request: NextRequest) {
     
     if (!id) {
       return NextResponse.json(
-        { success: false, error: 'Country ID is required' },
+        { success: false, error: 'User ID is required' },
         { status: 400 }
       );
     }
 
-    const countryRef = doc(db, 'countries', id);
+    const userRef = doc(db, 'users', id);
     const updatePayload = {
       ...updateData,
       updatedAt: new Date()
     };
 
-    await updateDoc(countryRef, updatePayload);
+    await updateDoc(userRef, updatePayload);
     
     return NextResponse.json({
       success: true,
-      message: 'Country updated successfully'
+      message: 'User updated successfully'
     });
   } catch (error) {
-    console.error('Error updating country:', error);
+    console.error('Error updating user:', error);
     return NextResponse.json(
       { 
         success: false, 
-        error: 'Failed to update country',
+        error: 'Failed to update user',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
@@ -164,7 +134,7 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-// DELETE - Delete country
+// DELETE - Delete user
 export async function DELETE(request: NextRequest) {
   try {
     if (!isFirebaseInitialized() || !db) {
@@ -179,23 +149,23 @@ export async function DELETE(request: NextRequest) {
     
     if (!id) {
       return NextResponse.json(
-        { success: false, error: 'Country ID is required' },
+        { success: false, error: 'User ID is required' },
         { status: 400 }
       );
     }
 
-    await deleteDoc(doc(db, 'countries', id));
+    await deleteDoc(doc(db, 'users', id));
     
     return NextResponse.json({
       success: true,
-      message: 'Country deleted successfully'
+      message: 'User deleted successfully'
     });
   } catch (error) {
-    console.error('Error deleting country:', error);
+    console.error('Error deleting user:', error);
     return NextResponse.json(
       { 
         success: false, 
-        error: 'Failed to delete country',
+        error: 'Failed to delete user',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }

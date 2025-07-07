@@ -111,8 +111,8 @@ export default function TestimonialsSlider() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
         >
+          <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
             What Our Students Say
           </h2>
@@ -120,6 +120,7 @@ export default function TestimonialsSlider() {
             Hear from our successful students who have achieved their study abroad dreams 
             with Alpine Education&apos;s guidance and support.
           </p>
+          </div>
         </motion.div>
 
         <div className="relative max-w-4xl mx-auto">
@@ -147,8 +148,8 @@ export default function TestimonialsSlider() {
                   paginate(-1);
                 }
               }}
-              className="w-full"
             >
+              <div className="w-full">
               <Card className="border-0 shadow-xl bg-white">
                 <CardContent className="p-8 lg:p-12">
                   <div className="text-center">
@@ -183,6 +184,7 @@ export default function TestimonialsSlider() {
                   </div>
                 </CardContent>
               </Card>
+              </div>
             </motion.div>
           </AnimatePresence>
 
@@ -227,8 +229,8 @@ export default function TestimonialsSlider() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           viewport={{ once: true }}
-          className="mt-16 grid grid-cols-1 md:grid-cols-4 gap-8"
         >
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="text-center">
             <div className="text-3xl font-bold text-blue-600 mb-2">3000+</div>
             <p className="text-gray-600">Students Placed</p>
@@ -241,9 +243,10 @@ export default function TestimonialsSlider() {
             <div className="text-3xl font-bold text-purple-600 mb-2">4.9/5</div>
             <p className="text-gray-600">Student Rating</p>
           </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-orange-600 mb-2">12+</div>
-            <p className="text-gray-600">Countries</p>
+                      <div className="text-center">
+              <div className="text-3xl font-bold text-orange-600 mb-2">12+</div>
+              <p className="text-gray-600">Countries</p>
+            </div>
           </div>
         </motion.div>
       </div>

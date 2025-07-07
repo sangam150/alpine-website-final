@@ -97,35 +97,36 @@ export default function DashboardPage() {
   if (!user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center p-4">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-md w-full"
-        >
-          <Card className="shadow-xl">
-            <CardHeader className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                <User className="w-8 h-8 text-white" />
-              </div>
-              <CardTitle className="text-2xl">Student Portal</CardTitle>
-              <CardDescription>
-                Sign in to access your personalized dashboard and track your study abroad journey
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Button 
-                onClick={signInWithGoogle} 
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
-              >
-                <User className="w-4 h-4 mr-2" />
-                Sign in with Google
-              </Button>
-              <p className="text-sm text-gray-500 text-center">
-                Secure login powered by Google
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
+        <div className="max-w-md w-full">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <Card className="shadow-xl">
+              <CardHeader className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <User className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="text-2xl">Student Portal</CardTitle>
+                <CardDescription>
+                  Sign in to access your personalized dashboard and track your study abroad journey
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Button 
+                  onClick={signInWithGoogle} 
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+                >
+                  <User className="w-4 h-4 mr-2" />
+                  Sign in with Google
+                </Button>
+                <p className="text-sm text-gray-500 text-center">
+                  Secure login powered by Google
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
       </div>
     );
   }
@@ -201,33 +202,34 @@ export default function DashboardPage() {
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-6"
-            >
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <BookOpen className="w-5 h-5 text-blue-600" />
-                    <span>Application Progress</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex justify-between text-sm mb-2">
-                        <span>Overall Progress</span>
-                        <span>{dashboardData.progress}%</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <BookOpen className="w-5 h-5 text-blue-600" />
+                      <span>Application Progress</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div>
+                        <div className="flex justify-between text-sm mb-2">
+                          <span>Overall Progress</span>
+                          <span>{dashboardData.progress}%</span>
+                        </div>
+                        <Progress value={dashboardData.progress} className="h-2" />
                       </div>
-                      <Progress value={dashboardData.progress} className="h-2" />
+                      <div className="text-sm text-gray-600">
+                        {dashboardData.documents.filter(d => d.status === "uploaded").length} of {dashboardData.documents.length} documents uploaded
+                      </div>
                     </div>
-                    <div className="text-sm text-gray-600">
-                      {dashboardData.documents.filter(d => d.status === "uploaded").length} of {dashboardData.documents.length} documents uploaded
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </motion.div>
 
               <Card>
                 <CardHeader>
@@ -264,7 +266,7 @@ export default function DashboardPage() {
                   </div>
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
 
             {/* Quick Actions */}
             <Card>
@@ -297,22 +299,22 @@ export default function DashboardPage() {
               <CardContent>
                 <div className="space-y-4">
                   {documents.map((doc, index) => (
-                    <motion.div
-                      key={doc.name}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="flex items-center justify-between p-4 border rounded-lg"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <FileText className="w-5 h-5 text-gray-400" />
-                        <div>
-                          <div className="font-medium">{doc.name}</div>
-                          {doc.url && (
-                            <div className="text-sm text-blue-600 underline"><a href={doc.url} target="_blank" rel="noopener noreferrer">View Uploaded</a></div>
-                          )}
+                    <div key={doc.name} className="flex items-center justify-between p-4 border rounded-lg">
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <FileText className="w-5 h-5 text-gray-400" />
+                          <div>
+                            <div className="font-medium">{doc.name}</div>
+                            {doc.url && (
+                              <div className="text-sm text-blue-600 underline"><a href={doc.url} target="_blank" rel="noopener noreferrer">View Uploaded</a></div>
+                            )}
+                          </div>
                         </div>
-                      </div>
+                      </motion.div>
                       <Badge 
                         variant={
                           doc.status === "uploaded" ? "default" : 
@@ -330,7 +332,7 @@ export default function DashboardPage() {
                           </form>
                         </FormProvider>
                       )}
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </CardContent>
@@ -349,28 +351,28 @@ export default function DashboardPage() {
               <CardContent>
                 <div className="space-y-4">
                   {dashboardData.applications.map((app, index) => (
-                    <motion.div
-                      key={app.university}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="border rounded-lg p-4"
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <div>
-                          <h3 className="font-semibold">{app.university}</h3>
-                          <p className="text-sm text-gray-600">{app.country}</p>
+                    <div key={app.university} className="border rounded-lg p-4">
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <div>
+                            <h3 className="font-semibold">{app.university}</h3>
+                            <p className="text-sm text-gray-600">{app.country}</p>
+                          </div>
+                          <Badge variant="outline">{app.status}</Badge>
                         </div>
-                        <Badge variant="outline">{app.status}</Badge>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span>Progress</span>
-                          <span>{app.progress}%</span>
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span>Progress</span>
+                            <span>{app.progress}%</span>
+                          </div>
+                          <Progress value={app.progress} className="h-2" />
                         </div>
-                        <Progress value={app.progress} className="h-2" />
-                      </div>
-                    </motion.div>
+                      </motion.div>
+                    </div>
                   ))}
                 </div>
               </CardContent>
@@ -389,26 +391,26 @@ export default function DashboardPage() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {dashboardData.countryGuides.map((guide, index) => (
-                    <motion.div
-                      key={guide.name}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="border rounded-lg p-4 hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-semibold">{guide.name}</h3>
-                          <p className="text-sm text-gray-600">
-                            {guide.lastUpdated ? `Updated: ${guide.lastUpdated}` : 'Coming Soon'}
-                          </p>
+                    <div key={guide.name} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="font-semibold">{guide.name}</h3>
+                            <p className="text-sm text-gray-600">
+                              {guide.lastUpdated ? `Updated: ${guide.lastUpdated}` : 'Coming Soon'}
+                            </p>
+                          </div>
+                          <Button size="sm" variant="outline" disabled={guide.status === "Coming Soon"}>
+                            <BookOpen className="w-4 h-4 mr-2" />
+                            {guide.status === "Available" ? "View Guide" : "Coming Soon"}
+                          </Button>
                         </div>
-                        <Button size="sm" variant="outline" disabled={guide.status === "Coming Soon"}>
-                          <BookOpen className="w-4 h-4 mr-2" />
-                          {guide.status === "Available" ? "View Guide" : "Coming Soon"}
-                        </Button>
-                      </div>
-                    </motion.div>
+                      </motion.div>
+                    </div>
                   ))}
                 </div>
               </CardContent>

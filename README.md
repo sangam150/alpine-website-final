@@ -13,6 +13,9 @@ A modern, responsive website for Alpine Education & Visa Services - a leading st
 - **Newsletter**: Mailchimp integration for email marketing
 - **Sticky Navigation**: Modern navbar with dropdown menus and CTA buttons
 - **Floating Actions**: WhatsApp and AI Chatbot positioned cleanly
+- **Admin Panel**: Complete content management system with role-based access
+- **Student Portal**: Secure student dashboard with document uploads and progress tracking
+- **Firebase Backend**: Real-time database, authentication, and file storage
 
 ### Pages & Components
 - **Homepage**: Hero section, services overview, testimonials, country grid
@@ -24,6 +27,8 @@ A modern, responsive website for Alpine Education & Visa Services - a leading st
 - **Apply Page**: Application form with guidance
 - **Countries**: Study destinations with filters and search
 - **About**: Company information and team details
+- **Admin Panel**: Dashboard, content management, student management
+- **Student Portal**: Application tracking, document uploads, progress monitoring
 
 ### Technical Features
 - **Next.js 15**: App Router with TypeScript
@@ -32,6 +37,8 @@ A modern, responsive website for Alpine Education & Visa Services - a leading st
 - **Framer Motion**: Smooth animations and transitions
 - **Firebase**: Authentication, Firestore, and Storage (configured)
 - **Form Handling**: React Hook Form with Zod validation
+- **API Routes**: RESTful API endpoints for data management
+- **Error Handling**: Comprehensive error handling and validation
 
 ## 🛠️ Tech Stack
 
@@ -44,6 +51,31 @@ A modern, responsive website for Alpine Education & Visa Services - a leading st
 - **Email**: Mailchimp
 - **Analytics**: Google Analytics, Meta Pixel
 - **Deployment**: Vercel (recommended)
+
+## 🔧 Recent Fixes
+
+### Firebase Configuration
+- ✅ Improved error handling for Firebase initialization
+- ✅ Added proper TypeScript types for Firebase services
+- ✅ Enhanced API route error handling with Firebase checks
+- ✅ Added validation for country slugs and data
+
+### Image Handling
+- ✅ Fixed empty image src attributes
+- ✅ Added fallback images for all components
+- ✅ Improved error handling for image loading
+
+### SEO & Performance
+- ✅ Updated manifest.json to only reference existing icons
+- ✅ Fixed robots.txt domain configuration
+- ✅ Updated sitemap.ts to use environment variables
+- ✅ Added proper error boundaries and loading states
+
+### API Routes
+- ✅ Enhanced error handling in all API routes
+- ✅ Added input validation for all endpoints
+- ✅ Improved Firebase initialization checks
+- ✅ Added proper TypeScript types
 
 ## 📦 Installation
 
@@ -72,6 +104,10 @@ A modern, responsive website for Alpine Education & Visa Services - a leading st
    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
    NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+   NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
+
+   # Site Configuration
+   NEXT_PUBLIC_SITE_URL=https://your-domain.com
 
    # Google Analytics
    NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
@@ -83,6 +119,9 @@ A modern, responsive website for Alpine Education & Visa Services - a leading st
    MAILCHIMP_API_KEY=your_mailchimp_api_key
    MAILCHIMP_SERVER_PREFIX=us1
    MAILCHIMP_AUDIENCE_ID=your_audience_id
+
+   # Resend Configuration (Optional)
+   RESEND_API_KEY=your_resend_api_key
 
    # Contact Information
    NEXT_PUBLIC_CONTACT_EMAIL=info@alpineeducation.com
@@ -102,12 +141,15 @@ A modern, responsive website for Alpine Education & Visa Services - a leading st
 
 5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
+   - Admin panel: `http://localhost:3000/admin`
+   - Student portal: `http://localhost:3000/student-portal`
 
 ## 🏗️ Project Structure
 
 ```
 src/
 ├── app/                    # Next.js App Router pages
+│   ├── admin/             # Admin panel pages
 │   ├── api/               # API routes
 │   ├── contact/           # Contact page
 │   ├── quiz/              # Quiz page
@@ -117,16 +159,18 @@ src/
 │   ├── services/          # Student services
 │   ├── test-preparation/  # Test prep pages
 │   ├── resources/         # Resources pages
+│   ├── student-portal/    # Student portal
 │   ├── globals.css        # Global styles
 │   ├── layout.tsx         # Root layout
 │   └── page.tsx           # Homepage
 ├── components/            # React components
-│   ├── home/              # Homepage components
-│   ├── layout/            # Layout components
-│   └── ui/                # shadcn/ui components
-└── lib/                   # Utility libraries
+│   ├── auth/             # Authentication components
+│   ├── home/             # Homepage components
+│   ├── layout/           # Layout components
+│   └── ui/               # shadcn/ui components
+└── lib/                  # Utility libraries
     ├── analytics.ts       # Analytics configuration
-    ├── firebase.ts        # Firebase configuration
+    ├── firebase-config.ts # Firebase configuration
     ├── mailchimp.ts       # Mailchimp configuration
     └── utils.ts           # Utility functions
 ```
@@ -198,55 +242,30 @@ The website includes PWA support with:
 3. Add TypeScript types if needed
 4. Test component functionality
 
-## 📊 Analytics & Tracking
+## 🐛 Known Issues & Solutions
 
-### Google Analytics
-- Configured in `src/lib/analytics.ts`
-- Tracks page views and custom events
-- Set `NEXT_PUBLIC_GA_ID` in environment variables
+### Firebase Initialization
+- **Issue**: Firebase may fail to initialize in development
+- **Solution**: Check environment variables and Firebase project configuration
+- **Fallback**: App uses mock data when Firebase is unavailable
 
-### Meta Pixel
-- Configured for Facebook advertising
-- Tracks conversions and custom events
-- Set `NEXT_PUBLIC_PIXEL_ID` in environment variables
+### Image Loading
+- **Issue**: Some images may not load properly
+- **Solution**: All images have fallback to `/og-image.jpg`
+- **Prevention**: Ensure all referenced images exist in `public/` directory
 
-## 📧 Newsletter Integration
-
-### Mailchimp
-- Configured in `src/lib/mailchimp.ts`
-- Newsletter signup form
-- Set Mailchimp environment variables
-
-## 🎯 Key Improvements Made
-
-### Navigation & UI
-- **Sticky Navbar**: Modern navigation with dropdown menus
-- **CTA Buttons**: "Book Free Counselling", "Apply Now", "Take Free Quiz"
-- **Mobile Responsive**: Perfect mobile experience with hamburger menu
-- **Floating Actions**: WhatsApp and AI Chatbot positioned cleanly
-
-### Content & SEO
-- **Country Pages**: Detailed information for each study destination
-- **Search & Filters**: Country search and filtering functionality
-- **Meta Tags**: Comprehensive SEO optimization
-- **Structured Data**: Schema.org markup for better search visibility
-
-### Performance & Accessibility
-- **Fast Loading**: Optimized images and code splitting
-- **Keyboard Navigation**: Full keyboard accessibility
-- **Screen Reader Support**: ARIA labels and semantic HTML
-- **Mobile Optimization**: Touch-friendly interface
+### API Routes
+- **Issue**: API routes may return errors
+- **Solution**: All routes include proper error handling and validation
+- **Monitoring**: Check browser console and server logs for detailed errors
 
 ## 📞 Support
 
-For technical support or questions:
-- Email: info@alpineeducation.com
-- WhatsApp: +977-XXXXXXXXX
-- Website: https://alpineeducation.com
+For support, email support@alpineeducation.com or create an issue in the repository.
 
 ## 📄 License
 
-This project is proprietary software owned by Alpine Education & Visa Services.
+This project is licensed under the MIT License.
 
 ---
 

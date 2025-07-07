@@ -1,49 +1,71 @@
-import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
-import { getStorage } from 'firebase/storage';
+import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
+import { getAuth, Auth } from 'firebase/auth';
+import { getFirestore, Firestore } from 'firebase/firestore';
+import { getStorage, FirebaseStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 'demo-api-key',
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || 'demo-project.firebaseapp.com',
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'demo-project',
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || 'demo-project.appspot.com',
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 'demo-key',
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || 'alpine-website-final.firebaseapp.com',
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'alpine-website-final',
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || 'alpine-website-final.appspot.com',
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '123456789',
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || 'demo-app-id',
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || '1:123456789:web:abcdef123456',
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || 'G-XXXXXXXXXX'
 };
 
-// Initialize Firebase only if we have valid config
-let app: any = null;
-let db: any = null;
-let auth: any = null;
-let storage: any = null;
+// Initialize Firebase only once
+let app: FirebaseApp | null = null;
+let auth: Auth | null = null;
+let db: Firestore | null = null;
+let storage: FirebaseStorage | null = null;
 
-// For build purposes, create mock objects to avoid Firebase initialization issues
-// In production, this will be properly initialized
-app = null;
-db = null;
-auth = null;
-storage = null;
-
-// Only initialize Firebase in browser environment
-if (typeof window !== 'undefined') {
-  try {
-    const existingApps = getApps();
-    if (existingApps.length > 0) {
-      app = existingApps[0];
-      db = getFirestore(app);
-      auth = getAuth(app);
-      storage = getStorage(app);
-    } else {
-      app = initializeApp(firebaseConfig);
-      db = getFirestore(app);
-      auth = getAuth(app);
-      storage = getStorage(app);
-    }
-  } catch (error) {
-    console.warn('Firebase initialization failed:', error);
+try {
+  if (!getApps().length) {
+    app = initializeApp(firebaseConfig);
+  } else {
+    app = getApps()[0];
   }
+
+  // Initialize Firebase services
+  auth = getAuth(app);
+  db = getFirestore(app);
+  storage = getStorage(app);
+} catch (error) {
+  console.warn('Firebase initialization failed:', error);
+  // Create mock objects for development
+  app = null;
+  auth = null;
+  db = null;
+  storage = null;
 }
 
-export { db, auth, storage };
-export default app; 
+// Export with error checking
+export { auth, db, storage };
+export default app;
+
+// Helper function to check if Firebase is properly initialized
+export const isFirebaseInitialized = () => {
+  return app !== null && auth !== null && db !== null && storage !== null;
+};
+
+// Safe Firebase service functions
+export const getFirestoreSafe = () => {
+  if (!db) {
+    throw new Error('Firestore is not initialized');
+  }
+  return db;
+};
+
+export const getAuthSafe = () => {
+  if (!auth) {
+    throw new Error('Auth is not initialized');
+  }
+  return auth;
+};
+
+export const getStorageSafe = () => {
+  if (!storage) {
+    throw new Error('Storage is not initialized');
+  }
+  return storage;
+}; 

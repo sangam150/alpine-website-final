@@ -1,255 +1,307 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Users, Award, Globe, Heart, Target, CheckCircle } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { 
+  Users, 
+  Award, 
+  Globe, 
+  BookOpen, 
+  CheckCircle, 
+  Star,
+  Linkedin,
+  Mail,
+  Phone
+} from 'lucide-react';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'About Us - Alpine Education & Visa Services',
-  description: 'Learn about Alpine Education & Visa Services - Nepal&apos;s leading study abroad consultancy. Our mission, team, and commitment to student success.',
+  title: 'About Us - Alpine Education | Leading Study Abroad Consultancy in Nepal',
+  description: 'Learn about Alpine Education, Nepal\'s premier study abroad consultancy. Meet our expert team of counselors and discover our mission to help students achieve their international education dreams.',
+  keywords: 'Alpine Education, study abroad Nepal, education consultancy, international students, visa guidance',
+  openGraph: {
+    title: 'About Us - Alpine Education',
+    description: 'Leading study abroad consultancy in Nepal with expert counselors and proven success record.',
+    type: 'website',
+  },
 };
 
 const teamMembers = [
   {
-    name: 'Rajesh Sharma',
-    position: 'Founder & CEO',
-    experience: '15+ years',
-    expertise: 'Study Abroad Counseling, Visa Services',
-    image: '/team/rajesh.jpg'
+    name: 'Sangam Karki',
+    position: 'Director of Operations',
+    image: '/og-image.jpg',
+    bio: 'Expert in international education with over 8 years of experience in student placement and visa guidance.',
+    email: 'sangam@alpineeducation.com',
+    phone: '+977-1-4444444',
+    linkedin: '#'
   },
   {
-    name: 'Priya Patel',
-    position: 'Head of Operations',
-    experience: '12+ years',
-    expertise: 'University Applications, Student Support',
-    image: '/team/priya.jpg'
+    name: 'Ragav Upreti',
+    position: 'Director',
+    image: '/og-image.jpg',
+    bio: 'Strategic leader with deep knowledge of global education systems and university partnerships.',
+    email: 'ragav@alpineeducation.com',
+    phone: '+977-1-4444444',
+    linkedin: '#'
   },
   {
-    name: 'Amit Kumar',
-    position: 'Test Preparation Director',
-    experience: '10+ years',
-    expertise: 'IELTS, PTE, TOEFL Training',
-    image: '/team/amit.jpg'
+    name: 'Aakanksha Poudel',
+    position: 'Document Officer',
+    image: '/og-image.jpg',
+    bio: 'Specialist in document preparation and application processing for international universities.',
+    email: 'aakanksha@alpineeducation.com',
+    phone: '+977-1-4444444',
+    linkedin: '#'
   },
   {
-    name: 'Sita Thapa',
-    position: 'Visa Specialist',
-    experience: '8+ years',
-    expertise: 'Student Visa Applications',
-    image: '/team/sita.jpg'
+    name: 'Sunita',
+    position: 'Instructor / Operations Incharge',
+    image: '/og-image.jpg',
+    bio: 'Test preparation expert and operations manager ensuring smooth student journey.',
+    email: 'sunita@alpineeducation.com',
+    phone: '+977-1-4444444',
+    linkedin: '#'
   }
 ];
 
-const achievements = [
-  { number: '5000+', label: 'Students Placed' },
-  { number: '95%', label: 'Visa Success Rate' },
-  { number: '50+', label: 'Partner Universities' },
-  { number: '15+', label: 'Years of Experience' }
-];
-
-const values = [
-  {
-    icon: Heart,
-    title: 'Student-Centric Approach',
-    description: 'Every decision we make is focused on student success and well-being.'
-  },
-  {
-    icon: Target,
-    title: 'Excellence in Service',
-    description: 'We maintain the highest standards in all our services and interactions.'
-  },
-  {
-    icon: Globe,
-    title: 'Global Perspective',
-    description: 'We understand international education systems and cultural nuances.'
-  },
-  {
-    icon: Award,
-    title: 'Proven Results',
-    description: 'Our track record speaks for itself with thousands of successful placements.'
-  }
+const stats = [
+  { icon: Users, value: '3000+', label: 'Students Placed' },
+  { icon: Globe, value: '12+', label: 'Countries' },
+  { icon: Award, value: '95%', label: 'Success Rate' },
+  { icon: Star, value: '4.9/5', label: 'Student Rating' }
 ];
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gray-50 py-20">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <Link href="/" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Home
-          </Link>
-          <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            About Alpine Education & Visa Services
-          </h1>
-          <p className="text-lg text-gray-600">
-            Nepal&apos;s leading study abroad consultancy, helping students achieve their international education dreams since 2009.
-          </p>
-        </div>
-
-        {/* Hero Section */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl p-8 text-white mb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div>
-              <h2 className="text-3xl font-bold mb-4">Your Gateway to Global Education</h2>
-              <p className="text-blue-100 mb-6">
-                For over 15 years, Alpine Education has been the trusted partner for thousands of Nepalese students 
-                seeking to study abroad. We provide comprehensive guidance from initial counseling to visa approval, 
-                ensuring your journey to international education is smooth and successful.
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="animate-fade-in">
+              <h1 className="text-4xl lg:text-6xl font-bold mb-6">
+                About Alpine Education
+              </h1>
+              <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-8">
+                Nepal's premier study abroad consultancy, dedicated to helping students achieve their international education dreams with expert guidance and proven success.
               </p>
-              <div className="flex flex-wrap gap-4">
-                <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-5 h-5" />
-                  <span>Free Counseling</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-5 h-5" />
-                  <span>Visa Assistance</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-5 h-5" />
-                  <span>Test Preparation</span>
-                </div>
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="bg-white/10 rounded-lg p-6">
-                <h3 className="text-xl font-semibold mb-2">Why Choose Alpine?</h3>
-                <p className="text-blue-100">Experience, expertise, and proven results</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Achievements */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Our Achievements</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {achievements.map((achievement, index) => (
-              <Card key={index} className="border-0 shadow-lg text-center">
-                <CardContent className="p-6">
-                  <div className="text-3xl font-bold text-blue-600 mb-2">{achievement.number}</div>
-                  <div className="text-gray-600">{achievement.label}</div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* Mission & Vision */}
-        <div className="mb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-xl">Our Mission</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700">
-                  To empower Nepalese students with the knowledge, skills, and opportunities to pursue quality 
-                  international education, enabling them to build successful careers and contribute to global society.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-xl">Our Vision</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700">
-                  To be the most trusted and comprehensive study abroad consultancy in Nepal, recognized for 
-                  excellence in student counseling, visa services, and educational partnerships worldwide.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        {/* Values */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Our Values</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {values.map((value, index) => (
-              <Card key={index} className="border-0 shadow-lg">
-                <CardContent className="p-6 text-center">
-                  <value.icon className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-                  <h3 className="font-semibold text-lg mb-2">{value.title}</h3>
-                  <p className="text-gray-600 text-sm">{value.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* Team */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Our Expert Team</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {teamMembers.map((member, index) => (
-              <Card key={index} className="border-0 shadow-lg">
-                <CardContent className="p-6 text-center">
-                  <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <Users className="w-12 h-12 text-gray-400" />
+              <div className="flex flex-wrap justify-center gap-8">
+                {stats.map((stat, index) => (
+                  <div key={stat.label} className="text-center animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                    <stat.icon className="w-8 h-8 mx-auto mb-2 text-blue-200" />
+                    <div className="text-2xl font-bold">{stat.value}</div>
+                    <div className="text-blue-100 text-sm">{stat.label}</div>
                   </div>
-                  <h3 className="font-semibold text-lg mb-1">{member.name}</h3>
-                  <p className="text-blue-600 font-medium mb-1">{member.position}</p>
-                  <p className="text-gray-600 text-sm mb-2">{member.experience} experience</p>
-                  <p className="text-gray-500 text-xs">{member.expertise}</p>
-                </CardContent>
-              </Card>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Mission & Vision */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div>
+              <div className="animate-fade-in-left">
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Mission</h2>
+                <p className="text-lg text-gray-600 mb-6">
+                  To empower Nepali students with the knowledge, resources, and guidance needed to successfully pursue international education opportunities and build successful global careers.
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <CheckCircle className="w-6 h-6 text-green-500 mt-1 flex-shrink-0" />
+                    <p className="text-gray-600">Provide expert counseling and personalized guidance</p>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <CheckCircle className="w-6 h-6 text-green-500 mt-1 flex-shrink-0" />
+                    <p className="text-gray-600">Ensure high visa success rates through proper preparation</p>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <CheckCircle className="w-6 h-6 text-green-500 mt-1 flex-shrink-0" />
+                    <p className="text-gray-600">Build lasting partnerships with global universities</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="animate-fade-in-right">
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Vision</h2>
+                <p className="text-lg text-gray-600 mb-6">
+                  To be the most trusted and respected study abroad consultancy in Nepal, known for our commitment to student success and excellence in international education services.
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <CheckCircle className="w-6 h-6 text-blue-500 mt-1 flex-shrink-0" />
+                    <p className="text-gray-600">Expand to serve students across South Asia</p>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <CheckCircle className="w-6 h-6 text-blue-500 mt-1 flex-shrink-0" />
+                    <p className="text-gray-600">Develop innovative digital platforms for student support</p>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <CheckCircle className="w-6 h-6 text-blue-500 mt-1 flex-shrink-0" />
+                    <p className="text-gray-600">Maintain 100% student satisfaction rate</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Team */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="animate-fade-in">
+              <h2 className="text-4xl font-bold text-gray-900 mb-6">Meet Our Expert Team</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Our experienced professionals are dedicated to helping you achieve your study abroad dreams with personalized guidance and proven expertise.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {teamMembers.map((member, index) => (
+              <div key={member.name} className="group">
+                <div className="animate-fade-in hover:-translate-y-1 transition-transform duration-300" style={{ animationDelay: `${index * 0.1}s` }}>
+                  <Card className="h-full shadow-lg hover:shadow-xl transition-all duration-300">
+                    <CardContent className="p-6 text-center">
+                      <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden bg-gray-200">
+                        <img 
+                          src={member.image} 
+                          alt={member.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = "/og-image.jpg";
+                          }}
+                        />
+                      </div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-1">{member.name}</h3>
+                      <p className="text-blue-600 font-medium mb-3">{member.position}</p>
+                      <p className="text-gray-600 text-sm mb-4">{member.bio}</p>
+                      
+                      <div className="flex justify-center space-x-3">
+                        <a 
+                          href={`mailto:${member.email}`}
+                          className="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors"
+                          aria-label={`Email ${member.name}`}
+                        >
+                          <Mail className="w-4 h-4" />
+                        </a>
+                        <a 
+                          href={`tel:${member.phone}`}
+                          className="p-2 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition-colors"
+                          aria-label={`Call ${member.name}`}
+                        >
+                          <Phone className="w-4 h-4" />
+                        </a>
+                        <a 
+                          href={member.linkedin}
+                          className="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors"
+                          aria-label={`LinkedIn profile of ${member.name}`}
+                        >
+                          <Linkedin className="w-4 h-4" />
+                        </a>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
             ))}
           </div>
         </div>
+      </section>
 
-        {/* Services Overview */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Our Services</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-lg">Study Abroad Counseling</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 text-sm">
-                  Free counseling sessions to help you choose the right country, university, and course.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-lg">Test Preparation</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 text-sm">
-                  Expert training for IELTS, PTE, and TOEFL with guaranteed score improvement.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-lg">Visa Services</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 text-sm">
-                  Complete visa application support with 95% success rate across all countries.
-                </p>
-              </CardContent>
-            </Card>
+      {/* Why Choose Us */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="animate-fade-in">
+              <h2 className="text-4xl font-bold text-gray-900 mb-6">Why Choose Alpine Education?</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                We provide comprehensive support throughout your study abroad journey with proven expertise and personalized care.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                icon: BookOpen,
+                title: 'Expert Counseling',
+                description: 'Personalized guidance from experienced education counselors who understand your goals and aspirations.'
+              },
+              {
+                icon: Award,
+                title: 'Proven Success',
+                description: '95% visa success rate with thousands of students successfully placed in top universities worldwide.'
+              },
+              {
+                icon: Globe,
+                title: 'Global Network',
+                description: 'Strong partnerships with universities across 12+ countries including Australia, UK, Canada, and more.'
+              },
+              {
+                icon: Users,
+                title: 'Comprehensive Support',
+                description: 'End-to-end assistance from application to visa approval, including test preparation and document guidance.'
+              },
+              {
+                icon: Star,
+                title: 'Student-First Approach',
+                description: 'Dedicated support team available throughout your journey with 24/7 assistance when needed.'
+              },
+              {
+                icon: CheckCircle,
+                title: 'Quality Assurance',
+                description: 'ISO certified processes ensuring the highest standards of service and student satisfaction.'
+              }
+            ].map((feature, index) => (
+              <div key={feature.title} className="text-center">
+                <div className="animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                  <div className="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                    <feature.icon className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
+                  <p className="text-gray-600">{feature.description}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
+      </section>
 
-        {/* CTA Section */}
-        <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-8 text-white text-center">
-          <h2 className="text-2xl font-bold mb-4">Ready to Start Your Journey?</h2>
-          <p className="text-green-100 mb-6">
-            Join thousands of successful students who achieved their study abroad dreams with Alpine Education.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-white text-green-600 hover:bg-gray-100">
-              <Link href="/contact">Get Free Consultation</Link>
-            </Button>
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="animate-fade-in">
+            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
+              Ready to Start Your Study Abroad Journey?
+            </h2>
+            <p className="text-xl text-blue-100 mb-8">
+              Join thousands of successful students who have achieved their international education dreams with Alpine Education.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" asChild className="bg-white text-blue-600 hover:bg-gray-100">
+                <Link href="/contact">
+                  <BookOpen className="w-5 h-5 mr-2" />
+                  Book Free Counselling
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild className="border-white text-white hover:bg-white hover:text-blue-600">
+                <Link href="/study-destinations">
+                  Explore Destinations
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 } 

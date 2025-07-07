@@ -74,15 +74,16 @@ export default function MockTestSection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
         >
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Free Mock Tests & Evaluation
-          </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Take our free mock tests to assess your current level and get personalized 
-            feedback from our expert instructors. Perfect your skills before the actual exam.
-          </p>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              Free Mock Tests & Evaluation
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Take our free mock tests to assess your current level and get personalized 
+              feedback from our expert instructors. Perfect your skills before the actual exam.
+            </p>
+          </div>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
@@ -173,21 +174,22 @@ export default function MockTestSection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12"
         >
-          {features.map((feature) => (
-            <div key={feature.title} className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <feature.icon className="w-8 h-8 text-blue-600" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                      {features.map((feature) => (
+              <div key={feature.title} className="text-center">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <feature.icon className="w-8 h-8 text-blue-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  {feature.description}
+                </p>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                {feature.title}
-              </h3>
-              <p className="text-gray-600 text-sm">
-                {feature.description}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </motion.div>
 
         {/* CTA Banner */}
@@ -196,8 +198,8 @@ export default function MockTestSection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
           viewport={{ once: true }}
-          className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white text-center"
         >
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white text-center">
           <h3 className="text-2xl lg:text-3xl font-bold mb-4">
             Ready to Ace Your English Test?
           </h3>
@@ -225,6 +227,7 @@ export default function MockTestSection() {
                 View All Courses
               </Link>
             </Button>
+          </div>
           </div>
         </motion.div>
       </div>
