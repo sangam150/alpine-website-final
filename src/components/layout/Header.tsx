@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Menu, X, GraduationCap, ArrowUpRight, Phone, MessageCircle } from 'lucide-react';
+import { Menu, X, GraduationCap, ArrowUpRight } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 const NAV_LINKS = [
@@ -26,11 +27,13 @@ export default function Header() {
         <div className="flex items-center h-16 justify-between gap-4 w-full">
           {/* Logo & Brand */}
           <div className="flex items-center min-w-0 flex-shrink-0">
-            <Link href="/" className="flex items-center space-x-2 group min-w-0">
-              <img src="/logo.svg" alt="Alpine Education Logo" className="h-8 w-8 flex-shrink-0" />
-              <span className="font-bold text-lg sm:text-xl text-gray-900 group-hover:text-blue-700 transition-colors leading-tight truncate block max-w-[160px] sm:max-w-none select-none">
-                Alpine Education & Visa Services
-              </span>
+            <Link href="/" className="block select-none">
+              <div className="flex items-center space-x-3 min-w-0 max-w-fit">
+                <Image src="/logo.svg" alt="Alpine Logo" width={32} height={32} className="w-8 h-8 object-contain" priority />
+                <span className="text-lg font-bold whitespace-nowrap text-[#1A2C5B] max-w-fit">
+                  Alpine Education & Visa Services
+                </span>
+              </div>
             </Link>
           </div>
 
@@ -79,8 +82,8 @@ export default function Header() {
             <div className="fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-xl flex flex-col" onClick={e => e.stopPropagation()}>
               <div className="flex items-center justify-between p-6 border-b border-blue-100">
                 <div className="flex items-center space-x-3">
-                  <img src="/logo.svg" alt="Alpine Education Logo" className="h-8 w-8" />
-                  <span className="font-bold text-lg text-gray-900">Alpine Education</span>
+                  <Image src="/logo.svg" alt="Alpine Logo" width={28} height={28} className="w-7 h-7 object-contain" priority />
+                  <span className="font-bold text-lg text-[#1A2C5B] whitespace-nowrap">Alpine Education</span>
                 </div>
                 <button
                   onClick={() => setMenuOpen(false)}
