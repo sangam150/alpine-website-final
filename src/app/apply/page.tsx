@@ -247,8 +247,8 @@ export default function ApplyPage() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="high-school">High School</SelectItem>
-                            <SelectItem value="bachelor">Bachelor's Degree</SelectItem>
-                            <SelectItem value="master">Master's Degree</SelectItem>
+                            <SelectItem value="bachelor">Bachelor&apos;s Degree</SelectItem>
+                            <SelectItem value="master">Master&apos;s Degree</SelectItem>
                             <SelectItem value="phd">PhD</SelectItem>
                             <SelectItem value="diploma">Diploma</SelectItem>
                             <SelectItem value="other">Other</SelectItem>
@@ -415,7 +415,7 @@ export default function ApplyPage() {
                           </li>
                           <li className="flex items-center gap-2">
                             <CheckCircle className="w-4 h-4" />
-                            You'll receive a personalized study plan and university recommendations
+                            You&apos;ll receive a personalized study plan and university recommendations
                           </li>
                           <li className="flex items-center gap-2">
                             <CheckCircle className="w-4 h-4" />

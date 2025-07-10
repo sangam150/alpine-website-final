@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -14,7 +14,6 @@ import {
   Edit, 
   Trash2, 
   Eye, 
-  Filter,
   FileText,
   Image,
   File,
@@ -284,7 +283,7 @@ export default function UploadsPage() {
             <div className="flex gap-2">
               <select
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as any)}
+                onChange={(e) => setStatusFilter(e.target.value as 'all' | 'pending' | 'processing' | 'completed' | 'failed')}
                 className="px-3 py-2 border rounded-md"
               >
                 <option value="all">All Status</option>
@@ -295,7 +294,7 @@ export default function UploadsPage() {
               </select>
               <select
                 value={typeFilter}
-                onChange={(e) => setTypeFilter(e.target.value as any)}
+                onChange={(e) => setTypeFilter(e.target.value as 'all' | 'document' | 'image' | 'video' | 'other')}
                 className="px-3 py-2 border rounded-md"
               >
                 <option value="all">All Types</option>
@@ -392,10 +391,10 @@ export default function UploadsPage() {
                 </div>
               </div>
               
-              {/* Tags */}
-              {upload.tags.length > 0 && (
+              {upload.description && (
                 <div className="mt-4">
-                  <div className="flex flex-wrap gap-2">
+                  <p className="text-sm text-gray-700">{upload.description}</p>
+                  <div className="flex flex-wrap gap-1 mt-2">
                     {upload.tags.map((tag, index) => (
                       <Badge key={index} variant="secondary" className="text-xs">
                         {tag}
@@ -601,7 +600,7 @@ function UploadForm({ upload, onSubmit, onCancel }: UploadFormProps) {
           <label className="text-sm font-medium">File Type</label>
           <select
             value={formData.type}
-            onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
+            onChange={(e) => setFormData({ ...formData, type: e.target.value as 'document' | 'image' | 'video' | 'other' })}
             className="w-full p-2 border rounded-md"
             required
           >
@@ -627,7 +626,7 @@ function UploadForm({ upload, onSubmit, onCancel }: UploadFormProps) {
           <label className="text-sm font-medium">Status</label>
           <select
             value={formData.status}
-            onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+            onChange={(e) => setFormData({ ...formData, status: e.target.value as 'pending' | 'processing' | 'completed' | 'failed' })}
             className="w-full p-2 border rounded-md"
           >
             <option value="pending">Pending</option>

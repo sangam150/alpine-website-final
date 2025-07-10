@@ -199,7 +199,7 @@ export default function AdminDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600">Welcome back! Here's what's happening with Alpine Education.</p>
+          <p className="text-gray-600">Welcome back! Here&apos;s what&apos;s happening with Alpine Education.</p>
         </div>
         <Button onClick={fetchDashboardData} variant="outline">
           <Activity className="w-4 h-4 mr-2" />
