@@ -27,10 +27,10 @@ export default function Header() {
         <div className="flex items-center h-16 justify-between gap-4 w-full">
           {/* Logo & Brand */}
           <div className="flex items-center min-w-0 flex-shrink-0">
-            <Link href="/" className="block select-none">
-              <div className="flex items-center space-x-3 min-w-0 max-w-fit">
-                <Image src="/logo.svg" alt="Alpine Logo" width={32} height={32} className="w-8 h-8 object-contain" priority />
-                <span className="text-lg font-bold whitespace-nowrap text-[#1A2C5B] max-w-fit">
+            <Link href="/" className="block select-none min-w-0">
+              <div className="flex items-center min-w-0 space-x-3">
+                <Image src="/logo.svg" alt="Alpine Logo" width={32} height={32} className="w-8 h-8 object-contain flex-shrink-0" priority />
+                <span className="text-lg font-bold whitespace-nowrap text-[#1A2C5B] min-w-0 max-w-none overflow-hidden text-ellipsis">
                   Alpine Education & Visa Services
                 </span>
               </div>
