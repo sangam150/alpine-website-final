@@ -30,7 +30,7 @@ export default function Header() {
             <Link href="/" className="block select-none min-w-0">
               <div className="flex items-center min-w-0 space-x-3">
                 <Image src="/logo.svg" alt="Alpine Logo" width={32} height={32} className="w-8 h-8 object-contain flex-shrink-0" priority />
-                <span className="text-lg font-bold whitespace-nowrap text-[#1A2C5B] min-w-0 max-w-none overflow-hidden text-ellipsis">
+                <span className="text-lg font-bold text-[#1A2C5B] min-w-0 whitespace-nowrap overflow-hidden text-ellipsis" style={{lineHeight: '1.2'}}>
                   Alpine Education & Visa Services
                 </span>
               </div>
