@@ -1,18 +1,17 @@
-import { Metadata } from 'next';
-import CountriesClient from './CountriesClient';
+import CountriesClient from './CountriesClient'
 
-export const metadata: Metadata = {
-  title: 'Study Destinations - Alpine Education',
-  description: 'Explore top study destinations including Australia, UK, Canada, USA, Germany, France, and New Zealand. Find universities, visa information, and tuition fees.',
-};
-
-export default async function CountriesPage() {
-  // Fetch countries data from API
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/countries`, {
-    cache: 'no-store'
-  });
-  
-  const countries = response.ok ? await response.json() : [];
-
-  return <CountriesClient countries={countries} />;
+export default function CountriesPage() {
+  return (
+    <section className="relative w-full min-h-[60vh] bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-hidden pt-28 pb-12">
+      <div className="max-w-4xl mx-auto px-4 text-center">
+        <h1 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight">
+          <span className="bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 bg-clip-text text-transparent">Study Destinations</span>
+        </h1>
+        <p className="text-lg md:text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
+          Explore top countries for studying abroad. Learn about universities, visa requirements, scholarships, and student life in each destination.
+        </p>
+        <CountriesClient />
+      </div>
+    </section>
+  )
 } 

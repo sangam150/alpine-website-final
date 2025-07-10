@@ -1,245 +1,163 @@
-'use client';
+'use client'
 
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  Phone, 
-  MessageCircle, 
-  Calendar, 
-  ArrowRight,
-  CheckCircle,
-  Users,
-  Clock,
-  Award,
-  BookOpen,
-  GraduationCap
-} from 'lucide-react';
+import Link from 'next/link'
 
 const ctaOptions = [
   {
-    icon: Calendar,
-    title: 'Free Counseling Session',
-    description: 'Book a 30-minute free consultation with our expert counselors',
-    action: 'Book Now',
+    title: 'Get Free Consultation',
+    description: 'Book a free 30-minute session with our expert counselors',
+    icon: '🎯',
     href: '/contact',
     color: 'from-blue-500 to-blue-600',
-    bgColor: 'bg-blue-50',
-    iconColor: 'text-blue-600'
+    bgColor: 'bg-blue-50'
   },
   {
-    icon: MessageCircle,
-    title: 'WhatsApp Consultation',
-    description: 'Get instant answers to your study abroad questions',
-    action: 'Chat Now',
-    href: '#',
+    title: 'Take Free Quiz',
+    description: 'Find your perfect study destination in 5 minutes',
+    icon: '🧭',
+    href: '/quiz/country',
     color: 'from-green-500 to-green-600',
-    bgColor: 'bg-green-50',
-    iconColor: 'text-green-600',
-    isWhatsApp: true
+    bgColor: 'bg-green-50'
   },
   {
-    icon: Phone,
-    title: 'Call Us Directly',
-    description: 'Speak with our counselors over the phone',
-    action: 'Call Now',
-    href: 'tel:+977-1-4XXXXXXX',
+    title: 'Download Resources',
+    description: 'Get free guides, checklists, and study materials',
+    icon: '📚',
+    href: '/resources',
     color: 'from-purple-500 to-purple-600',
-    bgColor: 'bg-purple-50',
-    iconColor: 'text-purple-600'
+    bgColor: 'bg-purple-50'
+  },
+  {
+    title: 'Meet Our Team',
+    description: 'Learn about our experienced counselors and success stories',
+    icon: '👥',
+    href: '/about',
+    color: 'from-orange-500 to-orange-600',
+    bgColor: 'bg-orange-50'
   }
-];
-
-const benefits = [
-  'No consultation fees',
-  'Expert guidance',
-  'Personalized recommendations',
-  'Document checklist',
-  'University selection help',
-  'Visa guidance'
-];
+]
 
 export default function CTASection() {
-  const handleWhatsAppClick = () => {
-    const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+977-XXXXXXXXX';
-    const message = encodeURIComponent('Hi! I&apos;m interested in studying abroad. Can you help me?');
-    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
-  };
-
   return (
-    <section className="py-16 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Start Your Study Abroad Journey Today
+    <section className="py-20 bg-gradient-to-br from-gray-900 to-blue-900">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Ready to Start Your Study Abroad Journey?
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
-              Don&apos;t let your dreams wait. Get expert guidance and take the first step towards 
-              your international education.
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Choose your next step and let us help you achieve your international education dreams
             </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white">
-                <Link href="/contact">
-                  <BookOpen className="w-5 h-5 mr-2" />
-                  Book Free Counselling
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild className="border-2 border-white text-white hover:bg-white hover:text-blue-900">
-                <Link href="/apply">
-                  <GraduationCap className="w-5 h-5 mr-2" />
-                  Apply Now
-                </Link>
-              </Button>
-            </div>
-          </motion.div>
-        </div>
+          </div>
 
-        {/* CTA Options */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          {ctaOptions.map((option) => (
-            <motion.div
-              key={option.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              viewport={{ once: true }}
-            >
-              <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 group">
-                <CardHeader className="text-center pb-4">
-                  <div className={`w-16 h-16 ${option.bgColor} rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                    <option.icon className={`w-8 h-8 ${option.iconColor}`} />
+          {/* CTA Options Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            {ctaOptions.map((option) => (
+              <Link
+                key={option.title}
+                href={option.href}
+                className="group bg-white rounded-xl p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+              >
+                <div className="text-center">
+                  <div className={`text-4xl mb-4 ${option.bgColor} w-16 h-16 rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300`}>
+                    {option.icon}
                   </div>
-                  <CardTitle className="text-xl font-bold text-gray-900">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-200">
                     {option.title}
-                  </CardTitle>
-                  <CardDescription className="text-gray-600">
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
                     {option.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <Button
-                    onClick={option.isWhatsApp ? handleWhatsAppClick : undefined}
-                    asChild={!option.isWhatsApp}
-                    className={`w-full bg-gradient-to-r ${option.color} hover:from-blue-700 hover:to-blue-800 text-white`}
-                  >
-                    {option.isWhatsApp ? (
-                      <span>
-                        {option.action} <ArrowRight className="w-4 h-4 ml-2" />
-                      </span>
-                    ) : (
-                      <Link href={option.href}>
-                        {option.action} <ArrowRight className="w-4 h-4 ml-2" />
-                      </Link>
-                    )}
-                  </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Benefits Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            viewport={{ once: true }}
-          >
-            <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                What You&apos;ll Get with Free Counseling
-              </h3>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                Our comprehensive counseling session covers everything you need to know about 
-                studying abroad, from university selection to visa requirements.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {benefits.map((benefit) => (
-                <div key={benefit} className="flex items-center space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                  <span className="text-gray-700 font-medium">{benefit}</span>
+                  </p>
+                  <div className={`inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r ${option.color} text-white text-sm font-medium rounded-lg group-hover:scale-105 transition-transform duration-200`}>
+                    Get Started
+                  </div>
                 </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
+              </Link>
+            ))}
+          </div>
 
-        {/* Stats Banner */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-              <div>
-                <Users className="w-12 h-12 mx-auto mb-4 text-blue-200" />
-                <div className="text-3xl font-bold mb-2">3000+</div>
-                <p className="text-blue-100">Students Placed</p>
-              </div>
-              <div>
-                <Award className="w-12 h-12 mx-auto mb-4 text-blue-200" />
-                <div className="text-3xl font-bold mb-2">95%</div>
-                <p className="text-blue-100">Success Rate</p>
-              </div>
-              <div>
-                <Clock className="w-12 h-12 mx-auto mb-4 text-blue-200" />
-                <div className="text-3xl font-bold mb-2">24/7</div>
-                <p className="text-blue-100">Support Available</p>
-              </div>
-              <div>
-                <CheckCircle className="w-12 h-12 mx-auto mb-4 text-blue-200" />
-                <div className="text-3xl font-bold mb-2">12+</div>
-                <p className="text-blue-100">Countries</p>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Final CTA */}
-        <div className="text-center mt-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Ready to Take the Next Step?
-            </h3>
-            <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-              Join thousands of successful students who trusted Alpine Education with their 
-              study abroad dreams. Your journey starts with a simple conversation.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white">
-                <Link href="/contact">
-                  <BookOpen className="w-5 h-5 mr-2" />
-                  Book Free Counselling
+          {/* Main CTA Banner */}
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white">
+            <div className="text-center">
+              <h3 className="text-2xl md:text-3xl font-bold mb-4">
+                Don't Wait - Start Today!
+              </h3>
+              <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
+                Join thousands of successful students who have achieved their study abroad dreams 
+                with Alpine Education. Your journey to international education starts here.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 font-semibold rounded-lg shadow-lg hover:bg-gray-50 transform hover:scale-105 transition-all duration-200"
+                >
+                  Schedule Free Consultation
                 </Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild className="border-2 border-white text-white hover:bg-white hover:text-blue-900">
-                <Link href="/apply">
-                  <GraduationCap className="w-5 h-5 mr-2" />
+                <Link
+                  href="/apply"
+                  className="inline-flex items-center justify-center px-8 py-4 bg-white/20 text-white font-semibold rounded-lg border-2 border-white/30 hover:bg-white/30 transform hover:scale-105 transition-all duration-200"
+                >
                   Apply Now
                 </Link>
-              </Button>
+              </div>
             </div>
-          </motion.div>
+          </div>
+
+          {/* Contact Info */}
+          <div className="mt-16 grid md:grid-cols-3 gap-8 text-center">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+              <div className="text-3xl mb-4">📞</div>
+              <h4 className="text-lg font-semibold text-white mb-2">Call Us</h4>
+              <p className="text-blue-100">+1 (555) 123-4567</p>
+              <p className="text-blue-100 text-sm">Mon-Fri: 9AM-6PM</p>
+            </div>
+            
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+              <div className="text-3xl mb-4">💬</div>
+              <h4 className="text-lg font-semibold text-white mb-2">WhatsApp</h4>
+              <p className="text-blue-100">+1 (555) 123-4567</p>
+              <p className="text-blue-100 text-sm">24/7 Support</p>
+            </div>
+            
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+              <div className="text-3xl mb-4">📧</div>
+              <h4 className="text-lg font-semibold text-white mb-2">Email Us</h4>
+              <p className="text-blue-100">info@alpineeducation.com</p>
+              <p className="text-blue-100 text-sm">Response within 24h</p>
+            </div>
+          </div>
+
+          {/* Trust Indicators */}
+          <div className="mt-16 text-center">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8">
+              <h4 className="text-xl font-semibold text-white mb-6">
+                Why Students Trust Alpine Education
+              </h4>
+              <div className="grid md:grid-cols-4 gap-6">
+                <div>
+                  <div className="text-3xl font-bold text-white mb-2">10,000+</div>
+                  <div className="text-blue-100 text-sm">Students Placed</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-white mb-2">98%</div>
+                  <div className="text-blue-100 text-sm">Success Rate</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-white mb-2">15+</div>
+                  <div className="text-blue-100 text-sm">Years Experience</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-white mb-2">4.9/5</div>
+                  <div className="text-blue-100 text-sm">Student Rating</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
-  );
+  )
 } 

@@ -1,54 +1,68 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import FloatingActions from '@/components/layout/FloatingActions';
-import Analytics from '@/components/layout/Analytics';
-import ClientRoot from "./client-root";
+import type { Metadata } from 'next'
+import { Inter, Hind_Siliguri } from 'next/font/google'
+import './globals.css'
+import Analytics from '@/components/layout/Analytics'
+import { BrandThemeProvider } from '@/components/layout/BrandThemeProvider'
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
+import ExitIntentPopup from '@/components/marketing/ExitIntentPopup'
+import StickyConsultationBar from '@/components/marketing/StickyConsultationBar'
+import AIChatbot from '@/components/ai/AIChatbot'
+import FloatingActions from '@/components/layout/FloatingActions'
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ 
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap'
+})
+
+const hindSiliguri = Hind_Siliguri({ 
+  subsets: ['bengali'],
+  variable: '--font-hind-siliguri',
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700']
+})
 
 export const metadata: Metadata = {
   title: {
-    default: "Alpine Education & Visa Services - Study Abroad Consultancy Nepal",
-    template: "%s | Alpine Education & Visa Services"
+    default: 'Alpine Education - Leading Study Abroad Consultants for Nepali Students',
+    template: '%s | Alpine Education'
   },
-  description: "Leading study abroad consultancy in Nepal. Free counseling for Australia, UK, Canada, Germany, France. IELTS/PTE preparation, visa assistance, and student profile evaluation.",
-  keywords: ["study abroad", "education consultancy", "visa services", "IELTS preparation", "Australia study", "UK study", "Canada study", "Nepal education"],
-  authors: [{ name: "Alpine Education & Visa Services" }],
-  creator: "Alpine Education & Visa Services",
-  publisher: "Alpine Education & Visa Services",
+  description: 'Expert study abroad consultants helping Nepali students achieve their dreams. 98% visa success rate, 5000+ successful students, 15 years of excellence. Free consultation available.',
+  keywords: 'study abroad Nepal, visa consultants Nepal, IELTS preparation Nepal, Australia study Nepal, UK study Nepal, USA study Nepal, Canada study Nepal',
+  authors: [{ name: 'Alpine Education & Visa Services' }],
+  creator: 'Alpine Education & Visa Services',
+  publisher: 'Alpine Education & Visa Services',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://alpineeducation.com"),
+  metadataBase: new URL('https://alpineeducation.com'),
   alternates: {
-    canonical: "/",
+    canonical: '/',
   },
   openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://alpineeducation.com",
-    title: "Alpine Education & Visa Services - Study Abroad Consultancy Nepal",
-    description: "Leading study abroad consultancy in Nepal. Free counseling for Australia, UK, Canada, Germany, France. IELTS/PTE preparation, visa assistance.",
-    siteName: "Alpine Education & Visa Services",
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://alpineeducation.com',
+    title: 'Alpine Education - Leading Study Abroad Consultants for Nepali Students',
+    description: 'Expert study abroad consultants helping Nepali students achieve their dreams. 98% visa success rate, 5000+ successful students.',
+    siteName: 'Alpine Education & Visa Services',
     images: [
       {
-        url: "/og-image.jpg",
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: "Alpine Education & Visa Services",
+        alt: 'Alpine Education - Study Abroad Success for Nepali Students',
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Alpine Education & Visa Services - Study Abroad Consultancy Nepal",
-    description: "Leading study abroad consultancy in Nepal. Free counseling for Australia, UK, Canada, Germany, France.",
-    images: ["/og-image.jpg"],
+    card: 'summary_large_image',
+    title: 'Alpine Education - Leading Study Abroad Consultants for Nepali Students',
+    description: 'Expert study abroad consultants helping Nepali students achieve their dreams. 98% visa success rate, 5000+ successful students.',
+    images: ['/og-image.jpg'],
   },
   robots: {
     index: true,
@@ -56,43 +70,48 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
   verification: {
-    google: "your-google-verification-code",
+    google: 'your-google-verification-code',
   },
-};
+}
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <head>
-        {/* PWA Manifest */}
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#2563eb" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Alpine Education" />
+        <link rel="icon" href="/icons/icon-192x192.png" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#2563EB" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className={inter.className}>
-        <ClientRoot>
-          <Header />
-          <main>
-            {children}
-          </main>
-          <Footer />
-                  <FloatingActions />
+      <body className={`${inter.variable} ${hindSiliguri.variable} font-sans antialiased`}>
+        <BrandThemeProvider>
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            <main className="flex-1 p-0 m-0">
+              {children}
+            </main>
+            <Footer />
+            <FloatingActions />
+            <StickyConsultationBar />
+            <ExitIntentPopup />
+            <AIChatbot />
+          </div>
           <Analytics />
-        </ClientRoot>
+        </BrandThemeProvider>
       </body>
     </html>
-  );
+  )
 }

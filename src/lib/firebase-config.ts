@@ -19,24 +19,27 @@ let auth: Auth | null = null;
 let db: Firestore | null = null;
 let storage: FirebaseStorage | null = null;
 
-try {
-  if (!getApps().length) {
-    app = initializeApp(firebaseConfig);
-  } else {
-    app = getApps()[0];
-  }
+// Only initialize Firebase on the client side
+if (typeof window !== 'undefined') {
+  try {
+    if (!getApps().length) {
+      app = initializeApp(firebaseConfig);
+    } else {
+      app = getApps()[0];
+    }
 
-  // Initialize Firebase services
-  auth = getAuth(app);
-  db = getFirestore(app);
-  storage = getStorage(app);
-} catch (error) {
-  console.warn('Firebase initialization failed:', error);
-  // Create mock objects for development
-  app = null;
-  auth = null;
-  db = null;
-  storage = null;
+    // Initialize Firebase services
+    auth = getAuth(app);
+    db = getFirestore(app);
+    storage = getStorage(app);
+  } catch (error) {
+    console.warn('Firebase initialization failed:', error);
+    // Create mock objects for development
+    app = null;
+    auth = null;
+    db = null;
+    storage = null;
+  }
 }
 
 // Export with error checking

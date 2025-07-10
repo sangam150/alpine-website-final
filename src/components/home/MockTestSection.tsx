@@ -1,236 +1,195 @@
-'use client';
+'use client'
 
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Clock, 
-  Users, 
-  Award, 
-  CheckCircle,
-  ArrowRight,
-  Calendar,
-  Target
-} from 'lucide-react';
+import Link from 'next/link'
 
-const mockTests = [
+const testTypes = [
   {
-    name: 'IELTS Academic',
-    description: 'Comprehensive mock test simulating the actual IELTS Academic exam',
+    name: 'IELTS',
+    description: 'International English Language Testing System',
     duration: '2 hours 45 minutes',
     sections: ['Listening', 'Reading', 'Writing', 'Speaking'],
-    price: 'Free',
-    originalPrice: 'Rs. 2,000',
-    features: ['Full-length test', 'Detailed feedback', 'Score prediction', 'Expert review'],
-    nextTest: 'March 15, 2024',
-    spots: 15,
-    totalSpots: 20
+    score: 'Band 6.5-7.5',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-50',
+    icon: '📝'
   },
   {
-    name: 'PTE Academic',
-    description: 'Practice test for PTE Academic with real exam format',
+    name: 'PTE',
+    description: 'Pearson Test of English Academic',
     duration: '3 hours',
     sections: ['Speaking & Writing', 'Reading', 'Listening'],
-    price: 'Free',
-    originalPrice: 'Rs. 1,800',
-    features: ['Computer-based test', 'Instant results', 'Performance analysis', 'Tips & strategies'],
-    nextTest: 'March 18, 2024',
-    spots: 12,
-    totalSpots: 20
+    score: 'Score 65-75',
+    color: 'from-green-500 to-green-600',
+    bgColor: 'bg-green-50',
+    icon: '🎯'
+  },
+  {
+    name: 'TOEFL',
+    description: 'Test of English as a Foreign Language',
+    duration: '3 hours',
+    sections: ['Reading', 'Listening', 'Speaking', 'Writing'],
+    score: 'Score 90-100',
+    color: 'from-purple-500 to-purple-600',
+    bgColor: 'bg-purple-50',
+    icon: '🌍'
   }
-];
-
-const features = [
-  {
-    icon: Target,
-    title: 'Score Improvement Guarantee',
-    description: 'Improve your score by 0.5+ bands or get free retest'
-  },
-  {
-    icon: Users,
-    title: 'Expert Instructors',
-    description: 'Experienced teachers with 8+ years of IELTS/PTE training'
-  },
-  {
-    icon: Award,
-    title: 'Proven Results',
-    description: '95% of our students achieve their target scores'
-  },
-  {
-    icon: Clock,
-    title: 'Flexible Schedule',
-    description: 'Morning, afternoon, and evening batches available'
-  }
-];
+]
 
 export default function MockTestSection() {
   return (
-    <section className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Free Mock Tests & Evaluation
+    <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Free Mock Tests & Test Preparation
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Take our free mock tests to assess your current level and get personalized 
-              feedback from our expert instructors. Perfect your skills before the actual exam.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Practice with our free mock tests and get expert guidance to achieve your target scores
             </p>
           </div>
-        </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          {mockTests.map((test) => (
-            <motion.div
-              key={test.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              viewport={{ once: true }}
-            >
-              <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <CardHeader className="pb-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <Badge variant="secondary" className="bg-green-100 text-green-800">
-                      {test.price}
-                    </Badge>
-                    <span className="text-sm text-gray-500 line-through">
-                      {test.originalPrice}
-                    </span>
+          {/* Test Types Grid */}
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
+            {testTypes.map((test) => (
+              <div key={test.name} className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-all duration-300">
+                <div className="text-center">
+                  <div className="text-4xl mb-4">{test.icon}</div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{test.name}</h3>
+                  <p className="text-sm text-gray-600 mb-4">{test.description}</p>
+                  
+                  <div className="space-y-2 text-sm mb-6">
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Duration:</span>
+                      <span className="font-medium">{test.duration}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Target Score:</span>
+                      <span className="font-medium">{test.score}</span>
+                    </div>
                   </div>
-                  <CardTitle className="text-2xl font-bold text-gray-900">
-                    {test.name}
-                  </CardTitle>
-                  <CardDescription className="text-gray-600">
-                    {test.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-2">
-                      <Clock className="w-4 h-4 text-blue-600" />
-                      <span className="text-sm text-gray-600">Duration: {test.duration}</span>
+                  
+                  <div className="mb-6">
+                    <div className="text-sm font-medium text-gray-700 mb-2">Sections:</div>
+                    <div className="flex flex-wrap gap-1">
+                      {test.sections.map((section) => (
+                        <span key={section} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                          {section}
+                        </span>
+                      ))}
                     </div>
-                    
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Test Sections:</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {test.sections.map((section) => (
-                          <Badge key={section} variant="outline" className="text-xs">
-                            {section}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">What&apos;s Included:</h4>
-                      <div className="space-y-2">
-                        {test.features.map((feature) => (
-                          <div key={feature} className="flex items-center space-x-2">
-                            <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                            <span className="text-sm text-gray-600">{feature}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="bg-blue-50 rounded-lg p-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-gray-700">Next Test Date:</span>
-                        <Calendar className="w-4 h-4 text-blue-600" />
-                      </div>
-                      <div className="text-lg font-bold text-blue-600">{test.nextTest}</div>
-                      <div className="text-sm text-gray-600 mt-1">
-                        {test.spots} spots left out of {test.totalSpots}
-                      </div>
-                    </div>
-
-                    <Button
-                      asChild
-                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
-                    >
-                      <Link href="/mock-tests">
-                        Book Free Mock Test <ArrowRight className="w-4 h-4 ml-2" />
-                      </Link>
-                    </Button>
                   </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Features Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          viewport={{ once: true }}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-                      {features.map((feature) => (
-              <div key={feature.title} className="text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <feature.icon className="w-8 h-8 text-blue-600" />
+                  
+                  <Link
+                    href={`/test-preparation/${test.name.toLowerCase()}`}
+                    className={`inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r ${test.color} text-white font-semibold rounded-lg hover:scale-105 transition-all duration-200`}
+                  >
+                    Take Free Mock Test
+                  </Link>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  {feature.description}
-                </p>
               </div>
             ))}
           </div>
-        </motion.div>
 
-        {/* CTA Banner */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          viewport={{ once: true }}
-        >
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white text-center">
-          <h3 className="text-2xl lg:text-3xl font-bold mb-4">
-            Ready to Ace Your English Test?
-          </h3>
-          <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
-            Join thousands of successful students who achieved their target scores with our 
-            proven test preparation methods. Start with a free mock test today!
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              asChild
-              size="lg"
-              className="bg-white text-blue-600 hover:bg-gray-100"
-            >
-              <Link href="/mock-tests">
-                Book Free Mock Test
-              </Link>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="border-white text-white hover:bg-white hover:text-blue-600"
-            >
-              <Link href="/test-preparation">
-                View All Courses
-              </Link>
-            </Button>
+          {/* Features Section */}
+          <div className="grid md:grid-cols-2 gap-8 mb-16">
+            <div className="bg-white rounded-xl border border-gray-200 p-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                Why Choose Our Test Prep?
+              </h3>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-green-600 text-sm">✓</span>
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-900">Expert Instructors</div>
+                    <div className="text-sm text-gray-600">Certified trainers with 10+ years experience</div>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-green-600 text-sm">✓</span>
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-900">Free Mock Tests</div>
+                    <div className="text-sm text-gray-600">Practice with real exam format questions</div>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-green-600 text-sm">✓</span>
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-900">Score Improvement Guarantee</div>
+                    <div className="text-sm text-gray-600">Free retake if you don't improve</div>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-green-600 text-sm">✓</span>
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-900">Flexible Schedule</div>
+                    <div className="text-sm text-gray-600">Morning, evening, and weekend classes</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl p-8 text-white">
+              <h3 className="text-2xl font-bold mb-4">
+                Ready to Start?
+              </h3>
+              <p className="text-blue-100 mb-6">
+                Book a free consultation to discuss your test preparation needs and get a personalized study plan.
+              </p>
+              <div className="space-y-4">
+                <Link
+                  href="/test-preparation"
+                  className="block w-full bg-white text-blue-600 font-semibold py-3 px-6 rounded-lg text-center hover:bg-gray-50 transition-colors duration-200"
+                >
+                  View All Courses
+                </Link>
+                <Link
+                  href="/contact"
+                  className="block w-full bg-white/20 text-white font-semibold py-3 px-6 rounded-lg text-center border-2 border-white/30 hover:bg-white/30 transition-colors duration-200"
+                >
+                  Schedule Free Consultation
+                </Link>
+              </div>
+            </div>
           </div>
+
+          {/* CTA Section */}
+          <div className="text-center">
+            <div className="bg-white rounded-2xl border border-gray-200 p-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                Don't Know Which Test to Take?
+              </h3>
+              <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+                Take our free assessment quiz to determine which English proficiency test 
+                is best suited for your study abroad goals.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/quiz/test"
+                  className="inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg shadow-lg hover:from-orange-600 hover:to-orange-700 transform hover:scale-105 transition-all duration-200"
+                >
+                  Take Test Assessment Quiz
+                </Link>
+                <Link
+                  href="/test-preparation"
+                  className="inline-flex items-center justify-center px-8 py-3 bg-white text-gray-700 font-semibold rounded-lg border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transform hover:scale-105 transition-all duration-200"
+                >
+                  Learn More About Tests
+                </Link>
+              </div>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
-  );
+  )
 } 

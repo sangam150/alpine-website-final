@@ -1,29 +1,93 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db, isFirebaseInitialized } from '@/lib/firebase-config';
-import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
 
 // GET - Fetch all countries
 export async function GET() {
   try {
-    if (!db) {
-      return NextResponse.json(
-        { success: false, error: 'Firestore is not initialized' },
-        { status: 500 }
-      );
-    }
-
-    const countriesRef = collection(db, 'countries');
-    const querySnapshot = await getDocs(countriesRef);
-    
-    const countries = querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    const mockCountries = [
+      {
+        id: 'australia',
+        name: 'Australia',
+        slug: 'australia',
+        description: 'Study in Australia with world-class universities and beautiful landscapes.',
+        universities: 43,
+        avgTuition: 'AUD 20,000-35,000',
+        visaSuccess: '95%',
+        duration: '2-4 years',
+        popularCourses: ['Business', 'Engineering', 'IT', 'Healthcare'],
+        pros: ['High quality education', 'Work opportunities', 'Beautiful country'],
+        image: '/flags/australia.svg'
+      },
+      {
+        id: 'canada',
+        name: 'Canada',
+        slug: 'canada',
+        description: 'Experience high-quality education in a multicultural environment.',
+        universities: 97,
+        avgTuition: 'CAD 15,000-30,000',
+        visaSuccess: '90%',
+        duration: '2-4 years',
+        popularCourses: ['Computer Science', 'Business', 'Engineering', 'Arts'],
+        pros: ['Affordable education', 'Immigration friendly', 'Safe country'],
+        image: '/flags/canada.svg'
+      },
+      {
+        id: 'uk',
+        name: 'United Kingdom',
+        slug: 'uk',
+        description: 'Study at prestigious universities with rich academic traditions.',
+        universities: 164,
+        avgTuition: '£10,000-25,000',
+        visaSuccess: '88%',
+        duration: '3-4 years',
+        popularCourses: ['Business', 'Law', 'Medicine', 'Arts'],
+        pros: ['World-class universities', 'Rich history', 'Cultural diversity'],
+        image: '/flags/uk.svg'
+      },
+      {
+        id: 'usa',
+        name: 'United States',
+        slug: 'usa',
+        description: 'Access top-ranked universities and diverse study options.',
+        universities: 4000,
+        avgTuition: 'USD 25,000-50,000',
+        visaSuccess: '85%',
+        duration: '4 years',
+        popularCourses: ['Computer Science', 'Business', 'Engineering', 'Arts'],
+        pros: ['Top universities', 'Innovation hub', 'Career opportunities'],
+        image: '/flags/usa.svg'
+      },
+      {
+        id: 'germany',
+        name: 'Germany',
+        slug: 'germany',
+        description: 'Study in Germany with low tuition fees and excellent education.',
+        universities: 400,
+        avgTuition: '€0-1,500',
+        visaSuccess: '92%',
+        duration: '3-4 years',
+        popularCourses: ['Engineering', 'Science', 'Business', 'Arts'],
+        pros: ['Low tuition fees', 'Strong economy', 'Central location'],
+        image: '/flags/germany.svg'
+      },
+      {
+        id: 'france',
+        name: 'France',
+        slug: 'france',
+        description: 'Experience French culture and excellent higher education.',
+        universities: 350,
+        avgTuition: '€170-380',
+        visaSuccess: '90%',
+        duration: '3-4 years',
+        popularCourses: ['Business', 'Arts', 'Engineering', 'Science'],
+        pros: ['Affordable education', 'Rich culture', 'Central Europe'],
+        image: '/flags/france.svg'
+      }
+    ];
 
     return NextResponse.json({ 
       success: true, 
-      data: countries,
-      count: countries.length 
+      data: mockCountries,
+      count: mockCountries.length 
     });
   } catch (error) {
     console.error('Error fetching countries:', error);
@@ -38,167 +102,26 @@ export async function GET() {
   }
 }
 
-// POST - Add new country
+// POST - Add new country (Mock implementation)
 export async function POST(request: NextRequest) {
-  try {
-    if (!isFirebaseInitialized() || !db) {
-      return NextResponse.json(
-        { success: false, error: 'Firebase not initialized' },
-        { status: 503 }
-      );
-    }
-
-    const body = await request.json();
-    
-    // Validate required fields
-    const { name, slug, description, universities, avgTuition, visaSuccess, duration, popularCourses, pros, visaInfo, image } = body;
-    
-    if (!name || !slug) {
-      return NextResponse.json(
-        { success: false, error: 'Name and slug are required' },
-        { status: 400 }
-      );
-    }
-
-    // Validate slug format
-    if (!/^[a-z0-9-]+$/.test(slug)) {
-      return NextResponse.json(
-        { success: false, error: 'Slug must contain only lowercase letters, numbers, and hyphens' },
-        { status: 400 }
-      );
-    }
-
-    // Check if country with same slug already exists
-    const existingQuery = query(collection(db, 'countries'), where('slug', '==', slug));
-    const existingSnapshot = await getDocs(existingQuery);
-    
-    if (!existingSnapshot.empty) {
-      return NextResponse.json(
-        { success: false, error: 'Country with this slug already exists' },
-        { status: 409 }
-      );
-    }
-
-    const countryData = {
-      name,
-      slug,
-      description: description || '',
-      universities: universities || 0,
-      avgTuition: avgTuition || '',
-      visaSuccess: visaSuccess || '',
-      duration: duration || '',
-      popularCourses: popularCourses || [],
-      pros: pros || [],
-      visaInfo: visaInfo || {
-        requirements: [],
-        processingTime: '',
-        documents: []
-      },
-      image: image || '',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-
-    const docRef = await addDoc(collection(db, 'countries'), countryData);
-    
-    return NextResponse.json({
-      success: true,
-      data: { id: docRef.id, ...countryData },
-      message: 'Country added successfully'
-    });
-  } catch (error) {
-    console.error('Error adding country:', error);
-    return NextResponse.json(
-      { 
-        success: false, 
-        error: 'Failed to add country',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json(
+    { success: false, error: 'Firebase not configured' },
+    { status: 503 }
+  );
 }
 
-// PUT - Update country
+// PUT - Update country (Mock implementation)
 export async function PUT(request: NextRequest) {
-  try {
-    if (!isFirebaseInitialized() || !db) {
-      return NextResponse.json(
-        { success: false, error: 'Firebase not initialized' },
-        { status: 503 }
-      );
-    }
-
-    const body = await request.json();
-    const { id, ...updateData } = body;
-    
-    if (!id) {
-      return NextResponse.json(
-        { success: false, error: 'Country ID is required' },
-        { status: 400 }
-      );
-    }
-
-    const countryRef = doc(db, 'countries', id);
-    const updatePayload = {
-      ...updateData,
-      updatedAt: new Date()
-    };
-
-    await updateDoc(countryRef, updatePayload);
-    
-    return NextResponse.json({
-      success: true,
-      message: 'Country updated successfully'
-    });
-  } catch (error) {
-    console.error('Error updating country:', error);
-    return NextResponse.json(
-      { 
-        success: false, 
-        error: 'Failed to update country',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json(
+    { success: false, error: 'Firebase not configured' },
+    { status: 503 }
+  );
 }
 
-// DELETE - Delete country
+// DELETE - Delete country (Mock implementation)
 export async function DELETE(request: NextRequest) {
-  try {
-    if (!isFirebaseInitialized() || !db) {
-      return NextResponse.json(
-        { success: false, error: 'Firebase not initialized' },
-        { status: 503 }
-      );
-    }
-
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
-    
-    if (!id) {
-      return NextResponse.json(
-        { success: false, error: 'Country ID is required' },
-        { status: 400 }
-      );
-    }
-
-    await deleteDoc(doc(db, 'countries', id));
-    
-    return NextResponse.json({
-      success: true,
-      message: 'Country deleted successfully'
-    });
-  } catch (error) {
-    console.error('Error deleting country:', error);
-    return NextResponse.json(
-      { 
-        success: false, 
-        error: 'Failed to delete country',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json(
+    { success: false, error: 'Firebase not configured' },
+    { status: 503 }
+  );
 } 

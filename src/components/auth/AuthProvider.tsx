@@ -21,28 +21,47 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') {
+      setLoading(false);
+      return;
+    }
+
     if (!typedAuth) {
       setLoading(false);
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(typedAuth, (firebaseUser) => {
-      setUser(firebaseUser);
+    try {
+      const unsubscribe = onAuthStateChanged(typedAuth, (firebaseUser) => {
+        setUser(firebaseUser);
+        setLoading(false);
+      });
+      return () => unsubscribe();
+    } catch (error) {
+      console.warn('Auth state change listener failed:', error);
       setLoading(false);
-    });
-    return () => unsubscribe();
+    }
   }, []);
 
   const signOut = async () => {
     if (typedAuth) {
-      await firebaseSignOut(typedAuth);
+      try {
+        await firebaseSignOut(typedAuth);
+      } catch (error) {
+        console.warn('Sign out failed:', error);
+      }
     }
   };
 
   const signInWithGoogle = async () => {
     if (typedAuth) {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(typedAuth, provider);
+      try {
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(typedAuth, provider);
+      } catch (error) {
+        console.warn('Google sign in failed:', error);
+      }
     }
   };
 

@@ -1,178 +1,177 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Menu, X, BookOpen, GraduationCap, LogIn } from 'lucide-react';
+import { Menu, X, GraduationCap, ArrowRight, Phone, MessageCircle } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
-import Image from 'next/image';
-
-const NAV_ITEMS = [
-  { name: 'Home', href: '/' },
-  { name: 'About Us', href: '/about' },
-  { name: 'Study Destinations', href: '/study-destinations' },
-  { name: 'Test Preparation', href: '/test-preparation' },
-  { name: 'Student Services', href: '/student-services' },
-  { name: 'Blog', href: '/blog' },
-  { name: 'Contact', href: '/contact' },
+const NAV_LINKS = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/countries', label: 'Study Destinations' },
+  { href: '/test-preparation', label: 'Test Prep' },
+  { href: '/student-services', label: 'Student Services' },
+  { href: '/resources/blog', label: 'Resources' },
+  { href: '/contact', label: 'Contact' },
 ];
 
 export default function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
+  
   return (
-    <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-      isScrolled 
-        ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200' 
-        : 'bg-white shadow-sm border-b border-gray-100'
-    }`}>
-      <nav className="max-w-screen-xl mx-auto flex items-center justify-between px-4 lg:px-8 h-16">
-        {/* Logo and Brand */}
-        <Link href="/" className="flex items-center gap-3 group focus:outline-none" aria-label="Alpine Education Home">
-          <div className="w-12 h-12 flex items-center justify-center">
-            <Image 
-              src="/logo.svg" 
-              alt="Alpine Education Logo" 
-              width={48} 
-              height={48} 
-              className="w-12 h-12 object-contain" 
-              priority 
-            />
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-gray-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          {/* Left: Logo & Brand */}
+          <div className="flex items-center flex-shrink-0">
+            <Link href="/" className="flex items-center space-x-3 group">
+              <img src="/logo.svg" alt="Alpine Education Logo" className="h-10 w-10 flex-shrink-0" />
+              <div className="hidden sm:block">
+                <span className="font-bold text-xl text-gray-900 group-hover:text-blue-700 transition-colors leading-tight">
+                  Alpine Education & Visa Services
+                </span>
+              </div>
+            </Link>
           </div>
-          <div className="flex flex-col justify-center">
-            <span className="font-bold text-lg leading-tight text-gray-900">Alpine Education</span>
-            <span className="text-xs text-gray-500 leading-tight">Study Abroad & Visa Services</span>
-          </div>
-        </Link>
 
-        {/* Desktop Navigation */}
-        <div className="hidden lg:flex flex-1 items-center justify-center ml-8">
-          <div className="flex items-center gap-x-8">
-            {NAV_ITEMS.map((item) => (
-              <Link 
-                key={item.name}
-                href={item.href}
-                className={`text-sm font-medium transition-colors duration-200 hover:text-blue-600 ${
-                  pathname === item.href ? 'text-blue-600' : 'text-gray-700'
+          {/* Center: Navigation (Desktop) */}
+          <nav className="hidden lg:flex items-center space-x-8">
+            {NAV_LINKS.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`font-medium text-gray-700 hover:text-blue-700 transition-colors duration-200 px-3 py-2 rounded-md hover:bg-blue-50 ${
+                  pathname === link.href ? 'text-blue-700 font-semibold' : ''
                 }`}
               >
-                {item.name}
+                {link.label}
               </Link>
             ))}
+          </nav>
+
+          {/* Right: CTAs */}
+          <div className="flex items-center space-x-4">
+            {/* Contact CTAs - Desktop */}
+            <div className="hidden md:flex items-center space-x-2">
+              <Button asChild variant="ghost" size="sm" className="text-gray-700 hover:text-blue-700 hover:bg-blue-50">
+                <a href="tel:+977-1-4444444">
+                  <Phone className="w-4 h-4 mr-1" />
+                  Call Now
+                </a>
+              </Button>
+              
+              <Button asChild variant="ghost" size="sm" className="text-gray-700 hover:text-green-700 hover:bg-green-50">
+                <a href="https://wa.me/977144444444" target="_blank" rel="noopener">
+                  <MessageCircle className="w-4 h-4 mr-1" />
+                  WhatsApp
+                </a>
+              </Button>
+            </div>
+
+            {/* Main CTAs */}
+            <Button asChild variant="outline" className="hidden sm:flex font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50">
+              <Link href="/student-portal">
+                <ArrowRight className="w-4 h-4 mr-2" />
+                Student Portal
+              </Link>
+            </Button>
+            
+            <Button asChild className="font-semibold bg-blue-600 text-white hover:bg-blue-700 px-6 py-2 rounded-lg shadow-sm transition-all">
+              <Link href="/apply">
+                <GraduationCap className="w-4 h-4 mr-2" />
+                Apply Now
+              </Link>
+            </Button>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="lg:hidden p-2 rounded-md text-gray-700 hover:text-blue-700 hover:bg-blue-50"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Toggle menu"
+            >
+              {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
+      </div>
 
-        {/* Desktop CTA Buttons - Refactored */}
-        <div className="hidden lg:flex navbar-ctas">
-          <Button 
-            asChild 
-            size="sm"
-            className="navbar-button navbar-button-primary"
-          >
-            <Link href="/apply">
-              <GraduationCap className="w-4 h-4" />
-              Apply Now
-            </Link>
-          </Button>
-          <Button 
-            asChild 
-            size="sm"
-            variant="outline"
-            className="navbar-button navbar-button-outline"
-          >
-            <Link href="/student-portal">
-              <LogIn className="w-4 h-4" />
-              Student Portal
-            </Link>
-          </Button>
-        </div>
+      {/* Mobile Navigation Overlay */}
+      {menuOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 bg-black/50">
+          <div className="fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-xl">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div className="flex items-center space-x-3">
+                <img src="/logo.svg" alt="Alpine Education Logo" className="h-8 w-8" />
+                <span className="font-bold text-lg text-gray-900">
+                  Alpine Education
+                </span>
+              </div>
+              <button
+                onClick={() => setMenuOpen(false)}
+                className="p-2 rounded-md text-gray-700 hover:text-blue-700 hover:bg-blue-50"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
 
-        {/* Mobile Menu Button */}
-        <button 
-          className="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-          aria-label="Open menu"
-        >
-          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
-      </nav>
+            <div className="p-6 space-y-4">
+              {/* Mobile Navigation Links */}
+              <nav className="space-y-2">
+                {NAV_LINKS.map(link => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`block px-4 py-3 rounded-lg font-medium transition-colors ${
+                      pathname === link.href 
+                        ? 'text-blue-700 bg-blue-50 font-semibold' 
+                        : 'text-gray-700 hover:text-blue-700 hover:bg-blue-50'
+                    }`}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
 
-      {/* Mobile Drawer */}
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-50 bg-black/40 flex justify-end transition-opacity duration-300">
-          <div className="w-80 max-w-full bg-white h-full shadow-xl flex flex-col transform transition-transform duration-300 ease-in-out">
-              {/* Mobile Header */}
-              <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                <div className="flex items-center gap-3">
-                  <Image src="/logo.svg" alt="Alpine Education Logo" width={32} height={32} className="w-8 h-8 object-contain" />
-                  <span className="font-bold text-lg text-gray-900">Alpine Education</span>
-                </div>
-                <button 
-                  onClick={() => setIsMobileMenuOpen(false)} 
-                  aria-label="Close menu"
-                  className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                >
-                  <X className="w-6 h-6" />
-                </button>
+              {/* Mobile Contact CTAs */}
+              <div className="pt-4 space-y-3 border-t border-gray-200">
+                <Button asChild className="w-full justify-center bg-green-600 hover:bg-green-700">
+                  <a href="tel:+977-1-4444444">
+                    <Phone className="w-4 h-4 mr-2" />
+                    Call Now
+                  </a>
+                </Button>
+                
+                <Button asChild variant="outline" className="w-full justify-center border-green-600 text-green-600 hover:bg-green-50">
+                  <a href="https://wa.me/977144444444" target="_blank" rel="noopener">
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    WhatsApp
+                  </a>
+                </Button>
               </div>
 
-              {/* Mobile Navigation */}
-              <div className="flex-1 overflow-y-auto p-6">
-                <nav className="flex flex-col gap-y-1">
-                  {NAV_ITEMS.map((item) => (
-                    <Link 
-                      key={item.name}
-                      href={item.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={`block px-4 py-3 text-lg font-medium rounded-lg transition-colors duration-200 ${
-                        pathname === item.href 
-                          ? 'text-blue-600 bg-blue-50' 
-                          : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
-                      }`}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </nav>
-              </div>
-
-              {/* Mobile CTA Buttons */}
-              <div className="p-6 border-t border-gray-200 space-y-3">
-                <Button 
-                  asChild 
-                  className="w-full navbar-button-primary rounded-lg py-3 shadow-md font-semibold flex items-center justify-center gap-2 transition-all duration-200"
-                >
-                  <Link href="/apply" onClick={() => setIsMobileMenuOpen(false)}>
-                    <GraduationCap className="w-4 h-4" />
-                    Apply Now
+              {/* Mobile Main CTAs */}
+              <div className="pt-4 space-y-3 border-t border-gray-200">
+                <Button asChild variant="outline" className="w-full justify-center">
+                  <Link href="/student-portal">
+                    <ArrowRight className="w-4 h-4 mr-2" />
+                    Student Portal
                   </Link>
                 </Button>
                 
-                <Button 
-                  asChild 
-                  variant="outline"
-                  className="w-full navbar-button-outline rounded-lg py-3 font-semibold flex items-center justify-center gap-2 transition-all duration-200 shadow-sm"
-                >
-                  <Link href="/student-portal" onClick={() => setIsMobileMenuOpen(false)}>
-                    <LogIn className="w-4 h-4" />
-                    Student Portal
+                <Button asChild className="w-full justify-center">
+                  <Link href="/apply">
+                    <GraduationCap className="w-4 h-4 mr-2" />
+                    Apply Now
                   </Link>
                 </Button>
               </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
     </header>
   );
 } 
