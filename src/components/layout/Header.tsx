@@ -22,23 +22,25 @@ export default function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-blue-100 shadow-md">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-blue-100 shadow-md overflow-x-hidden">
       <nav aria-label="Main navigation" className="max-w-screen-xl mx-auto px-4">
-        <div className="flex items-center h-16 justify-between gap-4 w-full">
-          {/* Logo & Brand */}
-          <div className="flex items-center min-w-0 flex-shrink-0">
+        {/* Main nav row */}
+        <div className="flex items-center h-16 w-full min-w-0">
+          {/* Logo & Brand (vertical flex, fixed width) */}
+          <div className="flex flex-col items-start w-56 min-w-[12rem] flex-shrink-0 pr-6">
             <Link href="/" className="block select-none min-w-0">
-              <div className="flex items-center min-w-0 space-x-3">
+              <div className="flex items-center min-w-0 space-x-2">
                 <Image src="/logo.svg" alt="Alpine Logo" width={32} height={32} className="w-8 h-8 object-contain flex-shrink-0" priority />
-                <span className="text-lg font-bold text-[#1A2C5B] min-w-0 whitespace-nowrap overflow-hidden text-ellipsis" style={{lineHeight: '1.2'}}>
-                  Alpine Education & Visa Services
+                <span className="text-lg font-bold text-[#1A2C5B] min-w-0 whitespace-nowrap overflow-hidden text-ellipsis leading-tight">
+                  Alpine Education
                 </span>
               </div>
             </Link>
+            {/* Subtitle/tagline under brand, only on desktop */}
+            <span className="hidden lg:block text-xs text-gray-500 leading-tight pl-10 pt-0.5">Study Abroad & Visa Services</span>
           </div>
-
           {/* Desktop Nav */}
-          <ul className="hidden lg:flex flex-1 items-center justify-center gap-6 whitespace-nowrap min-w-0 mx-4 px-2" role="menubar">
+          <ul className="hidden lg:flex flex-1 items-center justify-center gap-8 whitespace-nowrap min-w-0 mx-2 px-2 text-base font-medium" role="menubar">
             {NAV_LINKS.map(link => (
               <li key={link.href} role="none">
                 <Link
@@ -46,16 +48,15 @@ export default function Header() {
                   role="menuitem"
                   tabIndex={0}
                   aria-current={pathname === link.href ? 'page' : undefined}
-                  className={`font-normal text-gray-700 hover:text-blue-700 focus:text-blue-700 transition-colors duration-200 px-2 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200 ${pathname === link.href ? 'text-blue-700 font-semibold' : ''}`}
+                  className={`transition-colors duration-200 px-2 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-200 ${pathname === link.href ? 'text-blue-700 font-semibold' : 'text-gray-700 hover:text-blue-700'}`}
                 >
                   {link.label}
                 </Link>
               </li>
             ))}
           </ul>
-
           {/* Desktop CTAs */}
-          <div className="hidden lg:flex items-center gap-2 flex-shrink-0">
+          <div className="hidden lg:flex items-center gap-2 flex-shrink-0 pl-6">
             <Button asChild className="font-semibold bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-200 flex items-center gap-2" aria-label="Apply Now">
               <Link href="/apply"><GraduationCap className="w-4 h-4 mr-1" />Apply Now</Link>
             </Button>
@@ -63,10 +64,9 @@ export default function Header() {
               <Link href="/student-portal"><ArrowUpRight className="w-4 h-4 mr-1" />Student Portal</Link>
             </Button>
           </div>
-
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden p-2 rounded-md text-gray-700 hover:text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            className="lg:hidden p-2 rounded-md text-gray-700 hover:text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-200 ml-auto"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}

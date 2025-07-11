@@ -3,6 +3,7 @@ import { Inter, Hind_Siliguri } from 'next/font/google'
 import './globals.css'
 import Analytics from '@/components/layout/Analytics'
 import { BrandThemeProvider } from '@/components/layout/BrandThemeProvider'
+import { AuthProvider } from '@/components/auth/AuthProvider'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import ExitIntentPopup from '@/components/marketing/ExitIntentPopup'
@@ -98,18 +99,20 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${hindSiliguri.variable} font-sans antialiased`}>
         <BrandThemeProvider>
-          <div className="min-h-screen flex flex-col">
-            <Header />
-            <main className="flex-1 p-0 m-0">
-              {children}
-            </main>
-            <Footer />
-            <FloatingActions />
-            <StickyConsultationBar />
-            <ExitIntentPopup />
-            <AIChatbot />
-          </div>
-          <Analytics />
+          <AuthProvider>
+            <div className="min-h-screen flex flex-col">
+              <Header />
+              <main className="flex-1 p-0 m-0">
+                {children}
+              </main>
+              <Footer />
+              <FloatingActions />
+              <StickyConsultationBar />
+              <ExitIntentPopup />
+              <AIChatbot />
+            </div>
+            <Analytics />
+          </AuthProvider>
         </BrandThemeProvider>
       </body>
     </html>
