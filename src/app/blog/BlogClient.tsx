@@ -200,7 +200,7 @@ export default function BlogClient() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20">
+      <section className="relative bg-gradient-to-r from-blue-600 to-purple-600 text-white py-12 sm:py-16 lg:py-20">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
@@ -209,13 +209,13 @@ export default function BlogClient() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h1 className="text-4xl lg:text-6xl font-bold mb-6">
+              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6">
                 Blog
               </h1>
-              <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-8">
+              <p className="text-lg sm:text-xl text-blue-100 max-w-3xl mx-auto mb-6 sm:mb-8 px-4">
                 Expert insights, tips, and guides to help you navigate your study abroad journey successfully.
               </p>
-              <div className="flex flex-wrap justify-center gap-8">
+              <div className="grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-4 sm:gap-8">
                 {stats.map((stat, index) => (
                   <div key={stat.label} className="text-center">
                     <motion.div
@@ -223,9 +223,9 @@ export default function BlogClient() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1, duration: 0.6 }}
                     >
-                      <stat.icon className="w-8 h-8 mx-auto mb-2 text-blue-200" />
-                      <div className="text-2xl font-bold">{stat.value}</div>
-                      <div className="text-blue-100 text-sm">{stat.label}</div>
+                      <stat.icon className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 text-blue-200" />
+                      <div className="text-lg sm:text-2xl font-bold">{stat.value}</div>
+                      <div className="text-blue-100 text-xs sm:text-sm">{stat.label}</div>
                     </motion.div>
                   </div>
                 ))}
@@ -236,20 +236,20 @@ export default function BlogClient() {
       </section>
 
       {/* Search and Filter */}
-      <section className="py-8 bg-gray-50 border-b">
+      <section className="py-6 sm:py-8 bg-gray-50 border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center justify-between">
+            <div className="relative flex-1 max-w-md w-full">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
               <input
                 type="text"
                 placeholder="Search articles..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
               />
             </div>
             <div className="flex items-center space-x-2">
-              <Filter className="w-5 h-5 text-gray-500" />
-              <select className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              <Filter className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+              <select className="border border-gray-300 rounded-lg px-3 py-2 sm:py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base">
                 {categories.map((category) => (
                   <option key={category} value={category}>{category}</option>
                 ))}
@@ -260,16 +260,16 @@ export default function BlogClient() {
       </section>
 
       {/* Country Blog Posts */}
-      <section className="py-12 bg-white border-b">
+      <section className="py-8 sm:py-12 bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Country-Specific Study Abroad Guides</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 px-2">Country-Specific Study Abroad Guides</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {countryBlogs.map((blog) => (
               <Card key={blog.slug} className="shadow-md hover:shadow-xl transition-shadow">
-                <CardContent className="p-6 flex flex-col h-full">
-                  <h3 className="text-xl font-semibold mb-2">{blog.title}</h3>
-                  <p className="text-gray-600 mb-4 flex-1">{blog.excerpt}</p>
-                  <Link href={`/blog/${blog.slug}`} className="mt-auto inline-flex items-center text-blue-600 hover:underline font-medium">
+                <CardContent className="p-4 sm:p-6 flex flex-col h-full">
+                  <h3 className="text-lg sm:text-xl font-semibold mb-2 line-clamp-2">{blog.title}</h3>
+                  <p className="text-gray-600 mb-4 flex-1 text-sm sm:text-base line-clamp-3">{blog.excerpt}</p>
+                  <Link href={`/blog/${blog.slug}`} className="mt-auto inline-flex items-center text-blue-600 hover:underline font-medium text-sm sm:text-base">
                     Read Full Guide <ArrowRight className="ml-2 w-4 h-4" />
                   </Link>
                 </CardContent>
@@ -280,16 +280,16 @@ export default function BlogClient() {
       </section>
 
       {/* Featured Post */}
-      <section className="py-12">
+      <section className="py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8">
+          <div className="mb-6 sm:mb-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Featured Article</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 px-2">Featured Article</h2>
               {/* ...rest of the featured post and blog list rendering logic from page.tsx... */}
             </motion.div>
           </div>
