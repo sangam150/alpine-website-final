@@ -29,10 +29,11 @@ export default function FloatingActions() {
       {/* Sticky Apply Now CTA */}
       {showStickyCTA && (
         <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-40 animate-slide-up">
-          <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-full shadow-lg">
+          <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-lg text-sm sm:text-base">
             <Link href="/apply">
-              <GraduationCap className="w-5 h-5 mr-2" />
-              Apply Now
+              <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+              <span className="hidden sm:inline">Apply Now</span>
+              <span className="sm:hidden">Apply</span>
             </Link>
           </Button>
         </div>
@@ -40,18 +41,18 @@ export default function FloatingActions() {
 
       {/* Floating WhatsApp */}
       <div className="fixed bottom-4 right-4 z-40">
-        <Button asChild size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg">
+        <Button asChild size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg w-12 h-12 sm:w-14 sm:h-14">
           <a href="https://wa.me/977144444444" target="_blank" rel="noopener" aria-label="WhatsApp">
-            <MessageCircle className="w-6 h-6" />
+            <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" />
           </a>
         </Button>
       </div>
 
       {/* Floating Call */}
-      <div className="fixed bottom-20 right-4 z-40">
-        <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg">
+      <div className="fixed bottom-20 sm:bottom-24 right-4 z-40">
+        <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg w-12 h-12 sm:w-14 sm:h-14">
           <a href="tel:+977-1-4444444" aria-label="Call Now">
-            <Phone className="w-6 h-6" />
+            <Phone className="w-5 h-5 sm:w-6 sm:h-6" />
           </a>
         </Button>
       </div>
@@ -60,10 +61,10 @@ export default function FloatingActions() {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-4 left-4 z-40 p-3 bg-gray-800 hover:bg-gray-900 text-white rounded-full shadow-lg transition-all duration-300"
+          className="fixed bottom-4 left-4 z-40 p-2 sm:p-3 bg-gray-800 hover:bg-gray-900 text-white rounded-full shadow-lg transition-all duration-300"
           aria-label="Scroll to top"
         >
-          <ArrowUp className="w-6 h-6" />
+          <ArrowUp className="w-4 h-4 sm:w-6 sm:h-6" />
         </button>
       )}
     </>

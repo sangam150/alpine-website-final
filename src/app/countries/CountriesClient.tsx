@@ -246,29 +246,29 @@ export default function CountriesClient({ countries: apiCountries }: CountriesCl
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white py-20 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white py-12 sm:py-16 md:py-20 overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none select-none">
           <Image src="/globe.svg" alt="World Map" className="w-full max-w-4xl mx-auto animate-spin-slow" width={800} height={400} loading="lazy" />
         </div>
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
-          <Image src="/logo.svg" alt="Alpine Education Logo" className="w-16 h-16 object-contain mx-auto mb-4" width={64} height={64} loading="lazy" />
-          <h1 className="text-4xl lg:text-6xl font-bold mb-6">Study Destinations</h1>
-          <p className="text-xl lg:text-2xl mb-8">Explore {countries.length} countries for your study abroad journey. Filter by tuition, visa success, IELTS requirements, and more.</p>
-          <div className="flex flex-wrap justify-center gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <DollarSign className="w-4 h-4" />
+          <Image src="/logo.svg" alt="Alpine Education Logo" className="w-12 h-12 sm:w-16 sm:h-16 object-contain mx-auto mb-3 sm:mb-4" width={64} height={64} loading="lazy" />
+          <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6">Study Destinations</h1>
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 px-4">Explore {countries.length} countries for your study abroad journey. Filter by tuition, visa success, IELTS requirements, and more.</p>
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-4 text-xs sm:text-sm">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <DollarSign className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>Tuition Fees</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4" />
+            <div className="flex items-center gap-1 sm:gap-2">
+              <Globe className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>Visa Success</span>
             </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4" />
+            <div className="flex items-center gap-1 sm:gap-2">
+              <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>IELTS Options</span>
             </div>
-            <div className="flex items-center gap-2">
-              <GraduationCap className="w-4 h-4" />
+            <div className="flex items-center gap-1 sm:gap-2">
+              <GraduationCap className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>Dependent Visas</span>
             </div>
           </div>
@@ -276,44 +276,44 @@ export default function CountriesClient({ countries: apiCountries }: CountriesCl
       </section>
 
       {/* Filter/Search Bar */}
-      <section className="bg-white py-6 shadow-sm sticky top-16 z-40">
+      <section className="bg-white py-4 sm:py-6 shadow-sm sticky top-16 z-40">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-col lg:flex-row items-center gap-4 justify-between">
-            <div className="flex gap-2 flex-wrap justify-center lg:justify-start">
+          <div className="flex flex-col lg:flex-row items-center gap-3 sm:gap-4 justify-between">
+            <div className="flex gap-1 sm:gap-2 flex-wrap justify-center lg:justify-start">
               {filters.map(f => {
                 const Icon = f.icon;
                 return (
                   <Button
                     key={f.key}
                     variant={activeFilter === f.key ? 'default' : 'outline'}
-                    className={`rounded-full px-5 py-2 text-sm font-semibold transition-all flex items-center gap-2 ${
+                    className={`rounded-full px-3 sm:px-5 py-1 sm:py-2 text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2 ${
                       activeFilter === f.key 
                         ? `bg-${f.color}-600 text-white` 
                         : `bg-white text-${f.color}-700 border-${f.color}-600 hover:bg-${f.color}-50`
                     }`}
                     onClick={() => setActiveFilter(activeFilter === f.key ? null : f.key)}
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
                     {f.label}
                   </Button>
                 );
               })}
             </div>
             <div className="relative w-full lg:w-80">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3 sm:w-4 sm:h-4" />
               <input
                 type="text"
                 placeholder="Search countries..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-8 sm:pl-10 pr-3 sm:pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
               />
             </div>
           </div>
           
           {/* Results Summary */}
-          <div className="mt-4 text-center lg:text-left">
-            <p className="text-sm text-gray-600">
+          <div className="mt-3 sm:mt-4 text-center lg:text-left">
+            <p className="text-xs sm:text-sm text-gray-600">
               Showing {filteredCountries.length} of {countries.length} countries
               {activeFilter && ` • Filtered by ${filters.find(f => f.key === activeFilter)?.label}`}
               {search && ` • Search: "${search}"`}
@@ -323,12 +323,12 @@ export default function CountriesClient({ countries: apiCountries }: CountriesCl
       </section>
 
       {/* Country Grid */}
-      <section className="py-16">
+      <section className="py-8 sm:py-12 lg:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {filteredCountries.map((country) => (
               <div key={country.slug} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1 flex flex-col border border-gray-100 overflow-hidden">
-                <div className="w-full h-32 bg-gray-100 flex items-center justify-center overflow-hidden relative">
+                <div className="w-full h-24 sm:h-32 bg-gray-100 flex items-center justify-center overflow-hidden relative">
                   <Image
                     src={country.banner}
                     alt={country.name + ' Banner'}
@@ -340,58 +340,63 @@ export default function CountriesClient({ countries: apiCountries }: CountriesCl
                       e.currentTarget.parentElement?.classList.add('bg-gradient-to-br','from-blue-100','to-blue-300'); 
                     }}
                   />
-                  <span className="text-5xl z-10 relative">{country.flag}</span>
+                  <span className="text-3xl sm:text-5xl z-10 relative">{country.flag}</span>
                 </div>
                 
-                <div className="p-6 flex-1 flex flex-col">
-                  <div className="font-bold text-xl text-gray-900 mb-2">{country.name}</div>
-                  <p className="text-sm text-gray-600 mb-4 flex-1">{country.description}</p>
+                <div className="p-4 sm:p-6 flex-1 flex flex-col">
+                  <div className="font-bold text-lg sm:text-xl text-gray-900 mb-2">{country.name}</div>
+                  <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 flex-1 line-clamp-2">{country.description}</p>
                   
-                  <div className="space-y-2 mb-4">
-                    <div className="flex justify-between text-sm">
+                  <div className="space-y-1 sm:space-y-2 mb-3 sm:mb-4">
+                    <div className="flex justify-between text-xs sm:text-sm">
                       <span className="text-gray-500">Universities:</span>
                       <span className="font-semibold">{country.universities}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
+                    <div className="flex justify-between text-xs sm:text-sm">
                       <span className="text-gray-500">Avg Tuition:</span>
                       <span className="font-semibold">{country.avgTuition}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
+                    <div className="flex justify-between text-xs sm:text-sm">
                       <span className="text-gray-500">Visa Success:</span>
                       <span className="font-semibold text-green-600">{country.visaSuccess}</span>
                     </div>
                   </div>
                   
-                  <div className="flex gap-1 flex-wrap mb-4">
+                  <div className="flex gap-1 flex-wrap mb-3 sm:mb-4">
                     {country.tuition === 'low' && (
                       <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full flex items-center gap-1">
-                        <DollarSign className="w-3 h-3" />
-                        Low Tuition
+                        <DollarSign className="w-2 h-2 sm:w-3 sm:h-3" />
+                        <span className="hidden sm:inline">Low Tuition</span>
+                        <span className="sm:hidden">Low</span>
                       </span>
                     )}
                     {!country.ielts && (
                       <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full flex items-center gap-1">
-                        <CheckCircle className="w-3 h-3" />
-                        No IELTS
+                        <CheckCircle className="w-2 h-2 sm:w-3 sm:h-3" />
+                        <span className="hidden sm:inline">No IELTS</span>
+                        <span className="sm:hidden">No IELTS</span>
                       </span>
                     )}
                     {country.visa === 'high' && (
                       <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full flex items-center gap-1">
-                        <Globe className="w-3 h-3" />
-                        High Success
+                        <Globe className="w-2 h-2 sm:w-3 sm:h-3" />
+                        <span className="hidden sm:inline">High Success</span>
+                        <span className="sm:hidden">High</span>
                       </span>
                     )}
                     {country.dependent && (
                       <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full flex items-center gap-1">
-                        <GraduationCap className="w-3 h-3" />
-                        Dependent Visa
+                        <GraduationCap className="w-2 h-2 sm:w-3 sm:h-3" />
+                        <span className="hidden sm:inline">Dependent Visa</span>
+                        <span className="sm:hidden">Dependent</span>
                       </span>
                     )}
                   </div>
                   
-                  <Button asChild className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white">
+                  <Button asChild className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm sm:text-base py-2 sm:py-3">
                     <Link href={`/countries/${country.slug}`}>
-                      Explore {country.name}
+                      <span className="hidden sm:inline">Explore {country.name}</span>
+                      <span className="sm:hidden">Explore</span>
                     </Link>
                   </Button>
                 </div>
@@ -399,11 +404,11 @@ export default function CountriesClient({ countries: apiCountries }: CountriesCl
             ))}
             
             {filteredCountries.length === 0 && (
-              <div className="col-span-full text-center py-16">
+              <div className="col-span-full text-center py-12 sm:py-16">
                 <div className="max-w-md mx-auto">
-                  <Globe className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">No countries found</h3>
-                  <p className="text-gray-500 mb-4">
+                  <Globe className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">No countries found</h3>
+                  <p className="text-gray-500 mb-4 text-sm sm:text-base">
                     No countries match your current search or filter criteria. Try adjusting your filters or search terms.
                   </p>
                   <Button 
@@ -412,6 +417,8 @@ export default function CountriesClient({ countries: apiCountries }: CountriesCl
                       setActiveFilter(null);
                     }}
                     variant="outline"
+                    size="sm"
+                    className="text-sm sm:text-base"
                   >
                     Clear Filters
                   </Button>
