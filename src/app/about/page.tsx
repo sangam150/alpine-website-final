@@ -1,17 +1,47 @@
 import AboutClient from './AboutClient'
 
+export const metadata = {
+  title: 'About Us - Alpine Education & Visa Services | Nepal\'s Premier Study Abroad Consultancy',
+  description: 'Discover Alpine Education & Visa Services - Nepal\'s trusted study abroad partner. 10+ years experience, 3000+ students placed, 95% visa success rate. Expert counseling for Australia, UK, Canada, and 12+ countries.',
+  keywords: 'Alpine Education Nepal, study abroad consultancy, international education, visa services, university counseling, Australia study, UK education, Canada student visa, Nepali students abroad',
+  openGraph: {
+    title: 'About Alpine Education - Nepal\'s Premier Study Abroad Consultancy',
+    description: 'Trusted by 3000+ students. Expert counseling for study abroad in Australia, UK, Canada, and 12+ countries. 95% visa success rate.',
+    url: 'https://alpinevisa.com.np/about',
+    siteName: 'Alpine Education & Visa Services',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Alpine Education Team - Study Abroad Experts',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About Alpine Education - Nepal\'s Premier Study Abroad Consultancy',
+    description: 'Trusted by 3000+ students. Expert counseling for study abroad in Australia, UK, Canada, and 12+ countries.',
+    images: ['/og-image.jpg'],
+  },
+  alternates: {
+    canonical: 'https://alpinevisa.com.np/about',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+}
+
 export default function AboutPage() {
-  return (
-    <section className="relative w-full min-h-[60vh] bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-hidden pt-28 pb-12">
-      <div className="max-w-4xl mx-auto px-4 text-center">
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight">
-          About <span className="bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 bg-clip-text text-transparent">Alpine Education</span>
-        </h1>
-        <p className="text-lg md:text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
-          We are Nepal’s leading study abroad consultants, dedicated to helping students achieve their international education dreams. With 15+ years of experience, 98% visa success rate, and 5000+ successful students, we provide expert guidance, free counseling, and personalized support for every step of your journey.
-        </p>
-        <AboutClient />
-      </div>
-    </section>
-  )
+  return <AboutClient />
 } 

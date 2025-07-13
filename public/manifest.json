@@ -1,7 +1,7 @@
 {
-  "name": "Alpine Education - Study Abroad Consultants",
+  "name": "Alpine Education & Visa Services - Nepal's Premier Study Abroad Consultancy",
   "short_name": "Alpine Education",
-  "description": "Your trusted partner for study abroad opportunities, visa guidance, and educational consulting services",
+  "description": "Nepal's #1 study abroad consultancy. Expert guidance for Australia, UK, Canada, USA, and 12+ countries. 3000+ students placed, 95% visa success rate.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -9,7 +9,7 @@
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "en",
-  "categories": ["education", "business"],
+  "categories": ["education", "business", "travel"],
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
@@ -22,6 +22,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
     }
   ],
   "shortcuts": [
@@ -38,10 +44,10 @@
       ]
     },
     {
-      "name": "Countries",
+      "name": "Study Destinations",
       "short_name": "Countries",
       "description": "Explore study destinations",
-      "url": "/countries",
+      "url": "/study-destinations",
       "icons": [
         {
           "src": "/icons/icon-144x144.png",
@@ -50,7 +56,31 @@
       ]
     },
     {
-      "name": "Contact",
+      "name": "Test Preparation",
+      "short_name": "Tests",
+      "description": "IELTS, PTE, TOEFL preparation",
+      "url": "/test-preparation",
+      "icons": [
+        {
+          "src": "/icons/icon-144x144.png",
+          "sizes": "144x144"
+        }
+      ]
+    },
+    {
+      "name": "Student Portal",
+      "short_name": "Portal",
+      "description": "Track your application",
+      "url": "/student-portal",
+      "icons": [
+        {
+          "src": "/icons/icon-144x144.png",
+          "sizes": "144x144"
+        }
+      ]
+    },
+    {
+      "name": "Contact Us",
       "short_name": "Contact",
       "description": "Get in touch with us",
       "url": "/contact",
@@ -60,6 +90,28 @@
           "sizes": "144x144"
         }
       ]
+    },
+    {
+      "name": "Resources",
+      "short_name": "Resources",
+      "description": "Study guides and downloads",
+      "url": "/resources",
+      "icons": [
+        {
+          "src": "/icons/icon-144x144.png",
+          "sizes": "144x144"
+        }
+      ]
     }
-  ]
+  ],
+  "screenshots": [
+    {
+      "src": "/og-image.jpg",
+      "sizes": "1200x630",
+      "type": "image/jpeg",
+      "form_factor": "wide"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
 } 

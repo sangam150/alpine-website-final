@@ -2,6 +2,7 @@
 
 import { Heart, MessageCircle, Share2, Instagram } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
 
 const instagramPosts = [
   {
@@ -96,9 +97,11 @@ export default function InstagramFeed() {
             >
               {/* Post Image */}
               <div className="relative">
-                <img 
+                <Image 
                   src={post.image} 
                   alt="Instagram post" 
+                  width={384}
+                  height={256}
                   className="w-full h-64 object-cover"
                 />
                 {post.isVideo && (

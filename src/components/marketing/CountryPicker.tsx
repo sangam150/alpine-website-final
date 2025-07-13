@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { MapPin, DollarSign, Clock, Users } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
 
 interface Country {
   id: string
@@ -120,9 +121,11 @@ export default function CountryPicker() {
             >
               {/* Flag and Header */}
               <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200">
-                <img
+                <Image
                   src={country.flag}
                   alt={`${country.name} flag`}
+                  width={320}
+                  height={192}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-20"></div>

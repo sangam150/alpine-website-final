@@ -100,18 +100,18 @@ export default function RootLayout({
       <body className={`${inter.variable} ${hindSiliguri.variable} font-sans antialiased`}>
         <BrandThemeProvider>
           <AuthProvider>
-            <div className="min-h-screen flex flex-col">
-              <Header />
-              <main className="flex-1 p-0 m-0">
-                {children}
-              </main>
-              <Footer />
-              <FloatingActions />
-              <StickyConsultationBar />
-              <ExitIntentPopup />
-              <AIChatbot />
-            </div>
-            <Analytics />
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            <main className="flex-1 p-0 m-0">
+              {children}
+            </main>
+            <Footer />
+            <FloatingActions />
+            <StickyConsultationBar />
+            <ExitIntentPopup />
+            <AIChatbot />
+          </div>
+          <Analytics />
           </AuthProvider>
         </BrandThemeProvider>
       </body>

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { X, ChevronLeft, ChevronRight, Heart, Share2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
 
 const galleryPhotos = [
   {
@@ -150,9 +151,11 @@ export default function PhotoGallery() {
               onClick={() => openLightbox(index)}
             >
               <div className="relative">
-                <img 
+                <Image 
                   src={photo.src} 
                   alt={photo.alt} 
+                  width={192}
+                  height={192}
                   className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
@@ -220,9 +223,11 @@ export default function PhotoGallery() {
 
               {/* Photo Content */}
               <div className="text-center">
-                <img 
+                <Image 
                   src={filteredPhotos[currentPhoto].src} 
                   alt={filteredPhotos[currentPhoto].alt} 
+                  width={640}
+                  height={480}
                   className="max-h-[70vh] mx-auto rounded-lg"
                 />
                 <div className="mt-4 text-white">

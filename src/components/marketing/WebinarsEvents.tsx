@@ -3,6 +3,7 @@
 import { Calendar, Clock, MapPin, Users, PlayCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import Image from 'next/image'
 
 const events = [
   {
@@ -114,9 +115,11 @@ export default function WebinarsEvents() {
                 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <img 
+                    <Image 
                       src={event.image} 
                       alt={event.speaker} 
+                      width={32}
+                      height={32}
                       className="w-8 h-8 rounded-full border-2 border-blue-100"
                     />
                     <span className="text-sm font-medium text-gray-700">

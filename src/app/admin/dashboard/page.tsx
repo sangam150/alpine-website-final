@@ -1,509 +1,340 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Metadata } from 'next';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
   Users, 
   GraduationCap, 
   FileText, 
-  Globe, 
-  TrendingUp, 
-  Calendar,
-  ArrowUpRight,
-  ArrowDownRight,
-  Activity,
-  Clock,
-  CheckCircle,
-  AlertCircle,
   DollarSign,
+  TrendingUp,
+  TrendingDown,
+  Calendar,
+  MapPin,
   BookOpen,
   MessageSquare,
-  Download,
-  Upload as UploadIcon
+  Activity,
+  Target
 } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { FirebaseService, COLLECTIONS } from '@/lib/firebase-collections';
-import type { Student, Application, Upload, Analytics } from '@/lib/firebase-collections';
 
-interface DashboardStats {
-  totalStudents: number;
-  totalApplications: number;
-  totalUploads: number;
-  totalCountries: number;
-  recentApplications: Application[];
-  recentUploads: Upload[];
-  recentStudents: Student[];
-  analytics: {
-    pageViews: number;
-    formSubmissions: number;
-    fileDownloads: number;
-    quizCompletions: number;
-  };
-}
+export const metadata: Metadata = {
+  title: 'Admin Dashboard - Alpine Education Management System',
+  description: 'Admin dashboard for Alpine Education management system. Track students, applications, revenue, and performance metrics. Real-time analytics and reporting.',
+  keywords: 'admin dashboard, Alpine Education management, student tracking, application management, revenue analytics, performance metrics, study abroad admin',
+  openGraph: {
+    title: 'Admin Dashboard - Alpine Education Management System',
+    description: 'Admin dashboard for Alpine Education management system. Track students, applications, revenue, and performance metrics.',
+    url: 'https://alpinevisa.com.np/admin/dashboard',
+    siteName: 'Alpine Education & Visa Services',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Admin Dashboard - Alpine Education Management',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Admin Dashboard - Alpine Education Management System',
+    description: 'Admin dashboard for Alpine Education management system. Track students, applications, revenue, and performance metrics.',
+    images: ['/og-image.jpg'],
+  },
+  alternates: {
+    canonical: 'https://alpinevisa.com.np/admin/dashboard',
+  },
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
+};
 
-export default function AdminDashboard() {
-  const [stats, setStats] = useState<DashboardStats>({
-    totalStudents: 0,
-    totalApplications: 0,
-    totalUploads: 0,
-    totalCountries: 0,
-    recentApplications: [],
-    recentUploads: [],
-    recentStudents: [],
-    analytics: {
-      pageViews: 0,
-      formSubmissions: 0,
-      fileDownloads: 0,
-      quizCompletions: 0
-    }
-  });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  const fetchDashboardData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      // Fetch all data in parallel
-      const [
-        students,
-        applications,
-        uploads,
-        countries,
-        analytics
-      ] = await Promise.all([
-        FirebaseService.getDocuments<Student>(COLLECTIONS.STUDENTS),
-        FirebaseService.getDocuments<Application>(COLLECTIONS.APPLICATIONS),
-        FirebaseService.getDocuments<Upload>(COLLECTIONS.UPLOADS),
-        FirebaseService.getDocuments(COLLECTIONS.COUNTRIES),
-        FirebaseService.getAnalyticsByType('page_view', 7)
-      ]);
-
-      // Get recent items (last 5)
-      const recentStudents = students.slice(0, 5);
-      const recentApplications = applications.slice(0, 5);
-      const recentUploads = uploads.slice(0, 5);
-
-      // Calculate analytics
-      const formSubmissions = await FirebaseService.getAnalyticsByType('form_submission', 7);
-      const fileDownloads = await FirebaseService.getAnalyticsByType('file_download', 7);
-      const quizCompletions = await FirebaseService.getAnalyticsByType('quiz_completion', 7);
-
-      setStats({
-        totalStudents: students.length,
-        totalApplications: applications.length,
-        totalUploads: uploads.length,
-        totalCountries: countries.length,
-        recentStudents,
-        recentApplications,
-        recentUploads,
-        analytics: {
-          pageViews: analytics.length,
-          formSubmissions: formSubmissions.length,
-          fileDownloads: fileDownloads.length,
-          quizCompletions: quizCompletions.length
-        }
-      });
-    } catch (err) {
-      console.error('Error fetching dashboard data:', err);
-      setError('Failed to load dashboard data');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'approved':
-      case 'completed':
-        return 'bg-green-100 text-green-800';
-      case 'pending':
-      case 'scheduled':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'rejected':
-      case 'cancelled':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const formatDate = (timestamp: any) => {
-    if (!timestamp) return 'N/A';
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
-
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
-
-  if (loading) {
-    return (
-      <div className="p-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded"></div>
-            ))}
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {[...Array(2)].map((_, i) => (
-              <div key={i} className="h-96 bg-gray-200 rounded"></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+const stats = [
+  {
+    title: 'Total Students',
+    value: '1,247',
+    change: '+12%',
+    trend: 'up',
+    icon: Users,
+    color: 'blue'
+  },
+  {
+    title: 'Active Applications',
+    value: '89',
+    change: '+5%',
+    trend: 'up',
+    icon: FileText,
+    color: 'green'
+  },
+  {
+    title: 'Revenue (This Month)',
+    value: 'Rs. 2.4M',
+    change: '+18%',
+    trend: 'up',
+    icon: DollarSign,
+    color: 'purple'
+  },
+  {
+    title: 'Success Rate',
+    value: '94%',
+    change: '+2%',
+    trend: 'up',
+    icon: Target,
+    color: 'orange'
   }
+];
 
-  if (error) {
-    return (
-      <div className="p-6">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <div className="flex items-center">
-            <AlertCircle className="w-5 h-5 text-red-500 mr-2" />
-            <span className="text-red-800">{error}</span>
-          </div>
-          <Button 
-            onClick={fetchDashboardData} 
-            className="mt-2"
-            variant="outline"
-          >
-            Retry
-          </Button>
-        </div>
-      </div>
-    );
+const recentActivities = [
+  {
+    type: 'application',
+    message: 'New application received from Sarah Johnson for Australia',
+    time: '2 minutes ago',
+    status: 'pending'
+  },
+  {
+    type: 'payment',
+    message: 'Payment received from Michael Chen - Rs. 45,000',
+    time: '15 minutes ago',
+    status: 'completed'
+  },
+  {
+    type: 'visa',
+    message: 'Visa approved for Priya Sharma - Canada Student Visa',
+    time: '1 hour ago',
+    status: 'approved'
+  },
+  {
+    type: 'enquiry',
+    message: 'New enquiry from Rajesh Kumar about UK universities',
+    time: '2 hours ago',
+    status: 'new'
+  },
+  {
+    type: 'test',
+    message: 'IELTS test scheduled for David Wilson on March 25',
+    time: '3 hours ago',
+    status: 'scheduled'
   }
+];
 
+const topCountries = [
+  { country: 'Australia', applications: 45, successRate: '96%' },
+  { country: 'Canada', applications: 38, successRate: '94%' },
+  { country: 'UK', applications: 32, successRate: '92%' },
+  { country: 'USA', applications: 28, successRate: '89%' },
+  { country: 'Germany', applications: 15, successRate: '87%' }
+];
+
+const upcomingEvents = [
+  {
+    title: 'IELTS Mock Test',
+    date: 'March 20, 2024',
+    time: '9:00 AM',
+    participants: 25,
+    type: 'test'
+  },
+  {
+    title: 'University Fair - Australia',
+    date: 'March 25, 2024',
+    time: '2:00 PM',
+    participants: 50,
+    type: 'event'
+  },
+  {
+    title: 'Visa Interview Prep',
+    date: 'March 28, 2024',
+    time: '10:00 AM',
+    participants: 12,
+    type: 'workshop'
+  }
+];
+
+export default function AdminDashboardPage() {
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600">Welcome back! Here&apos;s what&apos;s happening with Alpine Education.</p>
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
+          <p className="text-gray-600">Welcome back! Here's what's happening with Alpine Education.</p>
         </div>
-        <Button onClick={fetchDashboardData} variant="outline">
-          <Activity className="w-4 h-4 mr-2" />
-          Refresh
-        </Button>
-      </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Students</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalStudents.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground">
-                +{Math.floor(stats.totalStudents * 0.12)} from last month
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Applications</CardTitle>
-              <GraduationCap className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalApplications.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground">
-                +{Math.floor(stats.totalApplications * 0.08)} from last month
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Uploads</CardTitle>
-              <UploadIcon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalUploads.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground">
-                +{Math.floor(stats.totalUploads * 0.15)} from last month
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Countries</CardTitle>
-              <Globe className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalCountries}</div>
-              <p className="text-xs text-muted-foreground">
-                Active destinations
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-
-      {/* Analytics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Page Views</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.analytics.pageViews}</div>
-              <p className="text-xs text-muted-foreground">Last 7 days</p>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Form Submissions</CardTitle>
-              <MessageSquare className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.analytics.formSubmissions}</div>
-              <p className="text-xs text-muted-foreground">Last 7 days</p>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-        >
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">File Downloads</CardTitle>
-              <Download className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.analytics.fileDownloads}</div>
-              <p className="text-xs text-muted-foreground">Last 7 days</p>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.7 }}
-        >
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Quiz Completions</CardTitle>
-              <BookOpen className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.analytics.quizCompletions}</div>
-              <p className="text-xs text-muted-foreground">Last 7 days</p>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-
-      {/* Recent Activities */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Applications */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <GraduationCap className="w-5 h-5 mr-2" />
-                Recent Applications
-              </CardTitle>
-              <CardDescription>
-                Latest student applications and their status
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {stats.recentApplications.length > 0 ? (
-                  stats.recentApplications.map((application) => (
-                    <div key={application.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                          <GraduationCap className="w-4 h-4 text-blue-600" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-sm">{application.program}</p>
-                          <p className="text-xs text-gray-500">{application.intake}</p>
-                        </div>
-                      </div>
-                      <Badge className={getStatusColor(application.status)}>
-                        {application.status}
-                      </Badge>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    <GraduationCap className="w-12 h-12 mx-auto mb-2 text-gray-300" />
-                    <p>No recent applications</p>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Recent Uploads */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.9 }}
-        >
-          <Card>
-            <CardHeader>
-                             <CardTitle className="flex items-center">
-                 <UploadIcon className="w-5 h-5 mr-2" />
-                 Recent Uploads
-               </CardTitle>
-              <CardDescription>
-                Latest files uploaded to the system
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {stats.recentUploads.length > 0 ? (
-                  stats.recentUploads.map((upload) => (
-                    <div key={upload.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                          <FileText className="w-4 h-4 text-green-600" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-sm">{upload.originalName}</p>
-                          <p className="text-xs text-gray-500">{formatFileSize(upload.size)}</p>
-                        </div>
-                      </div>
-                      <Badge variant="outline">{upload.fileType}</Badge>
-                    </div>
-                  ))
-                ) : (
-                                     <div className="text-center py-8 text-gray-500">
-                     <UploadIcon className="w-12 h-12 mx-auto mb-2 text-gray-300" />
-                     <p>No recent uploads</p>
-                   </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-
-      {/* Recent Students */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 1.0 }}
-      >
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Users className="w-5 h-5 mr-2" />
-              Recent Students
-            </CardTitle>
-            <CardDescription>
-              Latest student registrations and their progress
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {stats.recentStudents.length > 0 ? (
-                stats.recentStudents.map((student) => (
-                  <div key={student.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                        <span className="text-blue-600 font-medium">
-                          {student.firstName.charAt(0)}{student.lastName.charAt(0)}
+        {/* Stats Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {stats.map((stat, index) => {
+            const IconComponent = stat.icon;
+            const colorClasses = {
+              blue: 'bg-blue-100 text-blue-600',
+              green: 'bg-green-100 text-green-600',
+              purple: 'bg-purple-100 text-purple-600',
+              orange: 'bg-orange-100 text-orange-600'
+            };
+            
+            return (
+              <Card key={index} className="hover:shadow-lg transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">{stat.title}</p>
+                      <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                      <div className="flex items-center mt-2">
+                        {stat.trend === 'up' ? (
+                          <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
+                        ) : (
+                          <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
+                        )}
+                        <span className={`text-sm ${stat.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+                          {stat.change}
                         </span>
                       </div>
-                      <div>
-                        <p className="font-medium text-sm">
-                          {student.firstName} {student.lastName}
-                        </p>
-                        <p className="text-xs text-gray-500">{student.email}</p>
-                      </div>
                     </div>
-                    <div className="text-right">
-                      <Badge className={getStatusColor(student.counselingStage)}>
-                        {student.counselingStage}
-                      </Badge>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {formatDate(student.createdAt)}
-                      </p>
+                    <div className={`p-3 rounded-full ${colorClasses[stat.color as keyof typeof colorClasses]}`}>
+                      <IconComponent className="h-6 w-6" />
                     </div>
                   </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <Users className="w-12 h-12 mx-auto mb-2 text-gray-300" />
-                  <p>No recent students</p>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Recent Activities */}
+          <div className="lg:col-span-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Activity className="h-5 w-5 mr-2" />
+                  Recent Activities
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {recentActivities.map((activity, index) => {
+                    const statusColors = {
+                      pending: 'bg-yellow-100 text-yellow-800',
+                      completed: 'bg-green-100 text-green-800',
+                      approved: 'bg-blue-100 text-blue-800',
+                      new: 'bg-purple-100 text-purple-800',
+                      scheduled: 'bg-orange-100 text-orange-800'
+                    };
+                    
+                    return (
+                      <div key={index} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50">
+                        <div className="flex-shrink-0">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm text-gray-900">{activity.message}</p>
+                          <div className="flex items-center justify-between mt-1">
+                            <span className="text-xs text-gray-500">{activity.time}</span>
+                            <Badge className={`text-xs ${statusColors[activity.status as keyof typeof statusColors]}`}>
+                              {activity.status}
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Top Countries */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <MapPin className="h-5 w-5 mr-2" />
+                  Top Countries
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {topCountries.map((country, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50">
+                      <div>
+                        <p className="font-medium text-gray-900">{country.country}</p>
+                        <p className="text-sm text-gray-600">{country.applications} applications</p>
+                      </div>
+                      <Badge variant="secondary" className="text-green-600">
+                        {country.successRate}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Upcoming Events */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Calendar className="h-5 w-5 mr-2" />
+                  Upcoming Events
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {upcomingEvents.map((event, index) => (
+                    <div key={index} className="p-3 rounded-lg border hover:bg-gray-50">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="font-medium text-gray-900">{event.title}</p>
+                          <p className="text-sm text-gray-600">{event.date} at {event.time}</p>
+                          <p className="text-xs text-gray-500">{event.participants} participants</p>
+                        </div>
+                        <Badge variant="outline" className="text-xs">
+                          {event.type}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="mt-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <Button className="w-full" variant="outline">
+                  <Users className="h-4 w-4 mr-2" />
+                  Add Student
+                </Button>
+                <Button className="w-full" variant="outline">
+                  <FileText className="h-4 w-4 mr-2" />
+                  New Application
+                </Button>
+                <Button className="w-full" variant="outline">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Schedule Event
+                </Button>
+                <Button className="w-full" variant="outline">
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Send Notification
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 } 

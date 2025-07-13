@@ -2,13 +2,14 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://alpine-website-final.vercel.app/sitemap.xml
+Sitemap: https://alpinevisa.com.np/sitemap.xml
 
 # Disallow admin and private areas
 Disallow: /admin/
 Disallow: /api/
 Disallow: /_next/
 Disallow: /student-portal/
+Disallow: /dashboard/
 
 # Allow important pages
 Allow: /
@@ -20,6 +21,75 @@ Allow: /student-services/
 Allow: /study-destinations/
 Allow: /blog/
 Allow: /apply/
+Allow: /resources/
+Allow: /services/
+
+# Country pages
+Allow: /countries/australia/
+Allow: /countries/uk/
+Allow: /countries/canada/
+Allow: /countries/usa/
+Allow: /countries/germany/
+Allow: /countries/france/
+Allow: /countries/new-zealand/
+Allow: /countries/ireland/
+Allow: /countries/netherlands/
+Allow: /countries/spain/
+Allow: /countries/uae/
+Allow: /countries/malta/
+
+# Test preparation pages
+Allow: /test-preparation/ielts/
+Allow: /test-preparation/pte/
+Allow: /test-preparation/toefl/
+
+# Resource pages
+Allow: /resources/blog/
+Allow: /resources/mock-tests/
+Allow: /resources/downloads/
+Allow: /resources/handbooks/
+Allow: /resources/visa-faqs/
+
+# Service pages
+Allow: /services/profile-evaluation/
+Allow: /services/visa/
+Allow: /services/sop/
+Allow: /services/scholarships/
+
+# Legal pages
+Allow: /privacy/
+Allow: /terms/
 
 # Crawl delay for respectful crawling
-Crawl-delay: 1 
+Crawl-delay: 1
+
+# Additional directives for better SEO
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: / 

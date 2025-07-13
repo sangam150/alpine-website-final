@@ -2,6 +2,7 @@
 
 import { MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
 
 export default function CTASection() {
   return (
@@ -13,8 +14,8 @@ export default function CTASection() {
           <MessageCircle className="h-5 w-5 mr-2" /> Book Free Consultation
         </Button>
         <div className="flex justify-center mt-8 gap-4">
-          <img src="/logo.svg" alt="Alpine Logo" className="h-8" />
-          <img src="/icons/icon-192x192.png" alt="Trust Badge" className="h-8 rounded-full border border-gray-200" />
+          <Image src="/logo.svg" alt="Alpine Logo" className="h-8" width={32} height={32} />
+          <Image src="/icons/icon-192x192.png" alt="Trust Badge" className="h-8 rounded-full border border-gray-200" width={32} height={32} />
         </div>
       </div>
     </section>
