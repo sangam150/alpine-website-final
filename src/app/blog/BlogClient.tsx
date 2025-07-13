@@ -14,6 +14,8 @@ import {
   BookOpen
 } from 'lucide-react';
 import Link from 'next/link';
+import fs from 'fs';
+import path from 'path';
 
 // Mock blog posts data (in real implementation, this would come from CMS)
 const blogPosts = [
@@ -97,6 +99,86 @@ const blogPosts = [
   }
 ];
 
+const countryBlogs = [
+  {
+    country: 'Australia',
+    file: 'australia-blog.md',
+    slug: 'australia-blog',
+    title: 'Study in Australia – A Golden Opportunity for Nepali Students',
+    excerpt: 'Why Australia is the top study destination for Nepali students in 2025. Learn about top universities, scholarships, visa guidance, and more.',
+  },
+  {
+    country: 'UK',
+    file: 'uk-blog.md',
+    slug: 'uk-blog',
+    title: 'Study in the UK – Globally Recognized Degrees & Fast-Track Careers',
+    excerpt: 'Explore why the UK is a top choice for Nepali students: universities, scholarships, PSW visa, and more.',
+  },
+  {
+    country: 'Canada',
+    file: 'canada-blog.md',
+    slug: 'canada-blog',
+    title: 'Canada: Your Gateway to Quality Education & Permanent Residency',
+    excerpt: 'World-class institutions, PGWP, scholarships, and PR pathways for Nepali students in Canada.',
+  },
+  {
+    country: 'USA',
+    file: 'usa-blog.md',
+    slug: 'usa-blog',
+    title: 'USA: Land of Innovation & Opportunity',
+    excerpt: 'Top US universities, OPT, scholarships, and why Nepali students choose the USA.',
+  },
+  {
+    country: 'Germany',
+    file: 'germany-blog.md',
+    slug: 'germany-blog',
+    title: 'Germany: Tuition-Free Education + Strong Engineering Focus',
+    excerpt: 'Tuition-free public universities, engineering, scholarships, and PR in Germany for Nepali students.',
+  },
+  {
+    country: 'China',
+    file: 'china-blog.md',
+    slug: 'china-blog',
+    title: 'China: Emerging Education Hub with Global Influence',
+    excerpt: 'Affordable programs, scholarships, and Mandarin skills for Nepali students in China.',
+  },
+  {
+    country: 'New Zealand',
+    file: 'new-zealand-blog.md',
+    slug: 'new-zealand-blog',
+    title: 'New Zealand: Friendly Campus Culture & Work Rights',
+    excerpt: 'Renowned universities, post-study work, and PR pathways in New Zealand for Nepali students.',
+  },
+  {
+    country: 'Portugal',
+    file: 'portugal-blog.md',
+    slug: 'portugal-blog',
+    title: 'Portugal: Budget-Friendly & Welcoming',
+    excerpt: 'Affordable tuition, golden visa, and student life in Portugal for Nepali students.',
+  },
+  {
+    country: 'Spain',
+    file: 'spain-blog.md',
+    slug: 'spain-blog',
+    title: 'Spain: Study in Sunshine at Affordable Prices',
+    excerpt: 'Affordable degrees, vibrant culture, and scholarships for Nepali students in Spain.',
+  },
+  {
+    country: 'France',
+    file: 'france-blog.md',
+    slug: 'france-blog',
+    title: 'France: Prestigious & Affordable Education in Europe',
+    excerpt: 'Top public institutions, scholarships, and student life in France for Nepali students.',
+  },
+  {
+    country: 'Malta',
+    file: 'malta-blog.md',
+    slug: 'malta-blog',
+    title: 'Malta: Small Country, Big Opportunities',
+    excerpt: 'Boutique institutions, English-speaking, and Mediterranean lifestyle for Nepali students in Malta.',
+  },
+];
+
 const categories = [
   'All Posts',
   'Visa Guidance',
@@ -173,6 +255,26 @@ export default function BlogClient() {
                 ))}
               </select>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Country Blog Posts */}
+      <section className="py-12 bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Country-Specific Study Abroad Guides</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {countryBlogs.map((blog) => (
+              <Card key={blog.slug} className="shadow-md hover:shadow-xl transition-shadow">
+                <CardContent className="p-6 flex flex-col h-full">
+                  <h3 className="text-xl font-semibold mb-2">{blog.title}</h3>
+                  <p className="text-gray-600 mb-4 flex-1">{blog.excerpt}</p>
+                  <Link href={`/blog/${blog.slug}`} className="mt-auto inline-flex items-center text-blue-600 hover:underline font-medium">
+                    Read Full Guide <ArrowRight className="ml-2 w-4 h-4" />
+                  </Link>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
