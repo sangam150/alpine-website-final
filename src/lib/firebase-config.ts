@@ -1,16 +1,27 @@
-import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
-import { getAuth, Auth } from 'firebase/auth';
-import { getFirestore, Firestore } from 'firebase/firestore';
-import { getStorage, FirebaseStorage } from 'firebase/storage';
+import { initializeApp, getApps, FirebaseApp } from "firebase/app";
+import { getAuth as firebaseGetAuth, Auth } from "firebase/auth";
+import { getFirestore, Firestore } from "firebase/firestore";
+import {
+  getStorage as firebaseGetStorage,
+  FirebaseStorage,
+} from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 'demo-key',
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || 'alpine-website-final.firebaseapp.com',
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'alpine-website-final',
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || 'alpine-website-final.appspot.com',
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '123456789',
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || '1:123456789:web:abcdef123456',
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || 'G-XXXXXXXXXX'
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "demo-key",
+  authDomain:
+    process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ||
+    "alpine-website-final.firebaseapp.com",
+  projectId:
+    process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "alpine-website-final",
+  storageBucket:
+    process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ||
+    "alpine-website-final.appspot.com",
+  messagingSenderId:
+    process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "123456789",
+  appId:
+    process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:123456789:web:abcdef123456",
+  measurementId:
+    process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "G-XXXXXXXXXX",
 };
 
 // Initialize Firebase only once
@@ -19,53 +30,87 @@ let auth: Auth | null = null;
 let db: Firestore | null = null;
 let storage: FirebaseStorage | null = null;
 
-// Initialize Firebase for both client and server
-try {
-  if (!getApps().length) {
-    app = initializeApp(firebaseConfig);
-  } else {
-    app = getApps()[0];
+// Initialize Firebase only on client side
+const initializeFirebase = () => {
+  if (typeof window === "undefined") {
+    return; // Don't initialize on server side
   }
 
-  // Initialize Firebase services
-  auth = getAuth(app);
-  db = getFirestore(app);
-  storage = getStorage(app);
-} catch (error) {
-  console.warn('Firebase initialization failed:', error);
-  // Create mock objects for development
-  app = null;
-  auth = null;
-  db = null;
-  storage = null;
-}
+  try {
+    if (!getApps().length) {
+      app = initializeApp(firebaseConfig);
+    } else {
+      app = getApps()[0];
+    }
 
-// Export with error checking
-export { auth, db, storage };
+    // Initialize Firebase services
+    auth = firebaseGetAuth(app);
+    db = getFirestore(app);
+    storage = firebaseGetStorage(app);
+  } catch (error) {
+    console.warn("Firebase initialization failed:", error);
+    // Create mock objects for development
+    app = null;
+    auth = null;
+    db = null;
+    storage = null;
+  }
+};
+
+// Initialize Firebase on first client-side access
+let isInitialized = false;
+const ensureInitialized = () => {
+  if (!isInitialized && typeof window !== "undefined") {
+    initializeFirebase();
+    isInitialized = true;
+  }
+};
+
+// Export with lazy initialization
+export const getAuthInstance = () => {
+  ensureInitialized();
+  return auth;
+};
+
+export const getDbInstance = () => {
+  ensureInitialized();
+  return db;
+};
+
+export const getStorageInstance = () => {
+  ensureInitialized();
+  return storage;
+};
 
 // Helper function to check if Firebase is initialized
 export const isFirebaseInitialized = () => {
+  ensureInitialized();
   return app !== null && db !== null;
 };
 
 // Safe Firebase service functions
 export const getFirestoreSafe = () => {
-  if (!db) {
-    throw new Error('Firestore is not initialized');
+  const firestore = getDbInstance();
+  if (!firestore) {
+    throw new Error("Firestore is not initialized");
   }
-  return db;
+  return firestore;
 };
 
 export const getAuthSafe = () => {
-  if (!auth) {
-    throw new Error('Auth is not initialized');
+  const authInstance = getAuthInstance();
+  if (!authInstance) {
+    throw new Error("Auth is not initialized");
   }
-  return auth;
+  return authInstance;
 };
 
 export const getStorageSafe = () => {
-  if (!storage) {
-    throw new Error('Storage is not initialized');
+  const storageInstance = getStorageInstance();
+  if (!storageInstance) {
+    throw new Error("Storage is not initialized");
   }
-  return storage;
-}; 
+  return storageInstance;
+};
+
+export { firebaseConfig };

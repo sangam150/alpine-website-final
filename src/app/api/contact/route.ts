@@ -1,124 +1,74 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase-config';
-import { collection, addDoc } from 'firebase/firestore';
+import { NextRequest, NextResponse } from "next/server";
+import { sendTransactionalEmail } from "@/lib/resend";
+import { addItem } from "@/lib/firestore-admin";
 
-// Email notification function
-async function sendEmailNotification(type: 'admin' | 'user', data: any) {
+export async function POST(req: NextRequest) {
   try {
-    // For now, we'll use a simple console log as email service setup requires additional configuration
-    // In production, you would integrate with services like Resend, SendGrid, or Mailchimp
-    
-    if (type === 'admin') {
-      console.log('📧 ADMIN NOTIFICATION:', {
-        to: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'admin@alpineedu.com',
-        subject: `New Contact Form Submission from ${data.name}`,
-        message: `
-          New contact form submission received:
-          
-          Name: ${data.name}
-          Email: ${data.email}
-          Phone: ${data.phone}
-          Subject: ${data.subject}
-          Country: ${data.country}
-          Course: ${data.course}
-          Message: ${data.message}
-          
-          Submitted at: ${data.createdAt}
-        `
-      });
-    } else {
-      console.log('📧 USER CONFIRMATION:', {
-        to: data.email,
-        subject: 'Thank you for contacting Alpine Education',
-        message: `
-          Dear ${data.name},
-          
-          Thank you for contacting Alpine Education & Visa Services. We have received your message and will get back to you within 24 hours.
-          
-          Your inquiry details:
-          Subject: ${data.subject}
-          Message: ${data.message}
-          
-          If you have any urgent questions, please call us at ${process.env.NEXT_PUBLIC_CONTACT_PHONE || '+977-1-4XXXXXXX'}.
-          
-          Best regards,
-          Alpine Education Team
-        `
-      });
-    }
-    
-    return true;
-  } catch (error) {
-    console.error('Email notification error:', error);
-    return false;
-  }
-}
+    const { name, email, phone, message } = await req.json();
 
-export async function POST(request: NextRequest) {
-  try {
-    if (!db) {
-      return NextResponse.json(
-        { success: false, error: 'Database not initialized' },
-        { status: 500 }
-      );
-    }
-
-    const body = await request.json();
-    const { name, email, phone, subject, message, country, course } = body;
-
-    // Validate required fields
     if (!name || !email || !message) {
       return NextResponse.json(
-        { success: false, error: 'Name, email, and message are required' },
-        { status: 400 }
+        { error: "Missing required fields." },
+        { status: 400 },
       );
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid email format' },
-        { status: 400 }
-      );
-    }
-
-    // Create contact submission data
-    const contactData = {
+    // Store in Firestore
+    await addItem("messages", {
       name,
       email,
-      phone: phone || '',
-      subject: subject || 'General Inquiry',
+      phone: phone || "",
       message,
-      country: country || '',
-      course: course || '',
-      status: 'new',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-
-    // Save to Firestore
-    const docRef = await addDoc(collection(db, 'contacts'), contactData);
-
-    // Send email notifications
-    await sendEmailNotification('admin', contactData);
-    await sendEmailNotification('user', contactData);
-
-    return NextResponse.json({
-      success: true,
-      message: 'Thank you for your message. We will get back to you soon!',
-      data: { id: docRef.id, ...contactData }
+      status: "new",
     });
 
-  } catch (error) {
-    console.error('Error processing contact form:', error);
+    // Compose email content
+    const html = `
+      <h2>New Contact Form Submission</h2>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Phone:</strong> ${phone || "N/A"}</p>
+      <p><strong>Message:</strong></p>
+      <p>${message.replace(/\n/g, "<br/>")}</p>
+    `;
+
+    // Send email to admin
+    const adminResult = await sendTransactionalEmail({
+      to: "info@alpinevisa.com.np",
+      subject: "New Contact Form Submission - Alpine Education",
+      html,
+      replyTo: email,
+    });
+
+    if (!adminResult.success) {
+      return NextResponse.json(
+        { error: "Failed to send email. Please try again later." },
+        { status: 500 },
+      );
+    }
+
+    // Send confirmation email to user
+    const userHtml = `
+      <h2>Thank you for contacting Alpine Education!</h2>
+      <p>Dear ${name},</p>
+      <p>We have received your message and our counselors will get back to you within 24 hours.</p>
+      <p><strong>Your Message:</strong></p>
+      <p>${message.replace(/\n/g, "<br/>")}</p>
+      <hr/>
+      <p>Best regards,<br/>Alpine Education & Visa Services Team</p>
+    `;
+    await sendTransactionalEmail({
+      to: email,
+      subject: "Thank you for contacting Alpine Education",
+      html: userHtml,
+      from: "Alpine Education <no-reply@alpinevisa.com.np>",
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
     return NextResponse.json(
-      { 
-        success: false, 
-        error: 'Failed to process contact form',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
+      { error: error.message || "Something went wrong." },
+      { status: 500 },
     );
   }
-} 
+}

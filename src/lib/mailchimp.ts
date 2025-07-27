@@ -1,9 +1,12 @@
-import mailchimp from '@mailchimp/mailchimp_marketing';
+import mailchimpImport from "@mailchimp/mailchimp_marketing";
+const mailchimp = mailchimpImport as any;
 
 mailchimp.setConfig({
-  apiKey: process.env.MAILCHIMP_API_KEY,
-  server: process.env.MAILCHIMP_SERVER_PREFIX,
+  apiKey: process.env.MAILCHIMP_API_KEY as string || '',
+  server: process.env.MAILCHIMP_SERVER_PREFIX as string || '',
 });
+
+export default mailchimp;
 
 export const addToNewsletter = async (email: string, firstName?: string) => {
   try {
@@ -11,17 +14,20 @@ export const addToNewsletter = async (email: string, firstName?: string) => {
       process.env.MAILCHIMP_AUDIENCE_ID!,
       {
         email_address: email,
-        status: 'subscribed',
+        status: "subscribed",
         merge_fields: {
-          FNAME: firstName || '',
+          FNAME: firstName || "",
         },
-      }
+      },
     );
     return { success: true, data: response };
   } catch (error: unknown) {
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Failed to subscribe to newsletter' 
+    return {
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to subscribe to newsletter",
     };
   }
 };
@@ -30,10 +36,10 @@ export const checkNewsletterStatus = async (email: string) => {
   try {
     const response = await mailchimp.lists.getListMember(
       process.env.MAILCHIMP_AUDIENCE_ID!,
-      email
+      email,
     );
     return { success: true, status: response.status };
   } catch {
-    return { success: false, status: 'not_found' };
+    return { success: false, status: "not_found" };
   }
-}; 
+};

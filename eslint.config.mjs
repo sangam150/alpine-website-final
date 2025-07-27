@@ -18,9 +18,9 @@ const eslintConfig = [
       "@typescript-eslint/ban-ts-comment": "warn",
       "react/no-unescaped-entities": "warn",
       "@next/next/no-html-link-for-pages": "warn",
-      "jsx-a11y/alt-text": "warn"
-    }
-  }
+      "jsx-a11y/alt-text": "warn",
+    },
+  },
 ];
 
 export default eslintConfig;

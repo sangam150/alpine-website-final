@@ -2,10 +2,10 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {
@@ -107,11 +107,11 @@ module.exports = {
           "0%": { transform: "scale(0.95)", opacity: "0" },
           "100%": { transform: "scale(1)", opacity: "1" },
         },
-        "typewriter": {
+        typewriter: {
           "0%": { width: "0" },
           "100%": { width: "100%" },
         },
-        "blink": {
+        blink: {
           "0%, 50%": { borderColor: "transparent" },
           "51%, 100%": { borderColor: "currentColor" },
         },
@@ -125,14 +125,15 @@ module.exports = {
         "slide-in-from-left": "slide-in-from-left 0.5s ease-out",
         "slide-in-from-right": "slide-in-from-right 0.5s ease-out",
         "scale-in": "scale-in 0.3s ease-out",
-        "typewriter": "typewriter 2s steps(40, end)",
-        "blink": "blink 1s infinite",
+        typewriter: "typewriter 2s steps(40, end)",
+        blink: "blink 1s infinite",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "gradient-conic":
+          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
-} 
+};

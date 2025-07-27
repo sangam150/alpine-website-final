@@ -1,281 +1,232 @@
-import { Metadata } from 'next';
-import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, Shield, FileText, Eye, Lock, Database, Users, Phone, Mail } from 'lucide-react';
-
-export const metadata: Metadata = {
-  title: 'Privacy Policy - Alpine Education & Visa Services',
-  description: 'Privacy policy and data protection information for Alpine Education & Visa Services.',
-  keywords: 'privacy policy, data protection, GDPR, alpine education, visa services',
+export const metadata = {
+  title: "Privacy Policy - Alpine Education & Visa Services",
+  description:
+    "Learn how Alpine Education & Visa Services protects your personal information and maintains your privacy.",
 };
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <Link href="/" className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Home
-          </Link>
-          <div className="flex items-center space-x-3 mb-4">
-            <Shield className="h-8 w-8 text-blue-600" />
-            <h1 className="text-3xl font-bold text-gray-900">Privacy Policy</h1>
-          </div>
-          <p className="text-gray-600">Last updated: {new Date().toLocaleDateString()}</p>
+    <div className="max-w-4xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+      <div className="prose prose-lg max-w-none">
+        <h1 className="text-4xl font-bold text-gray-900 mb-8">
+          Privacy Policy
+        </h1>
+
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+          <p className="text-blue-800 mb-0">
+            <strong>Last updated:</strong> January 2025
+          </p>
         </div>
 
-        <div className="max-w-4xl mx-auto space-y-6">
-          {/* Introduction */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">1. Introduction</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                Alpine Education & Visa Services ("we," "our," or "us") is committed to protecting your privacy. 
-                This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you 
-                visit our website or use our services.
-              </p>
-              <p className="text-gray-700">
-                By using our services, you consent to the data practices described in this policy.
-              </p>
-            </CardContent>
-          </Card>
+        <p className="mb-4">
+          We value your privacy and are committed to protecting your personal information. This policy explains how we collect, use, and safeguard your data when you use our website and services. By accessing our website, you agree to this policy and our terms of service.
+        </p>
 
-          {/* Information We Collect */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">2. Information We Collect</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <h3 className="font-semibold text-gray-800">Personal Information:</h3>
-              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                <li>Name, email address, and phone number</li>
-                <li>Educational background and academic records</li>
-                <li>Passport and visa information</li>
-                <li>Financial information for payment processing</li>
-                <li>Communication preferences</li>
-              </ul>
-              
-              <h3 className="font-semibold text-gray-800 mt-4">Automatically Collected Information:</h3>
-              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                <li>IP address and browser type</li>
-                <li>Pages visited and time spent on site</li>
-                <li>Device information and location data</li>
-                <li>Cookies and similar technologies</li>
-              </ul>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            1. Introduction
+          </h2>
+          <p className="text-gray-700 mb-4">
+            Alpine Education & Visa Services (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed
+            to protecting your privacy. This Privacy Policy explains how we
+            collect, use, disclose, and safeguard your information when you
+            visit our website, use our services, or interact with us.
+          </p>
+        </section>
 
-          {/* How We Use Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">3. How We Use Your Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">We use your information to:</p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                <li>Provide study abroad consultation services</li>
-                <li>Process university applications</li>
-                <li>Assist with visa applications</li>
-                <li>Send important updates and notifications</li>
-                <li>Improve our services and website</li>
-                <li>Comply with legal obligations</li>
-                <li>Prevent fraud and ensure security</li>
-              </ul>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            2. Information We Collect
+          </h2>
 
-          {/* Information Sharing */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">4. Information Sharing</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                We do not sell, trade, or rent your personal information to third parties. We may share your 
-                information only in the following circumstances:
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                <li>With your explicit consent</li>
-                <li>With universities and educational institutions</li>
-                <li>With government agencies for visa processing</li>
-                <li>With service providers who assist our operations</li>
-                <li>When required by law or legal process</li>
-                <li>To protect our rights and safety</li>
-              </ul>
-            </CardContent>
-          </Card>
+          <h3 className="text-xl font-medium text-gray-900 mb-3">
+            2.1 Personal Information
+          </h3>
+          <p className="text-gray-700 mb-4">
+            We may collect personal information that you voluntarily provide to
+            us, including:
+          </p>
+          <ul className="list-disc pl-6 text-gray-700 mb-4">
+            <li>Name and contact information (email, phone number, address)</li>
+            <li>Educational background and academic records</li>
+            <li>Passport and visa information</li>
+            <li>Financial information for payment processing</li>
+            <li>Communication preferences</li>
+          </ul>
 
-          {/* Data Security */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">5. Data Security</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                We implement appropriate security measures to protect your personal information:
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                <li>Encryption of sensitive data</li>
-                <li>Secure servers and networks</li>
-                <li>Regular security assessments</li>
-                <li>Access controls and authentication</li>
-                <li>Employee training on data protection</li>
-              </ul>
-              <p className="text-gray-700">
-                However, no method of transmission over the internet is 100% secure, and we cannot guarantee 
-                absolute security.
-              </p>
-            </CardContent>
-          </Card>
+          <h3 className="text-xl font-medium text-gray-900 mb-3">
+            2.2 Automatically Collected Information
+          </h3>
+          <p className="text-gray-700 mb-4">
+            When you visit our website, we automatically collect certain
+            information, including:
+          </p>
+          <ul className="list-disc pl-6 text-gray-700 mb-4">
+            <li>IP address and device information</li>
+            <li>Browser type and version</li>
+            <li>Pages visited and time spent on our website</li>
+            <li>Referring website information</li>
+            <li>Cookies and similar tracking technologies</li>
+          </ul>
+        </section>
 
-          {/* Cookies and Tracking */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">6. Cookies and Tracking Technologies</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                We use cookies and similar technologies to:
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                <li>Remember your preferences</li>
-                <li>Analyze website traffic</li>
-                <li>Improve user experience</li>
-                <li>Provide personalized content</li>
-              </ul>
-              <p className="text-gray-700">
-                You can control cookie settings through your browser preferences.
-              </p>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            3. How We Use Your Information
+          </h2>
+          <p className="text-gray-700 mb-4">
+            We use the information we collect for various purposes, including:
+          </p>
+          <ul className="list-disc pl-6 text-gray-700 mb-4">
+            <li>Providing and improving our services</li>
+            <li>Processing applications and visa requests</li>
+            <li>Communicating with you about our services</li>
+            <li>
+              Sending newsletters and marketing materials (with your consent)
+            </li>
+            <li>Analyzing website usage and improving user experience</li>
+            <li>Complying with legal obligations</li>
+            <li>Preventing fraud and ensuring security</li>
+          </ul>
+        </section>
 
-          {/* Your Rights */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">7. Your Rights</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">You have the right to:</p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                <li>Access your personal information</li>
-                <li>Correct inaccurate data</li>
-                <li>Request deletion of your data</li>
-                <li>Object to processing of your data</li>
-                <li>Withdraw consent at any time</li>
-                <li>Data portability</li>
-                <li>Lodge a complaint with authorities</li>
-              </ul>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            4. Information Sharing and Disclosure
+          </h2>
+          <p className="text-gray-700 mb-4">
+            We do not sell, trade, or otherwise transfer your personal
+            information to third parties without your consent, except in the
+            following circumstances:
+          </p>
+          <ul className="list-disc pl-6 text-gray-700 mb-4">
+            <li>
+              <strong>Service Providers:</strong> We may share information with
+              trusted third-party service providers who assist us in operating
+              our website and providing services.
+            </li>
+            <li>
+              <strong>Legal Requirements:</strong> We may disclose information
+              when required by law or to protect our rights and safety.
+            </li>
+            <li>
+              <strong>Business Transfers:</strong> In the event of a merger,
+              acquisition, or sale of assets, your information may be
+              transferred as part of the transaction.
+            </li>
+          </ul>
+        </section>
 
-          {/* Data Retention */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">8. Data Retention</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                We retain your personal information for as long as necessary to:
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                <li>Provide our services</li>
-                <li>Comply with legal obligations</li>
-                <li>Resolve disputes</li>
-                <li>Enforce agreements</li>
-              </ul>
-              <p className="text-gray-700">
-                When we no longer need your information, we will securely delete or anonymize it.
-              </p>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            5. Data Security
+          </h2>
+          <p className="text-gray-700 mb-4">
+            We implement appropriate technical and organizational measures to
+            protect your personal information against unauthorized access,
+            alteration, disclosure, or destruction. However, no method of
+            transmission over the internet or electronic storage is 100% secure.
+          </p>
+        </section>
 
-          {/* International Transfers */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">9. International Data Transfers</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                Your information may be transferred to and processed in countries other than your own. 
-                We ensure appropriate safeguards are in place to protect your data during such transfers.
-              </p>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            6. Your Rights and Choices
+          </h2>
+          <p className="text-gray-700 mb-4">
+            You have certain rights regarding your personal information,
+            including:
+          </p>
+          <ul className="list-disc pl-6 text-gray-700 mb-4">
+            <li>
+              <strong>Access:</strong> Request access to your personal
+              information
+            </li>
+            <li>
+              <strong>Correction:</strong> Request correction of inaccurate
+              information
+            </li>
+            <li>
+              <strong>Deletion:</strong> Request deletion of your personal
+              information
+            </li>
+            <li>
+              <strong>Portability:</strong> Request a copy of your data in a
+              portable format
+            </li>
+            <li>
+              <strong>Opt-out:</strong> Unsubscribe from marketing
+              communications
+            </li>
+          </ul>
+        </section>
 
-          {/* Children's Privacy */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">10. Children's Privacy</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                Our services are not intended for children under 13 years of age. We do not knowingly 
-                collect personal information from children under 13. If you believe we have collected 
-                such information, please contact us immediately.
-              </p>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            7. Cookies and Tracking Technologies
+          </h2>
+          <p className="text-gray-700 mb-4">
+            We use cookies and similar tracking technologies to enhance your
+            browsing experience, analyze website traffic, and understand where
+            our visitors are coming from. You can control cookie settings
+            through your browser preferences.
+          </p>
+        </section>
 
-          {/* Changes to Policy */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">11. Changes to This Policy</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                We may update this Privacy Policy from time to time. We will notify you of any changes 
-                by posting the new policy on this page and updating the "Last updated" date.
-              </p>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            8. International Data Transfers
+          </h2>
+          <p className="text-gray-700 mb-4">
+            Your information may be transferred to and processed in countries
+            other than your own. We ensure that such transfers comply with
+            applicable data protection laws and implement appropriate
+            safeguards.
+          </p>
+        </section>
 
-          {/* Contact Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">12. Contact Us</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                If you have any questions about this Privacy Policy, please contact us:
-              </p>
-              <div className="space-y-2 text-gray-700">
-                <div className="flex items-center space-x-2">
-                  <Phone className="h-4 w-4" />
-                  <span>+977-1-4XXXXXXX</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Mail className="h-4 w-4" />
-                  <span>info@alpineeducation.com</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Users className="h-4 w-4" />
-                  <span>Kathmandu, Nepal</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            9. Children&apos;s Privacy
+          </h2>
+          <p className="text-gray-700 mb-4">
+            Our services are not intended for children under 13 years of age. We
+            do not knowingly collect personal information from children under
+            13. If you believe we have collected information from a child under
+            13, please contact us immediately.
+          </p>
+        </section>
 
-          {/* Footer Actions */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
-            <Link href="/terms">
-              <Button variant="outline">
-                <FileText className="mr-2 h-4 w-4" />
-                Terms of Use
-              </Button>
-            </Link>
-            <Link href="/contact">
-              <Button>
-                Contact Us
-              </Button>
-            </Link>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            10. Changes to This Privacy Policy
+          </h2>
+          <p className="text-gray-700 mb-4">
+            We may update this privacy policy from time to time. We will notify
+            you of any changes by posting the new policy on this page. You are advised to review this policy periodically for any changes. Changes to this policy are effective when they are posted on this page.
+          </p>
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            11. Contact Us
+          </h2>
+          <p className="text-gray-700 mb-4">
+            If you have any questions about this privacy policy, please contact us at info@alpineeducation.com.
+          </p>
+          <div className="bg-gray-50 rounded-lg p-6">
+            <p className="text-gray-700 mb-2">
+              <strong>Alpine Education & Visa Services</strong>
+              <br />
+              Thamel, Kathmandu, Nepal
+              <br />
+              Email: info@alpineeducation.com
+              <br />
+              Phone: +977-1-4444444
+            </p>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );
-} 
+}

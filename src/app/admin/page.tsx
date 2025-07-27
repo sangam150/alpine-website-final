@@ -1,269 +1,244 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Progress } from '@/components/ui/progress';
-import { 
-  Users, 
-  Globe, 
-  FileText, 
-  Upload, 
-  TrendingUp,
-  Eye,
+"use client";
+
+import { useState, useEffect } from "react";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Users,
+  FileText,
+  CheckCircle,
+  Clock,
+  AlertCircle,
+  Search,
+  Filter,
   Download,
-  Plus,
-  Calendar,
-  MessageSquare,
-  BarChart3,
-  PieChart,
-  Activity,
-  Target,
-  DollarSign,
+  Eye,
   Mail,
   Phone,
-  MapPin,
-  Clock,
-  CheckCircle,
-  AlertCircle,
-  XCircle,
-  Filter,
-  Search,
-  Edit,
-  Trash2,
-  Settings,
-  Bell,
-  Star,
-  Award,
-  BookOpen,
+  Calendar,
   GraduationCap,
-  User
-} from 'lucide-react';
-import Link from 'next/link';
+  Building,
+  Globe,
+  UserCheck,
+  UserX,
+} from "lucide-react";
+import { getFirestoreSafe } from "@/lib/firebase-config";
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  query,
+  where,
+  orderBy,
+} from "firebase/firestore";
 
-// Disable SSR for this page to avoid Firebase initialization issues
-export const dynamic = 'force-dynamic';
-import { useAuth } from "@/components/auth/AuthProvider";
-
-type Lead = {
+interface StudentData {
   id: string;
   name: string;
   email: string;
   phone: string;
   country: string;
-  status: 'new' | 'contacted' | 'qualified' | 'converted' | 'lost';
-  source: string;
-  createdAt: string;
-  lastContact: string;
-  notes: string;
-};
-
-type Analytics = { 
-  users: number; 
-  leads: number; 
-  applications: number;
-  revenue: number;
-  conversionRate: number;
-  averageResponseTime: number;
-};
-
-interface DashboardStats {
-  totalStudents: number;
-  totalUploads: number;
-  totalCountries: number;
-  statusCounts: Record<string, number>;
-  recentStudents: any[];
-  monthlyGrowth: number;
-  topCountries: Array<{country: string; count: number}>;
-  leadSources: Array<{source: string; count: number}>;
+  course: string;
+  university: string;
+  status: "pending" | "in-progress" | "completed" | "rejected";
+  progress: number;
+  documents: {
+    name: string;
+    status: "pending" | "uploaded" | "approved" | "rejected";
+    uploadedAt?: string;
+    downloadUrl?: string;
+  }[];
+  timeline: {
+    date: string;
+    event: string;
+    status: "completed" | "pending" | "in-progress";
+  }[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-interface ChartData {
-  labels: string[];
-  datasets: Array<{
-    label: string;
-    data: number[];
-    backgroundColor: string[];
-    borderColor: string[];
-  }>;
-}
+type FilterStatus =
+  | "all"
+  | "pending"
+  | "in-progress"
+  | "completed"
+  | "rejected";
 
 export default function AdminDashboard() {
-  const { user, loading, signInWithGoogle } = useAuth();
-  const [isAdmin, setIsAdmin] = React.useState(false);
-  const [leads, setLeads] = React.useState<Lead[]>([]);
-  const [loadingLeads, setLoadingLeads] = React.useState(true);
-  const [analytics, setAnalytics] = React.useState<Analytics>({ 
-    users: 0, 
-    leads: 0, 
-    applications: 0,
-    revenue: 0,
-    conversionRate: 0,
-    averageResponseTime: 0
-  });
-  const [stats, setStats] = useState<DashboardStats>({
-    totalStudents: 0,
-    totalUploads: 0,
-    totalCountries: 0,
-    statusCounts: {},
-    recentStudents: [],
-    monthlyGrowth: 0,
-    topCountries: [],
-    leadSources: []
-  });
-  const [loadingStats, setLoadingStats] = useState(true);
-  const [activeTab, setActiveTab] = useState('overview');
+  const { user, signOut } = useAuth();
+  const [students, setStudents] = useState<StudentData[]>([]);
+  const [filteredStudents, setFilteredStudents] = useState<StudentData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<FilterStatus>("all");
+  const [selectedStudent, setSelectedStudent] = useState<StudentData | null>(
+    null,
+  );
 
-  React.useEffect(() => {
-    if (!user) return;
-    // Check admin status via API
-    const checkAdmin = async () => {
+  // Load all students from Firestore
+  useEffect(() => {
+    const loadStudents = async () => {
       try {
-        const response = await fetch('/api/auth/check-admin');
-        const data = await response.json();
-        setIsAdmin(data.isAdmin);
+        const db = getFirestoreSafe();
+        const studentsRef = collection(db, "students");
+        const q = query(studentsRef, orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(q);
+
+        const studentsData: StudentData[] = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as StudentData[];
+
+        setStudents(studentsData);
+        setFilteredStudents(studentsData);
       } catch (error) {
-        console.error('Error checking admin status:', error);
-        setIsAdmin(false);
+        console.error("Error loading students:", error);
+      } finally {
+        setLoading(false);
       }
     };
-    checkAdmin();
+
+    if (user) {
+      loadStudents();
+    }
   }, [user]);
 
-  React.useEffect(() => {
-    if (!isAdmin) return;
-    const fetchLeads = async () => {
-      setLoadingLeads(true);
-      try {
-        const response = await fetch('/api/leads');
-        const data = await response.json();
-        if (data.success) {
-          setLeads(data.data);
-        }
-      } catch (error) {
-        console.error('Error fetching leads:', error);
-      }
-      setLoadingLeads(false);
-    };
-    fetchLeads();
-  }, [isAdmin]);
-
-  // Analytics: count users, leads, uploads
-  React.useEffect(() => {
-    if (!isAdmin) return;
-    const fetchAnalytics = async () => {
-      try {
-        const [usersResponse, leadsResponse] = await Promise.all([
-          fetch('/api/users'),
-          fetch('/api/leads')
-        ]);
-        
-        const usersData = await usersResponse.json();
-        const leadsData = await leadsResponse.json();
-        
-        setAnalytics({
-          users: usersData.success ? usersData.data.length : 0,
-          leads: leadsData.success ? leadsData.data.length : 0,
-          applications: 45,
-          revenue: 125000,
-          conversionRate: 23.5,
-          averageResponseTime: 2.3
-        });
-      } catch (error) {
-        console.error('Error fetching analytics:', error);
-      }
-    };
-    fetchAnalytics();
-  }, [isAdmin]);
-
+  // Filter students based on search term and status
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const response = await fetch('/api/admin/dashboard-stats');
-        const data = await response.json();
-        if (data.success) {
-          setStats({
-            ...data.data,
-            monthlyGrowth: 15.2,
-            topCountries: [
-              { country: 'Canada', count: 25 },
-              { country: 'Australia', count: 18 },
-              { country: 'UK', count: 12 },
-              { country: 'USA', count: 8 },
-              { country: 'Germany', count: 6 }
-            ],
-            leadSources: [
-              { source: 'Website', count: 45 },
-              { source: 'Social Media', count: 28 },
-              { source: 'Referral', count: 15 },
-              { source: 'Google Ads', count: 12 }
-            ]
-          });
-        }
-      } catch (error) {
-        console.error('Error fetching dashboard stats:', error);
-      } finally {
-        setLoadingStats(false);
-      }
-    };
+    let filtered = students;
 
-    fetchStats();
-  }, []);
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (student) =>
+          student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          student.course.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          student.university.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
+    }
+
+    // Filter by status
+    if (statusFilter !== "all") {
+      filtered = filtered.filter((student) => student.status === statusFilter);
+    }
+
+    setFilteredStudents(filtered);
+  }, [students, searchTerm, statusFilter]);
+
+  const handleStatusUpdate = async (
+    studentId: string,
+    newStatus: StudentData["status"],
+  ) => {
+    try {
+      const db = getFirestoreSafe();
+      await updateDoc(doc(db, "students", studentId), {
+        status: newStatus,
+        updatedAt: new Date().toISOString(),
+      });
+
+      // Update local state
+      setStudents((prev) =>
+        prev.map((student) =>
+          student.id === studentId
+            ? { ...student, status: newStatus }
+            : student,
+        ),
+      );
+    } catch (error) {
+      console.error("Error updating student status:", error);
+    }
+  };
+
+  const handleDocumentApproval = async (
+    studentId: string,
+    documentName: string,
+    approved: boolean,
+  ) => {
+    try {
+      const db = getFirestoreSafe();
+      const student = students.find((s) => s.id === studentId);
+      if (!student) return;
+
+      const updatedDocuments = student.documents.map((doc) =>
+        doc.name === documentName
+          ? {
+              ...doc,
+              status: approved ? ("approved" as const) : ("rejected" as const),
+            }
+          : doc,
+      );
+
+      await updateDoc(doc(db, "students", studentId), {
+        documents: updatedDocuments,
+        updatedAt: new Date().toISOString(),
+      });
+
+      // Update local state
+      setStudents((prev) =>
+        prev.map((student) =>
+          student.id === studentId
+            ? { ...student, documents: updatedDocuments }
+            : student,
+        ),
+      );
+    } catch (error) {
+      console.error("Error updating document status:", error);
+    }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'new':
-        return 'bg-blue-100 text-blue-800';
-      case 'contacted':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'qualified':
-        return 'bg-green-100 text-green-800';
-      case 'converted':
-        return 'bg-purple-100 text-purple-800';
-      case 'lost':
-        return 'bg-red-100 text-red-800';
+      case "completed":
+        return "text-green-600 bg-green-100";
+      case "in-progress":
+        return "text-blue-600 bg-blue-100";
+      case "pending":
+        return "text-yellow-600 bg-yellow-100";
+      case "rejected":
+        return "text-red-600 bg-red-100";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "text-gray-600 bg-gray-100";
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'new':
-        return <AlertCircle className="h-4 w-4 text-blue-500" />;
-      case 'contacted':
-        return <Clock className="h-4 w-4 text-yellow-500" />;
-      case 'qualified':
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'converted':
-        return <Star className="h-4 w-4 text-purple-500" />;
-      case 'lost':
-        return <XCircle className="h-4 w-4 text-red-500" />;
+      case "completed":
+        return <CheckCircle className="w-4 h-4" />;
+      case "in-progress":
+        return <Clock className="w-4 h-4" />;
+      case "pending":
+        return <AlertCircle className="w-4 h-4" />;
+      case "rejected":
+        return <AlertCircle className="w-4 h-4" />;
       default:
-        return <Clock className="h-4 w-4 text-gray-500" />;
+        return <Clock className="w-4 h-4" />;
     }
   };
 
-  if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
-  }
+  const stats = {
+    total: students.length,
+    pending: students.filter((s) => s.status === "pending").length,
+    inProgress: students.filter((s) => s.status === "in-progress").length,
+    completed: students.filter((s) => s.status === "completed").length,
+    rejected: students.filter((s) => s.status === "rejected").length,
+  };
 
-  if (!user || !isAdmin) {
+  if (!user) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4">
-        <h2 className="text-xl font-semibold">Admin access only</h2>
-        <Button onClick={signInWithGoogle}>Sign in with Google</Button>
-      </div>
-    );
-  }
-
-  if (loadingStats) {
-    return (
-      <div className="flex items-center justify-center h-64">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-2 text-gray-600">Loading dashboard...</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            Access Denied
+          </h1>
+          <p className="text-gray-600">
+            Please sign in to access the admin dashboard.
+          </p>
         </div>
       </div>
     );
@@ -275,399 +250,366 @@ export default function AdminDashboard() {
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-              <p className="text-gray-600">Welcome back, {user.displayName || user.email}</p>
-            </div>
             <div className="flex items-center space-x-4">
-              <Button variant="outline" size="sm">
-                <Bell className="h-4 w-4 mr-2" />
-                Notifications
-              </Button>
-              <Button size="sm">
-                <Settings className="h-4 w-4 mr-2" />
-                Settings
-              </Button>
+              <Users className="w-8 h-8 text-blue-600" />
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">
+                  Admin Dashboard
+                </h1>
+                <p className="text-sm text-gray-600">
+                  Manage student applications
+                </p>
+              </div>
             </div>
+            <Button variant="outline" onClick={signOut}>
+              Sign Out
+            </Button>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Total Students</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.totalStudents}</p>
-                  <p className="text-xs text-green-600">+{stats.monthlyGrowth}% this month</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Students
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.total}
+                  </p>
                 </div>
-                <Users className="h-8 w-8 text-blue-600" />
+                <Users className="w-8 h-8 text-blue-600" />
               </div>
             </CardContent>
           </Card>
-          
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Active Leads</p>
-                  <p className="text-2xl font-bold text-gray-900">{analytics.leads}</p>
-                  <p className="text-xs text-blue-600">{analytics.conversionRate}% conversion</p>
+                  <p className="text-sm font-medium text-gray-600">Pending</p>
+                  <p className="text-2xl font-bold text-yellow-600">
+                    {stats.pending}
+                  </p>
                 </div>
-                <Target className="h-8 w-8 text-green-600" />
+                <AlertCircle className="w-8 h-8 text-yellow-600" />
               </div>
             </CardContent>
           </Card>
-          
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Revenue</p>
-                  <p className="text-2xl font-bold text-gray-900">₹{analytics.revenue.toLocaleString()}</p>
-                  <p className="text-xs text-green-600">+12.5% this month</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    In Progress
+                  </p>
+                  <p className="text-2xl font-bold text-blue-600">
+                    {stats.inProgress}
+                  </p>
                 </div>
-                <DollarSign className="h-8 w-8 text-purple-600" />
+                <Clock className="w-8 h-8 text-blue-600" />
               </div>
             </CardContent>
           </Card>
-          
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Response Time</p>
-                  <p className="text-2xl font-bold text-gray-900">{analytics.averageResponseTime}h</p>
-                  <p className="text-xs text-green-600">Avg response time</p>
+                  <p className="text-sm font-medium text-gray-600">Completed</p>
+                  <p className="text-2xl font-bold text-green-600">
+                    {stats.completed}
+                  </p>
                 </div>
-                <Clock className="h-8 w-8 text-orange-600" />
+                <CheckCircle className="w-8 h-8 text-green-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Rejected</p>
+                  <p className="text-2xl font-bold text-red-600">
+                    {stats.rejected}
+                  </p>
+                </div>
+                <UserX className="w-8 h-8 text-red-600" />
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Main Content */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="leads">Leads</TabsTrigger>
-            <TabsTrigger value="students">Students</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
-            <TabsTrigger value="content">Content</TabsTrigger>
-          </TabsList>
+        {/* Filters */}
+        <Card className="mb-8">
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1">
+                <Label htmlFor="search">Search Students</Label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Input
+                    id="search"
+                    placeholder="Search by name, email, course, or university..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="status-filter">Filter by Status</Label>
+                <select
+                  id="status-filter"
+                  value={statusFilter}
+                  onChange={(e) =>
+                    setStatusFilter(e.target.value as FilterStatus)
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Status</option>
+                  <option value="pending">Pending</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="completed">Completed</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-          <TabsContent value="overview" className="space-y-6">
-            {/* Quick Stats */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Top Countries</CardTitle>
-                  <CardDescription>Most popular study destinations</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {stats.topCountries.map((item, index) => (
-                      <div key={item.country} className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-medium text-blue-600">{index + 1}</span>
+        {/* Students List */}
+        <div className="grid gap-6">
+          {loading ? (
+            <div className="text-center py-8">
+              <p className="text-gray-600">Loading students...</p>
+            </div>
+          ) : filteredStudents.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-gray-600">No students found.</p>
+            </div>
+          ) : (
+            filteredStudents.map((student) => (
+              <Card
+                key={student.id}
+                className="hover:shadow-md transition-shadow"
+              >
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {student.name}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {student.email}
+                          </p>
+                        </div>
+                        <span
+                          className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(student.status)}`}
+                        >
+                          {student.status.replace("-", " ").toUpperCase()}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                        <div className="flex items-center gap-2">
+                          <Phone className="w-4 h-4 text-gray-400" />
+                          <span className="text-sm text-gray-600">
+                            {student.phone}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Globe className="w-4 h-4 text-gray-400" />
+                          <span className="text-sm text-gray-600">
+                            {student.country}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <GraduationCap className="w-4 h-4 text-gray-400" />
+                          <span className="text-sm text-gray-600">
+                            {student.course}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Building className="w-4 h-4 text-gray-400" />
+                          <span className="text-sm text-gray-600">
+                            {student.university}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-sm font-medium text-gray-700">
+                              Progress
+                            </span>
+                            <span className="text-sm font-bold text-blue-600">
+                              {student.progress}%
+                            </span>
                           </div>
-                          <span className="font-medium">{item.country}</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Progress value={(item.count / stats.totalStudents) * 100} className="w-20" />
-                          <span className="text-sm text-gray-600">{item.count}</span>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${student.progress}%` }}
+                            ></div>
+                          </div>
                         </div>
                       </div>
-                    ))}
+                    </div>
+
+                    <div className="flex flex-col gap-2 ml-4">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() =>
+                          setSelectedStudent(
+                            selectedStudent?.id === student.id ? null : student,
+                          )
+                        }
+                      >
+                        <Eye className="w-4 h-4 mr-1" />
+                        {selectedStudent?.id === student.id
+                          ? "Hide"
+                          : "View"}{" "}
+                        Details
+                      </Button>
+
+                      <select
+                        value={student.status}
+                        onChange={(e) =>
+                          handleStatusUpdate(
+                            student.id,
+                            e.target.value as StudentData["status"],
+                          )
+                        }
+                        className="px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                        <option value="rejected">Rejected</option>
+                      </select>
+                    </div>
                   </div>
+
+                  {/* Expanded Details */}
+                  {selectedStudent?.id === student.id && (
+                    <div className="mt-6 pt-6 border-t border-gray-200">
+                      <h4 className="font-semibold text-gray-900 mb-4">
+                        Documents
+                      </h4>
+                      <div className="space-y-3">
+                        {student.documents.map((doc, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                          >
+                            <div className="flex items-center gap-3">
+                              {getStatusIcon(doc.status)}
+                              <div>
+                                <p className="font-medium text-gray-900">
+                                  {doc.name}
+                                </p>
+                                {doc.uploadedAt && (
+                                  <p className="text-xs text-gray-500">
+                                    Uploaded:{" "}
+                                    {new Date(
+                                      doc.uploadedAt,
+                                    ).toLocaleDateString()}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span
+                                className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(doc.status)}`}
+                              >
+                                {doc.status}
+                              </span>
+                              {doc.downloadUrl && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() =>
+                                    window.open(doc.downloadUrl, "_blank")
+                                  }
+                                >
+                                  <Download className="w-4 h-4 mr-1" />
+                                  View
+                                </Button>
+                              )}
+                              {doc.status === "uploaded" && (
+                                <div className="flex gap-1">
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() =>
+                                      handleDocumentApproval(
+                                        student.id,
+                                        doc.name,
+                                        true,
+                                      )
+                                    }
+                                    className="text-green-600 hover:text-green-700"
+                                  >
+                                    <UserCheck className="w-4 h-4" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() =>
+                                      handleDocumentApproval(
+                                        student.id,
+                                        doc.name,
+                                        false,
+                                      )
+                                    }
+                                    className="text-red-600 hover:text-red-700"
+                                  >
+                                    <UserX className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <h4 className="font-semibold text-gray-900 mb-4 mt-6">
+                        Timeline
+                      </h4>
+                      <div className="space-y-3">
+                        {student.timeline.map((item, index) => (
+                          <div key={index} className="flex items-start gap-4">
+                            <div
+                              className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${getStatusColor(item.status)}`}
+                            >
+                              {getStatusIcon(item.status)}
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900">
+                                {item.event}
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                {item.date}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Lead Sources</CardTitle>
-                  <CardDescription>Where our leads come from</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {stats.leadSources.map((item, index) => (
-                      <div key={item.source} className="flex items-center justify-between">
-                        <span className="font-medium">{item.source}</span>
-                        <div className="flex items-center space-x-2">
-                          <Progress value={(item.count / analytics.leads) * 100} className="w-20" />
-                          <span className="text-sm text-gray-600">{item.count}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Recent Activity */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>Latest updates and activities</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-                    <CheckCircle className="h-5 w-5 text-green-600" />
-                    <div>
-                      <p className="font-medium">New student application approved</p>
-                      <p className="text-sm text-gray-600">University of Toronto - Master of Computer Science</p>
-                    </div>
-                    <span className="text-xs text-gray-500 ml-auto">2 hours ago</span>
-                  </div>
-                  
-                  <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-                    <MessageSquare className="h-5 w-5 text-blue-600" />
-                    <div>
-                      <p className="font-medium">New lead inquiry received</p>
-                      <p className="text-sm text-gray-600">From website contact form</p>
-                    </div>
-                    <span className="text-xs text-gray-500 ml-auto">4 hours ago</span>
-                  </div>
-                  
-                  <div className="flex items-center space-x-3 p-3 bg-yellow-50 rounded-lg">
-                    <Upload className="h-5 w-5 text-yellow-600" />
-                    <div>
-                      <p className="font-medium">Document uploaded</p>
-                      <p className="text-sm text-gray-600">IELTS Score Report - Student ID: STU001</p>
-                    </div>
-                    <span className="text-xs text-gray-500 ml-auto">6 hours ago</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="leads" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle>Lead Management</CardTitle>
-                    <CardDescription>Manage and track all leads</CardDescription>
-                  </div>
-                  <Button>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Lead
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {leads.map((lead) => (
-                    <div key={lead.id} className="flex items-center justify-between p-4 border rounded-lg">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                          <User className="h-5 w-5 text-blue-600" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">{lead.name}</h3>
-                          <p className="text-sm text-gray-600">{lead.email}</p>
-                          <p className="text-xs text-gray-500">{lead.country} • {lead.source}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-4">
-                        <Badge className={getStatusColor(lead.status)}>
-                          {lead.status}
-                        </Badge>
-                        <div className="text-right">
-                          <p className="text-xs text-gray-500">Created: {lead.createdAt}</p>
-                          <p className="text-xs text-gray-500">Last contact: {lead.lastContact}</p>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button variant="ghost" size="sm">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            <MessageSquare className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="students" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle>Student Management</CardTitle>
-                    <CardDescription>Track all student applications and progress</CardDescription>
-                  </div>
-                  <Button>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Student
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {stats.recentStudents.map((student: any) => (
-                    <div key={student.id} className="border rounded-lg p-4">
-                      <div className="flex items-center space-x-3 mb-3">
-                        <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                          <GraduationCap className="h-5 w-5 text-green-600" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">{student.name}</h3>
-                          <p className="text-sm text-gray-600">{student.university}</p>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span>Progress</span>
-                          <span>{student.progress}%</span>
-                        </div>
-                        <Progress value={student.progress} className="h-2" />
-                        <div className="flex justify-between text-xs text-gray-500">
-                          <span>{student.country}</span>
-                          <span>{student.status}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="analytics" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Performance Metrics</CardTitle>
-                  <CardDescription>Key performance indicators</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span>Conversion Rate</span>
-                      <span className="font-semibold">{analytics.conversionRate}%</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Average Response Time</span>
-                      <span className="font-semibold">{analytics.averageResponseTime} hours</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Student Satisfaction</span>
-                      <span className="font-semibold">4.8/5</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Visa Success Rate</span>
-                      <span className="font-semibold">95%</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Revenue Analytics</CardTitle>
-                  <CardDescription>Financial performance overview</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span>Monthly Revenue</span>
-                      <span className="font-semibold">₹{analytics.revenue.toLocaleString()}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Growth Rate</span>
-                      <span className="font-semibold text-green-600">+{stats.monthlyGrowth}%</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Average Deal Size</span>
-                      <span className="font-semibold">₹25,000</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>Customer Lifetime Value</span>
-                      <span className="font-semibold">₹75,000</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="content" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle>Content Management</CardTitle>
-                    <CardDescription>Manage website content and resources</CardDescription>
-                  </div>
-                  <Button>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Content
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div className="border rounded-lg p-4">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <BookOpen className="h-8 w-8 text-blue-600" />
-                      <div>
-                        <h3 className="font-semibold">Blog Posts</h3>
-                        <p className="text-sm text-gray-600">50+ articles</p>
-                      </div>
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">View All</Button>
-                      <Button variant="outline" size="sm">Add New</Button>
-                    </div>
-                  </div>
-
-                  <div className="border rounded-lg p-4">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <FileText className="h-8 w-8 text-green-600" />
-                      <div>
-                        <h3 className="font-semibold">Resources</h3>
-                        <p className="text-sm text-gray-600">25+ downloads</p>
-                      </div>
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">View All</Button>
-                      <Button variant="outline" size="sm">Add New</Button>
-                    </div>
-                  </div>
-
-                  <div className="border rounded-lg p-4">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <Globe className="h-8 w-8 text-purple-600" />
-                      <div>
-                        <h3 className="font-semibold">Countries</h3>
-                        <p className="text-sm text-gray-600">12 destinations</p>
-                      </div>
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">View All</Button>
-                      <Button variant="outline" size="sm">Add New</Button>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
-} 
+}

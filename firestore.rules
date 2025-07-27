@@ -1,0 +1,113 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Admin access - full control for authenticated admins
+    match /admin/{document=**} {
+      allow read, write: if request.auth != null && 
+        request.auth.token.role == 'admin';
+    }
+    
+    // Student data - users can only access their own data
+    match /students/{userId} {
+      allow read, write: if request.auth != null && 
+        request.auth.uid == userId;
+      
+      // Students can update their own profile
+      match /profile/{document} {
+        allow read, write: if request.auth != null && 
+          request.auth.uid == userId;
+      }
+      
+      // Students can upload their own documents
+      match /documents/{document} {
+        allow read, write: if request.auth != null && 
+          request.auth.uid == userId;
+      }
+    }
+    
+    // Public content - readable by all, writable by admins
+    match /content/{document} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        request.auth.token.role == 'admin';
+    }
+    
+    // Blog posts - readable by all, writable by admins
+    match /blog/{postId} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        request.auth.token.role == 'admin';
+    }
+    
+    // Country information - readable by all, writable by admins
+    match /countries/{countryId} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        request.auth.token.role == 'admin';
+    }
+    
+    // Leads - readable by admins, writable by all (for contact forms)
+    match /leads/{leadId} {
+      allow read: if request.auth != null && 
+        request.auth.token.role == 'admin';
+      allow create: if true; // Allow form submissions
+      allow update: if request.auth != null && 
+        request.auth.token.role == 'admin';
+    }
+    
+    // Newsletters - readable by admins, writable by all (for signups)
+    match /newsletters/{subscriberId} {
+      allow read: if request.auth != null && 
+        request.auth.token.role == 'admin';
+      allow create: if true; // Allow newsletter signups
+      allow update: if request.auth != null && 
+        request.auth.token.role == 'admin';
+    }
+    
+    // Testimonials - readable by all, writable by admins
+    match /testimonials/{testimonialId} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        request.auth.token.role == 'admin';
+    }
+    
+    // Services - readable by all, writable by admins
+    match /services/{serviceId} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        request.auth.token.role == 'admin';
+    }
+    
+    // Resources - readable by all, writable by admins
+    match /resources/{resourceId} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        request.auth.token.role == 'admin';
+    }
+    
+    // Analytics - readable by admins only
+    match /analytics/{document} {
+      allow read, write: if request.auth != null && 
+        request.auth.token.role == 'admin';
+    }
+    
+    // User sessions - users can read their own sessions
+    match /sessions/{sessionId} {
+      allow read, write: if request.auth != null && 
+        request.auth.uid == resource.data.userId;
+    }
+    
+    // File uploads - users can upload to their own folder
+    match /uploads/{userId}/{fileName} {
+      allow read, write: if request.auth != null && 
+        request.auth.uid == userId;
+    }
+    
+    // Admin uploads - admins can upload to admin folder
+    match /uploads/admin/{fileName} {
+      allow read, write: if request.auth != null && 
+        request.auth.token.role == 'admin';
+    }
+  }
+} 

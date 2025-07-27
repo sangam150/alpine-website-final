@@ -1,44 +1,28 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { addToNewsletter } from '@/lib/mailchimp';
+import { NextRequest, NextResponse } from "next/server";
+import { addToNewsletter } from "@/lib/mailchimp";
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const { email, firstName } = await request.json();
-
+    const { email, firstName } = await req.json();
     if (!email) {
       return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
+        { error: "Email is required." },
+        { status: 400 },
       );
     }
-
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Invalid email format' },
-        { status: 400 }
-      );
-    }
-
     const result = await addToNewsletter(email, firstName);
-
     if (result.success) {
-      return NextResponse.json(
-        { message: 'Successfully subscribed to newsletter' },
-        { status: 200 }
-      );
+      return NextResponse.json({ success: true });
     } else {
       return NextResponse.json(
-        { error: result.error || 'Failed to subscribe to newsletter' },
-        { status: 500 }
+        { error: result.error || "Failed to subscribe." },
+        { status: 500 },
       );
     }
-  } catch (error) {
-    console.error('Newsletter signup error:', error);
+  } catch (error: any) {
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: error.message || "Something went wrong." },
+      { status: 500 },
     );
   }
-} 
+}

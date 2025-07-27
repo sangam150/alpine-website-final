@@ -2,117 +2,404 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .btn-gold {
-    @apply bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-bold rounded-xl shadow hover:from-yellow-500 hover:to-yellow-400 hover:scale-105 transition-all duration-200;
-  }
-  .nav-link {
-    @apply text-gray-700 font-medium hover:text-blue-600 transition-colors px-2 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300;
-  }
-  .text-animate {
-    @apply animate-pulse;
-  }
-  
-  /* Blog specific utilities */
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  
-  .line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  
-  .prose-responsive {
-    @apply prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl;
-  }
-  
-  .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
-  }
+/* Alpine Education Theme Colors with Nepali Cultural Elements */
+:root {
+  --alpine-blue: #2563eb;
+  --alpine-blue-dark: #1d4ed8;
+  --alpine-gold: #f59e0b;
+  --alpine-gold-dark: #d97706;
+  --alpine-navy: #1a2c5b;
+  --alpine-gray-light: #f8fafc;
+  --alpine-gray: #64748b;
+  --alpine-gray-dark: #334155;
+
+  /* Nepali Cultural Colors */
+  --nepali-crimson: #dc2626; /* Nepali flag red */
+  --nepali-blue: #2563eb; /* Nepali flag blue */
+  --prayer-flag-red: #dc2626;
+  --prayer-flag-yellow: #f59e0b;
+  --prayer-flag-blue: #2563eb;
+  --prayer-flag-green: #059669;
+  --prayer-flag-purple: #7c3aed;
+  --lotus-gold: #f59e0b;
+  --himalayan-snow: #f8fafc;
 }
 
-body {
-  @apply bg-white min-h-screen font-sans text-gray-900;
-}
-
-section {
-  @apply w-full;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  @apply font-display;
-}
-
-.card {
-  @apply bg-white rounded-2xl shadow-md border border-gray-100 p-8;
-}
-
-/* Remove old custom classes and visual clutter */
-.success-check {
-  @apply text-green-500 animate-bounce;
-}
-
-/* Blob animations for hero section */
-@keyframes blob {
-  0% {
-    transform: translate(0px, 0px) scale(1);
+/* Global Styles */
+@layer base {
+  html {
+    scroll-behavior: smooth;
   }
-  33% {
-    transform: translate(30px, -50px) scale(1.1);
-  }
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
-  }
-  100% {
-    transform: translate(0px, 0px) scale(1);
-  }
-}
 
-.animate-blob {
-  animation: blob 7s infinite;
-}
-
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
-
-.animation-delay-4000 {
-  animation-delay: 4s;
-}
-
-/* Slide down animation for mobile menu */
-@keyframes slide-down {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
+  body {
+    font-family:
+      "Inter",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      sans-serif;
+    line-height: 1.6;
+    color: var(--alpine-gray-dark);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-.animate-slide-down {
-  animation: slide-down 0.3s ease-out;
-}
-
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+  /* Alpine Theme Colors */
+  .text-alpine-blue {
+    color: var(--alpine-blue);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-.animate-slide-up {
-  animation: slide-up 0.3s ease-out;
+  .text-alpine-gold {
+    color: var(--alpine-gold);
+  }
+
+  .text-nepali-crimson {
+    color: var(--nepali-crimson);
+  }
+
+  .bg-alpine-blue {
+    background-color: var(--alpine-blue);
+  }
+
+  .bg-alpine-gold {
+    background-color: var(--alpine-gold);
+  }
+
+  .bg-nepali-crimson {
+    background-color: var(--nepali-crimson);
+  }
+
+  .border-alpine-blue {
+    border-color: var(--alpine-blue);
+  }
+
+  .border-alpine-gold {
+    border-color: var(--alpine-gold);
+  }
+
+  .border-nepali-crimson {
+    border-color: var(--nepali-crimson);
+  }
+
+  /* Hover Effects */
+  .hover-alpine-blue:hover {
+    color: var(--alpine-blue);
+  }
+
+  .hover-alpine-gold:hover {
+    color: var(--alpine-gold);
+  }
+
+  .hover-nepali-crimson:hover {
+    color: var(--nepali-crimson);
+  }
+
+  /* Focus States */
+  .focus-alpine-blue:focus {
+    border-color: var(--alpine-blue);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  .focus-nepali-crimson:focus {
+    border-color: var(--nepali-crimson);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+  }
+
+  /* Button Styles */
+  .btn-alpine-primary {
+    @apply bg-[#2563EB] hover:bg-[#1d4ed8] text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20;
+  }
+
+  .btn-alpine-secondary {
+    @apply bg-[#F59E0B] hover:bg-[#D97706] text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#F59E0B]/20;
+  }
+
+  .btn-nepali-crimson {
+    @apply bg-[#DC2626] hover:bg-[#B91C1C] text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#DC2626]/20;
+  }
+
+  .btn-alpine-outline {
+    @apply border-[#2563EB] text-[#2563EB] hover:bg-[#2563EB]/5 font-medium py-2 px-4 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20;
+  }
+
+  /* Card Styles */
+  .card-alpine {
+    @apply bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300;
+  }
+
+  .card-alpine-hover {
+    @apply bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-xl hover:border-[#2563EB]/20 transition-all duration-300 transform hover:-translate-y-1;
+  }
+
+  .card-nepali {
+    @apply bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-xl hover:border-[#DC2626]/20 transition-all duration-300 transform hover:-translate-y-1;
+  }
+
+  /* Section Styles */
+  .section-alpine {
+    @apply py-16 lg:py-24;
+  }
+
+  .container-alpine {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Typography */
+  .heading-alpine {
+    @apply text-3xl lg:text-4xl font-bold text-[#1A2C5B] leading-tight;
+  }
+
+  .heading-nepali {
+    @apply text-3xl lg:text-4xl font-bold text-[#DC2626] leading-tight;
+  }
+
+  .subheading-alpine {
+    @apply text-xl lg:text-2xl font-semibold text-[#2563EB] leading-relaxed;
+  }
+
+  .subheading-nepali {
+    @apply text-xl lg:text-2xl font-semibold text-[#F59E0B] leading-relaxed;
+  }
+
+  .text-alpine-body {
+    @apply text-gray-600 leading-relaxed;
+  }
+
+  /* Animation Classes */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.4s ease-out;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .opacity-15 {
+    opacity: 0.15;
+  }
+
+  .animation-delay-1000 {
+    animation-delay: 1s;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-3000 {
+    animation-delay: 3s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  /* Keyframes */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Responsive Utilities */
+  .responsive-text {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+
+  .responsive-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  .responsive-margin {
+    @apply mx-4 sm:mx-6 lg:mx-8;
+  }
+
+  /* Interactive Elements */
+  .interactive-link {
+    @apply text-[#2563EB] hover:text-[#1d4ed8] transition-colors duration-200 underline-offset-4 hover:underline;
+  }
+
+  .interactive-link-nepali {
+    @apply text-[#DC2626] hover:text-[#B91C1C] transition-colors duration-200 underline-offset-4 hover:underline;
+  }
+
+  .interactive-button {
+    @apply transform transition-all duration-200 hover:scale-105 active:scale-95;
+  }
+
+  /* Form Styles */
+  .form-input-alpine {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:border-[#2563EB] transition-all duration-200;
+  }
+
+  .form-input-nepali {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DC2626]/20 focus:border-[#DC2626] transition-all duration-200;
+  }
+
+  .form-label-alpine {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+  }
+
+  /* Loading States */
+  .loading-alpine {
+    @apply animate-pulse bg-gray-200 rounded;
+  }
+
+  /* Success/Error States */
+  .success-alpine {
+    @apply text-green-600 bg-green-50 border-green-200;
+  }
+
+  .error-alpine {
+    @apply text-red-600 bg-red-50 border-red-200;
+  }
+
+  /* Nepali Cultural Gradients */
+  .gradient-nepali-flag {
+    background: linear-gradient(135deg, #dc2626 0%, #2563eb 50%, #f59e0b 100%);
+  }
+
+  .gradient-prayer-flags {
+    background: linear-gradient(
+      135deg,
+      #dc2626 0%,
+      #f59e0b 20%,
+      #2563eb 40%,
+      #059669 60%,
+      #7c3aed 80%,
+      #dc2626 100%
+    );
+  }
+
+  .gradient-himalayan {
+    background: linear-gradient(
+      135deg,
+      #f8fafc 0%,
+      #e2e8f0 25%,
+      #cbd5e1 50%,
+      #94a3b8 75%,
+      #64748b 100%
+    );
+  }
+
+  .gradient-alpine-blue {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #1e40af 100%);
+  }
+
+  .gradient-alpine-gold {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+  }
+
+  .glass-alpine {
+    @apply bg-white/80 backdrop-blur-sm border border-white/20;
+  }
+
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-[#2563EB] rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-[#1d4ed8];
+  }
+
+  /* Navigation Styles */
+  .nav-link-alpine {
+    @apply relative px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg;
+  }
+
+  .nav-link-alpine.active {
+    @apply text-[#2563EB] font-semibold bg-[#2563EB]/10;
+  }
+
+  .nav-link-alpine:not(.active) {
+    @apply text-gray-700 hover:text-[#2563EB] hover:bg-[#2563EB]/5;
+  }
+
+  /* Hero Section Styles */
+  .hero-alpine {
+    @apply relative min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50;
+  }
+
+  /* Testimonial Styles */
+  .testimonial-alpine {
+    @apply bg-white p-6 rounded-xl shadow-lg border border-gray-200;
+  }
+
+  /* Service Card Styles */
+  .service-card-alpine {
+    @apply bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300;
+  }
+
+  /* Country Card Styles */
+  .country-card-alpine {
+    @apply bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300;
+  }
+
+  /* CTA Styles */
+  .cta-alpine-primary {
+    @apply bg-[#2563EB] hover:bg-[#1d4ed8] text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl;
+  }
+
+  .cta-alpine-secondary {
+    @apply bg-[#F59E0B] hover:bg-[#D97706] text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl;
+  }
+
+  /* Text Balance and Pretty */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
 }

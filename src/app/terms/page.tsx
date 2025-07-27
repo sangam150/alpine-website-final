@@ -1,231 +1,228 @@
-import { Metadata } from 'next';
-import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, Shield, FileText, Users, Phone, Mail } from 'lucide-react';
-
-export const metadata: Metadata = {
-  title: 'Terms of Use - Alpine Education & Visa Services',
-  description: 'Terms and conditions for using Alpine Education & Visa Services website and services.',
-  keywords: 'terms of use, conditions, alpine education, visa services, study abroad',
+export const metadata = {
+  title: "Terms of Service - Alpine Education & Visa Services",
+  description:
+    "Read the terms and conditions governing the use of Alpine Education & Visa Services website and services.",
 };
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <Link href="/" className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-4">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Home
-          </Link>
-          <div className="flex items-center space-x-3 mb-4">
-            <FileText className="h-8 w-8 text-blue-600" />
-            <h1 className="text-3xl font-bold text-gray-900">Terms of Use</h1>
-          </div>
-          <p className="text-gray-600">Last updated: {new Date().toLocaleDateString()}</p>
+    <div className="max-w-4xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+      <div className="prose prose-lg max-w-none">
+        <h1 className="text-4xl font-bold text-gray-900 mb-8">
+          Terms of Service
+        </h1>
+
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+          <p className="text-blue-800 mb-0">
+            <strong>Last updated:</strong> January 2025
+          </p>
         </div>
 
-        <div className="max-w-4xl mx-auto space-y-6">
-          {/* Introduction */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">1. Introduction</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                Welcome to Alpine Education & Visa Services. These Terms of Use govern your use of our website 
-                and services. By accessing or using our services, you agree to be bound by these terms.
-              </p>
-              <p className="text-gray-700">
-                Alpine Education & Visa Services ("we," "our," or "us") provides study abroad consultation, 
-                visa services, and educational guidance to students in Nepal and abroad.
-              </p>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            1. Acceptance of Terms
+          </h2>
+          <p className="text-gray-700 mb-4">
+            By accessing and using the Alpine Education & Visa Services website
+            and services, you accept and agree to be bound by the terms and
+            provision of this agreement. If you do not agree to abide by the
+            above, please do not use this service.
+          </p>
+        </section>
 
-          {/* Services */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">2. Services</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">Our services include but are not limited to:</p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                <li>Study abroad consultation and guidance</li>
-                <li>University application assistance</li>
-                <li>Visa application support</li>
-                <li>Test preparation coaching (IELTS, PTE, TOEFL)</li>
-                <li>Document preparation and review</li>
-                <li>Pre-departure orientation</li>
-                <li>Post-arrival support</li>
-              </ul>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            2. Description of Service
+          </h2>
+          <p className="text-gray-700 mb-4">
+            Alpine Education & Visa Services provides educational consulting
+            services, including but not limited to:
+          </p>
+          <ul className="list-disc pl-6 text-gray-700 mb-4">
+            <li>Study abroad counseling and guidance</li>
+            <li>University and course selection assistance</li>
+            <li>Visa application support</li>
+            <li>Test preparation services (IELTS, TOEFL, PTE)</li>
+            <li>Document preparation and review</li>
+            <li>Pre-departure orientation</li>
+            <li>Scholarship and financial aid guidance</li>
+          </ul>
+        </section>
 
-          {/* User Responsibilities */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">3. User Responsibilities</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">As a user of our services, you agree to:</p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                <li>Provide accurate and complete information</li>
-                <li>Maintain the confidentiality of your account</li>
-                <li>Use our services for lawful purposes only</li>
-                <li>Not engage in any fraudulent or deceptive practices</li>
-                <li>Respect intellectual property rights</li>
-                <li>Not interfere with the proper functioning of our website</li>
-              </ul>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            3. User Responsibilities
+          </h2>
+          <p className="text-gray-700 mb-4">
+            As a user of our services, you agree to:
+          </p>
+          <ul className="list-disc pl-6 text-gray-700 mb-4">
+            <li>Provide accurate and complete information</li>
+            <li>Maintain the confidentiality of your account information</li>
+            <li>Use our services for lawful purposes only</li>
+            <li>Not engage in any fraudulent or deceptive practices</li>
+            <li>Comply with all applicable laws and regulations</li>
+            <li>Respect the intellectual property rights of others</li>
+          </ul>
+        </section>
 
-          {/* Privacy & Data */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">4. Privacy and Data Protection</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                We are committed to protecting your privacy. Our collection and use of personal information 
-                is governed by our Privacy Policy, which is incorporated into these Terms of Use.
-              </p>
-              <p className="text-gray-700">
-                By using our services, you consent to the collection and use of your information as described 
-                in our Privacy Policy.
-              </p>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            4. Payment Terms
+          </h2>
+          <p className="text-gray-700 mb-4">
+            Payment for our services is due as specified in your service
+            agreement. We reserve the right to:
+          </p>
+          <ul className="list-disc pl-6 text-gray-700 mb-4">
+            <li>Require payment in advance for certain services</li>
+            <li>Suspend services for non-payment</li>
+            <li>Charge late fees for overdue payments</li>
+            <li>Refuse service to clients with outstanding balances</li>
+          </ul>
+        </section>
 
-          {/* Payment Terms */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">5. Payment Terms</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                Service fees are payable in advance unless otherwise agreed. Payment methods include:
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                <li>Bank transfer</li>
-                <li>Cash payment at our office</li>
-                <li>Online payment (where available)</li>
-              </ul>
-              <p className="text-gray-700">
-                All fees are non-refundable unless otherwise specified in our service agreement.
-              </p>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            5. Service Limitations
+          </h2>
+          <p className="text-gray-700 mb-4">
+            While we strive to provide the best possible service, we cannot
+            guarantee:
+          </p>
+          <ul className="list-disc pl-6 text-gray-700 mb-4">
+            <li>University admission or visa approval</li>
+            <li>Specific test scores or academic outcomes</li>
+            <li>Availability of scholarships or financial aid</li>
+            <li>Processing times for applications or visas</li>
+            <li>Changes in immigration policies or requirements</li>
+          </ul>
+        </section>
 
-          {/* Limitation of Liability */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">6. Limitation of Liability</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                Alpine Education & Visa Services provides guidance and assistance but cannot guarantee:
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                <li>University admission outcomes</li>
-                <li>Visa approval decisions</li>
-                <li>Test score results</li>
-                <li>Employment opportunities</li>
-              </ul>
-              <p className="text-gray-700">
-                We are not liable for any indirect, incidental, or consequential damages arising from 
-                the use of our services.
-              </p>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            6. Intellectual Property
+          </h2>
+          <p className="text-gray-700 mb-4">
+            All content on this website, including text, graphics, logos, and
+            software, is the property of Alpine Education & Visa Services and is
+            protected by copyright laws. You may not reproduce, distribute, or
+            create derivative works without our written permission.
+          </p>
+        </section>
 
-          {/* Intellectual Property */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">7. Intellectual Property</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                All content on this website, including text, graphics, logos, and software, is the 
-                property of Alpine Education & Visa Services and is protected by copyright laws.
-              </p>
-              <p className="text-gray-700">
-                You may not reproduce, distribute, or create derivative works without our written permission.
-              </p>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            7. Privacy and Data Protection
+          </h2>
+          <p className="text-gray-700 mb-4">
+            Your privacy is important to us. Please review our Privacy Policy,
+            which also governs your use of our services, to understand our
+            practices regarding the collection and use of your information.
+          </p>
+        </section>
 
-          {/* Termination */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">8. Termination</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                We may terminate or suspend your access to our services at any time, with or without notice, 
-                for conduct that we believe violates these Terms of Use or is harmful to other users or us.
-              </p>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            8. Disclaimers
+          </h2>
+          <p className="text-gray-700 mb-4">
+            Our services are provided &quot;as is&quot; without warranties of any kind. We
+            disclaim all warranties, express or implied, including but not
+            limited to:
+          </p>
+          <ul className="list-disc pl-6 text-gray-700 mb-4">
+            <li>
+              Warranties of merchantability or fitness for a particular purpose
+            </li>
+            <li>
+              Warranties that our services will be uninterrupted or error-free
+            </li>
+            <li>
+              Warranties regarding the accuracy or completeness of information
+            </li>
+            <li>Warranties that defects will be corrected</li>
+          </ul>
+        </section>
 
-          {/* Changes to Terms */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">9. Changes to Terms</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                We reserve the right to modify these Terms of Use at any time. Changes will be effective 
-                immediately upon posting on our website. Your continued use of our services constitutes 
-                acceptance of the modified terms.
-              </p>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            9. Limitation of Liability
+          </h2>
+          <p className="text-gray-700 mb-4">
+            In no event shall Alpine Education & Visa Services be liable for any
+            indirect, incidental, special, consequential, or punitive damages,
+            including but not limited to loss of profits, data, or use, arising
+            out of or relating to your use of our services.
+          </p>
+        </section>
 
-          {/* Contact Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">10. Contact Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-700">
-                If you have any questions about these Terms of Use, please contact us:
-              </p>
-              <div className="space-y-2 text-gray-700">
-                <div className="flex items-center space-x-2">
-                  <Phone className="h-4 w-4" />
-                  <span>+977-1-4XXXXXXX</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Mail className="h-4 w-4" />
-                  <span>info@alpineeducation.com</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Users className="h-4 w-4" />
-                  <span>Kathmandu, Nepal</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            10. Indemnification
+          </h2>
+          <p className="text-gray-700 mb-4">
+            You agree to indemnify and hold harmless Alpine Education & Visa
+            Services from any claims, damages, or expenses arising from your use
+            of our services or violation of these terms.
+          </p>
+        </section>
 
-          {/* Footer Actions */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
-            <Link href="/privacy">
-              <Button variant="outline">
-                <Shield className="mr-2 h-4 w-4" />
-                Privacy Policy
-              </Button>
-            </Link>
-            <Link href="/contact">
-              <Button>
-                Contact Us
-              </Button>
-            </Link>
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            11. Termination
+          </h2>
+          <p className="text-gray-700 mb-4">
+            We may terminate or suspend your access to our services at any time,
+            with or without cause, with or without notice. Upon termination,
+            your right to use our services will cease immediately.
+          </p>
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            12. Governing Law
+          </h2>
+          <p className="text-gray-700 mb-4">
+            These terms shall be governed by and construed in accordance with
+            the laws of Nepal. Any disputes arising from these terms or your use
+            of our services shall be subject to the exclusive jurisdiction of
+            the courts in Kathmandu, Nepal.
+          </p>
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            13. Changes to Terms
+          </h2>
+          <p className="text-gray-700 mb-4">
+            We reserve the right to modify these terms at any time. We will
+            notify users of any material changes by posting the new terms on
+            this page and updating the &quot;Last updated&quot; date.
+          </p>
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            14. Contact Information
+          </h2>
+          <p className="text-gray-700 mb-4">
+            If you have any questions about these Terms of Service, please
+            contact us:
+          </p>
+          <div className="bg-gray-50 rounded-lg p-6">
+            <p className="text-gray-700 mb-2">
+              <strong>Alpine Education & Visa Services</strong>
+              <br />
+              Thamel, Kathmandu, Nepal
+              <br />
+              Email: info@alpineeducation.com
+              <br />
+              Phone: +977-1-4444444
+            </p>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );
-} 
+}

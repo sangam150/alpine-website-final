@@ -1,16 +1,25 @@
-import { getAuthSafe } from './firebase-config';
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged, User } from 'firebase/auth';
+import { getAuthSafe } from "./firebase-config";
+import {
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  User,
+} from "firebase/auth";
 
 export interface AuthUser {
   uid: string;
   email: string | null;
-  role: 'admin' | 'counselor' | 'student';
+  role: "admin" | "counselor" | "student";
 }
 
 export const signInAdmin = async (email: string, password: string) => {
   try {
     const auth = getAuthSafe();
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
     return userCredential.user;
   } catch (error) {
     throw error;
@@ -34,4 +43,4 @@ export const getCurrentUser = (): User | null => {
 export const onAuthStateChange = (callback: (user: User | null) => void) => {
   const auth = getAuthSafe();
   return onAuthStateChanged(auth, callback);
-}; 
+};

@@ -1,112 +1,134 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { Users, Award, Globe, TrendingUp, Star, CheckCircle } from 'lucide-react'
+import { useEffect, useState } from "react";
+import {
+  Users,
+  Award,
+  Globe,
+  TrendingUp,
+  Star,
+  CheckCircle,
+} from "lucide-react";
+import { getHomepageStats, HomepageStats } from "@/lib/content-management";
 
 interface StatItem {
-  icon: React.ComponentType<any>
-  number: string
-  label: string
-  description: string
-  color: string
-  delay: number
+  icon: React.ComponentType<any>;
+  number: string;
+  label: string;
+  description: string;
+  color: string;
+  delay: number;
 }
 
 export default function StatsSection() {
-  const [isVisible, setIsVisible] = useState(false)
-  const [counts, setCounts] = useState({
-    students: 0,
-    countries: 0,
-    success: 0,
-    years: 0
-  })
+  const [stats, setStats] = useState<HomepageStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    async function fetchStats() {
+      setLoading(true);
+      try {
+        const data = await getHomepageStats();
+        setStats(data);
+      } catch (e) {
+        setError("Failed to load stats");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchStats();
+  }, []);
+
+  useEffect(() => {
+    if (!stats) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true)
-          animateCounts()
+          setIsVisible(true);
         }
       },
-      { threshold: 0.3 }
-    )
+      { threshold: 0.3 },
+    );
+    const element = document.getElementById("stats-section");
+    if (element) observer.observe(element);
+    return () => observer.disconnect();
+  }, [stats]);
 
-    const element = document.getElementById('stats-section')
-    if (element) observer.observe(element)
-
-    return () => observer.disconnect()
-  }, [])
+  if (loading) return <div className="py-12 text-center text-gray-400">Loading stats...</div>;
+  if (error) return <div className="py-12 text-center text-red-500">{error}</div>;
+  if (!stats) return <div className="py-12 text-center text-gray-400">No stats found.</div>;
 
   const animateCounts = () => {
     const targets = {
       students: 5000,
       countries: 15,
       success: 98,
-      years: 15
-    }
+      years: 15,
+    };
 
-    const duration = 2000
-    const steps = 60
-    const stepDuration = duration / steps
+    const duration = 2000;
+    const steps = 60;
+    const stepDuration = duration / steps;
 
-    let step = 0
+    let step = 0;
     const timer = setInterval(() => {
-      step++
-      const progress = step / steps
-      const easeOut = 1 - Math.pow(1 - progress, 3)
+      step++;
+      const progress = step / steps;
+      const easeOut = 1 - Math.pow(1 - progress, 3);
 
-      setCounts({
-        students: Math.floor(targets.students * easeOut),
-        countries: Math.floor(targets.countries * easeOut),
-        success: Math.floor(targets.success * easeOut),
-        years: Math.floor(targets.years * easeOut)
-      })
+      // setCounts({ // This line is removed as per the edit hint
+      //   students: Math.floor(targets.students * easeOut),
+      //   countries: Math.floor(targets.countries * easeOut),
+      //   success: Math.floor(targets.success * easeOut),
+      //   years: Math.floor(targets.years * easeOut),
+      // });
+    }, stepDuration);
+  };
 
-      if (step >= steps) {
-        clearInterval(timer)
-        setCounts(targets)
-      }
-    }, stepDuration)
-  }
-
-  const stats: StatItem[] = [
+  // The stats array is now defined directly within the render function
+  // as it depends on the fetched stats object.
+  const statsArray: StatItem[] = [
     {
       icon: Users,
-      number: counts.students.toLocaleString(),
-      label: 'Students Placed',
-      description: 'Successfully studying abroad',
-      color: 'from-blue-500 to-blue-600',
-      delay: 0
+      number: stats.students.toLocaleString(),
+      label: "Students Placed",
+      description: "Successfully studying abroad",
+      color: "from-blue-500 to-blue-600",
+      delay: 0,
     },
     {
       icon: Globe,
-      number: counts.countries.toString(),
-      label: 'Countries',
-      description: 'Study destinations available',
-      color: 'from-green-500 to-green-600',
-      delay: 200
+      number: stats.countries.toString(),
+      label: "Countries",
+      description: "Study destinations available",
+      color: "from-green-500 to-green-600",
+      delay: 200,
     },
     {
       icon: Award,
-      number: `${counts.success}%`,
-      label: 'Visa Success Rate',
-      description: 'Proven track record',
-      color: 'from-yellow-500 to-yellow-600',
-      delay: 400
+      number: `${stats.success}%`,
+      label: "Visa Success Rate",
+      description: "Proven track record",
+      color: "from-yellow-500 to-yellow-600",
+      delay: 400,
     },
     {
       icon: TrendingUp,
-      number: `${counts.years}+`,
-      label: 'Years Experience',
-      description: 'Industry expertise',
-      color: 'from-purple-500 to-purple-600',
-      delay: 600
-    }
-  ]
+      number: `${stats.years}+`,
+      label: "Years Experience",
+      description: "Industry expertise",
+      color: "from-purple-500 to-purple-600",
+      delay: 600,
+    },
+  ];
 
   return (
-    <section id="stats-section" className="py-20 bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden">
+    <section
+      id="stats-section"
+      className="py-20 bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden"
+    >
       {/* Enhanced Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-10 left-10 w-64 h-64 bg-blue-200 bg-opacity-20 rounded-full blur-3xl"></div>
@@ -125,29 +147,36 @@ export default function StatsSection() {
             Our Success in Numbers
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Join thousands of Nepali students who have transformed their lives through international education. 
-            Our proven track record speaks for itself.
+            Join thousands of Nepali students who have transformed their lives
+            through international education. Our proven track record speaks for
+            itself.
           </p>
         </div>
 
         {/* Enhanced Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {stats.map((stat, index) => (
+          {statsArray.map((stat, index) => (
             <div
               key={index}
               className={`group relative transition-all duration-1000 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                isVisible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-10"
               }`}
               style={{ transitionDelay: `${stat.delay}ms` }}
             >
               {/* Enhanced Card */}
               <div className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 overflow-hidden">
                 {/* Gradient Border */}
-                <div className={`absolute inset-0 bg-gradient-to-r ${stat.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
-                
+                <div
+                  className={`absolute inset-0 bg-gradient-to-r ${stat.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                ></div>
+
                 <div className="relative p-8 text-center">
                   {/* Enhanced Icon */}
-                  <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${stat.color} rounded-2xl mb-6 shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-110`}>
+                  <div
+                    className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r ${stat.color} rounded-2xl mb-6 shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-110`}
+                  >
                     <stat.icon className="h-8 w-8 text-white" />
                   </div>
 
@@ -166,11 +195,11 @@ export default function StatsSection() {
 
                   {/* Enhanced Progress Bar */}
                   <div className="w-full bg-gray-200 rounded-full h-2 mt-4">
-                    <div 
+                    <div
                       className={`bg-gradient-to-r ${stat.color} h-2 rounded-full transition-all duration-1000 ease-out`}
-                      style={{ 
-                        width: isVisible ? '100%' : '0%',
-                        transitionDelay: `${stat.delay + 500}ms`
+                      style={{
+                        width: isVisible ? "100%" : "0%",
+                        transitionDelay: `${stat.delay + 500}ms`,
                       }}
                     ></div>
                   </div>
@@ -193,25 +222,37 @@ export default function StatsSection() {
             <div className="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-4">
               <Star className="h-6 w-6 text-green-600" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">5-Star Rated</h3>
-            <p className="text-gray-600">Consistently rated excellent by our students</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              5-Star Rated
+            </h3>
+            <p className="text-gray-600">
+              Consistently rated excellent by our students
+            </p>
           </div>
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mb-4">
               <Award className="h-6 w-6 text-blue-600" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Award Winning</h3>
-            <p className="text-gray-600">Recognized for excellence in education consulting</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              Award Winning
+            </h3>
+            <p className="text-gray-600">
+              Recognized for excellence in education consulting
+            </p>
           </div>
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-purple-100 rounded-full mb-4">
               <CheckCircle className="h-6 w-6 text-purple-600" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Certified</h3>
-            <p className="text-gray-600">Government approved and certified consultants</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              Certified
+            </h3>
+            <p className="text-gray-600">
+              Government approved and certified consultants
+            </p>
           </div>
         </div>
       </div>
     </section>
-  )
-} 
+  );
+}

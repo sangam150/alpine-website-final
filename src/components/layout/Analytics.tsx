@@ -1,198 +1,208 @@
 "use client";
 
-import Script from 'next/script';
+import Script from "next/script";
+import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 
 export default function Analytics() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
-    "name": "Alpine Education & Visa Services",
-    "alternateName": "Alpine Education",
-    "description": "Nepal's premier study abroad consultancy. Expert guidance for Australia, UK, Canada, USA, and 12+ countries. 3000+ students placed, 95% visa success rate.",
-    "url": "https://alpinevisa.com.np",
-    "logo": "https://alpinevisa.com.np/logo.svg",
-    "image": "https://alpinevisa.com.np/og-image.jpg",
-    "telephone": "+977-1-4444444",
-    "email": "info@alpinevisa.com.np",
-    "address": {
+    name: "Alpine Education & Visa Services",
+    alternateName: "Alpine Education",
+    description:
+      "Nepal's premier study abroad consultancy. Expert guidance for Australia, UK, Canada, USA, and 12+ countries. 3000+ students placed, 95% visa success rate.",
+    url: "https://alpinevisa.com.np",
+    logo: "https://alpinevisa.com.np/logo.svg",
+    image: "https://alpinevisa.com.np/og-image.jpg",
+    telephone: "+977-1-4444444",
+    email: "info@alpinevisa.com.np",
+    address: {
       "@type": "PostalAddress",
-      "streetAddress": "Thamel, Kathmandu",
-      "addressLocality": "Kathmandu",
-      "addressRegion": "Bagmati",
-      "postalCode": "44600",
-      "addressCountry": "NP"
+      streetAddress: "Thamel, Kathmandu",
+      addressLocality: "Kathmandu",
+      addressRegion: "Bagmati",
+      postalCode: "44600",
+      addressCountry: "NP",
     },
-    "geo": {
+    geo: {
       "@type": "GeoCoordinates",
-      "latitude": "27.7172",
-      "longitude": "85.3240"
+      latitude: "27.7172",
+      longitude: "85.3240",
     },
-    "openingHours": "Mo-Fr 09:00-18:00, Sa 09:00-14:00",
-    "priceRange": "$$",
-    "currenciesAccepted": "NPR, USD, EUR",
-    "paymentAccepted": "Cash, Credit Card, Bank Transfer",
-    "areaServed": {
+    openingHours: "Mo-Fr 09:00-18:00, Sa 09:00-14:00",
+    priceRange: "$$",
+    currenciesAccepted: "NPR, USD, EUR",
+    paymentAccepted: "Cash, Credit Card, Bank Transfer",
+    areaServed: {
       "@type": "Country",
-      "name": "Nepal"
+      name: "Nepal",
     },
-    "serviceArea": {
+    serviceArea: {
       "@type": "Country",
-      "name": "Nepal"
+      name: "Nepal",
     },
-    "hasOfferCatalog": {
+    hasOfferCatalog: {
       "@type": "OfferCatalog",
-      "name": "Study Abroad Services",
-      "itemListElement": [
+      name: "Study Abroad Services",
+      itemListElement: [
         {
           "@type": "Offer",
-          "itemOffered": {
+          itemOffered: {
             "@type": "Service",
-            "name": "Study Abroad Counseling",
-            "description": "Expert guidance for international education"
-          }
+            name: "Study Abroad Counseling",
+            description: "Expert guidance for international education",
+          },
         },
         {
           "@type": "Offer",
-          "itemOffered": {
+          itemOffered: {
             "@type": "Service",
-            "name": "Visa Application Support",
-            "description": "Complete visa application assistance"
-          }
+            name: "Visa Application Support",
+            description: "Complete visa application assistance",
+          },
         },
         {
           "@type": "Offer",
-          "itemOffered": {
+          itemOffered: {
             "@type": "Service",
-            "name": "Test Preparation",
-            "description": "IELTS, PTE, TOEFL coaching"
-          }
-        }
-      ]
+            name: "Test Preparation",
+            description: "IELTS, PTE, TOEFL coaching",
+          },
+        },
+      ],
     },
-    "aggregateRating": {
+    aggregateRating: {
       "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "reviewCount": "150",
-      "bestRating": "5",
-      "worstRating": "1"
+      ratingValue: "4.8",
+      reviewCount: "150",
+      bestRating: "5",
+      worstRating: "1",
     },
-    "review": [
+    review: [
       {
         "@type": "Review",
-        "reviewRating": {
+        reviewRating: {
           "@type": "Rating",
-          "ratingValue": "5",
-          "bestRating": "5"
+          ratingValue: "5",
+          bestRating: "5",
         },
-        "author": {
+        author: {
           "@type": "Person",
-          "name": "Sarah Johnson"
+          name: "Sarah Johnson",
         },
-        "reviewBody": "Excellent guidance for my Australia study visa. Highly recommended!"
+        reviewBody:
+          "Excellent guidance for my Australia study visa. Highly recommended!",
       },
       {
         "@type": "Review",
-        "reviewRating": {
+        reviewRating: {
           "@type": "Rating",
-          "ratingValue": "5",
-          "bestRating": "5"
+          ratingValue: "5",
+          bestRating: "5",
         },
-        "author": {
+        author: {
           "@type": "Person",
-          "name": "Michael Chen"
+          name: "Michael Chen",
         },
-        "reviewBody": "Professional service and great support throughout the process."
-      }
+        reviewBody:
+          "Professional service and great support throughout the process.",
+      },
     ],
-    "sameAs": [
+    sameAs: [
       "https://www.facebook.com/alpineeducation",
       "https://www.instagram.com/alpineeducation",
-      "https://www.linkedin.com/company/alpineeducation"
+      "https://www.linkedin.com/company/alpineeducation",
     ],
-    "foundingDate": "2014",
-    "numberOfEmployees": "25",
-    "award": [
+    foundingDate: "2014",
+    numberOfEmployees: "25",
+    award: [
       "Best Study Abroad Consultancy 2023",
-      "Excellence in Student Services Award"
-    ]
+      "Excellence in Student Services Award",
+    ],
   };
 
   const localBusinessData = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": "Alpine Education & Visa Services",
-    "image": "https://alpinevisa.com.np/og-image.jpg",
-    "description": "Nepal's premier study abroad consultancy providing expert guidance for international education.",
-    "url": "https://alpinevisa.com.np",
-    "telephone": "+977-1-4444444",
-    "address": {
+    name: "Alpine Education & Visa Services",
+    image: "https://alpinevisa.com.np/og-image.jpg",
+    description:
+      "Nepal's premier study abroad consultancy providing expert guidance for international education.",
+    url: "https://alpinevisa.com.np",
+    telephone: "+977-1-4444444",
+    address: {
       "@type": "PostalAddress",
-      "streetAddress": "Thamel, Kathmandu",
-      "addressLocality": "Kathmandu",
-      "addressRegion": "Bagmati",
-      "postalCode": "44600",
-      "addressCountry": "NP"
+      streetAddress: "Thamel, Kathmandu",
+      addressLocality: "Kathmandu",
+      addressRegion: "Bagmati",
+      postalCode: "44600",
+      addressCountry: "NP",
     },
-    "geo": {
+    geo: {
       "@type": "GeoCoordinates",
-      "latitude": "27.7172",
-      "longitude": "85.3240"
+      latitude: "27.7172",
+      longitude: "85.3240",
     },
-    "openingHoursSpecification": [
+    openingHoursSpecification: [
       {
         "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        "opens": "09:00",
-        "closes": "18:00"
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        opens: "09:00",
+        closes: "18:00",
       },
       {
         "@type": "OpeningHoursSpecification",
-        "dayOfWeek": "Saturday",
-        "opens": "09:00",
-        "closes": "14:00"
-      }
+        dayOfWeek: "Saturday",
+        opens: "09:00",
+        closes: "14:00",
+      },
     ],
-    "priceRange": "$$",
-    "currenciesAccepted": "NPR, USD, EUR",
-    "paymentAccepted": "Cash, Credit Card, Bank Transfer"
+    priceRange: "$$",
+    currenciesAccepted: "NPR, USD, EUR",
+    paymentAccepted: "Cash, Credit Card, Bank Transfer",
   };
 
   const websiteData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Alpine Education & Visa Services",
-    "url": "https://alpinevisa.com.np",
-    "description": "Nepal's premier study abroad consultancy. Expert guidance for Australia, UK, Canada, USA, and 12+ countries.",
-    "potentialAction": {
+    name: "Alpine Education & Visa Services",
+    url: "https://alpinevisa.com.np",
+    description:
+      "Nepal's premier study abroad consultancy. Expert guidance for Australia, UK, Canada, USA, and 12+ countries.",
+    potentialAction: {
       "@type": "SearchAction",
-      "target": "https://alpinevisa.com.np/search?q={search_term_string}",
-      "query-input": "required name=search_term_string"
+      target: "https://alpinevisa.com.np/search?q={search_term_string}",
+      "query-input": "required name=search_term_string",
     },
-    "publisher": {
+    publisher: {
       "@type": "Organization",
-      "name": "Alpine Education & Visa Services",
-      "logo": {
+      name: "Alpine Education & Visa Services",
+      logo: {
         "@type": "ImageObject",
-        "url": "https://alpinevisa.com.np/logo.svg"
-      }
-    }
+        url: "https://alpinevisa.com.np/logo.svg",
+      },
+    },
   };
 
   return (
     <>
       {/* Google Analytics */}
-      <Script
-        src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"
-        strategy="afterInteractive"
-      />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'GA_MEASUREMENT_ID');
-        `}
-      </Script>
+      {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+        <>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}');
+            `}
+          </Script>
+        </>
+      )}
 
       {/* Structured Data */}
       <Script
@@ -234,9 +244,12 @@ export default function Analytics() {
           src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
           height="0"
           width="0"
-          style={{ display: 'none', visibility: 'hidden' }}
+          style={{ display: "none", visibility: "hidden" }}
         />
       </noscript>
+
+      {/* Vercel Analytics */}
+      <VercelAnalytics />
     </>
   );
-} 
+}

@@ -1,5 +1,9 @@
-import { initializeApp, getApps, cert } from 'firebase-admin/app';
-import { getFirestore, CollectionReference, Query } from 'firebase-admin/firestore';
+import { initializeApp, getApps, cert } from "firebase-admin/app";
+import {
+  getFirestore,
+  CollectionReference,
+  Query,
+} from "firebase-admin/firestore";
 
 // Initialize Firebase Admin
 let app;
@@ -9,20 +13,20 @@ if (!getApps().length) {
     if (serviceAccount) {
       app = initializeApp({
         credential: cert(JSON.parse(serviceAccount)),
-        databaseURL: process.env.FIREBASE_DATABASE_URL
+        databaseURL: process.env.FIREBASE_DATABASE_URL,
       });
     } else {
       // Fallback for development
       app = initializeApp({
         projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-        databaseURL: process.env.FIREBASE_DATABASE_URL
+        databaseURL: process.env.FIREBASE_DATABASE_URL,
       });
     }
   } catch (error) {
-    console.error('Firebase Admin initialization error:', error);
+    console.error("Firebase Admin initialization error:", error);
     // Initialize without credentials for development
     app = initializeApp({
-      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
+      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
     });
   }
 }
@@ -33,7 +37,7 @@ const db = getFirestore(app!);
 export async function fetchAll(collectionName: string) {
   try {
     const snapshot = await db.collection(collectionName).get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   } catch (error) {
     console.error(`Error fetching ${collectionName}:`, error);
     return [];
@@ -56,7 +60,7 @@ export async function addItem(collectionName: string, data: any) {
   try {
     const docRef = await db.collection(collectionName).add({
       ...data,
-      createdAt: new Date()
+      createdAt: new Date(),
     });
     return docRef.id;
   } catch (error) {
@@ -66,12 +70,19 @@ export async function addItem(collectionName: string, data: any) {
 }
 
 // Generic update
-export async function updateItem(collectionName: string, id: string, data: any) {
+export async function updateItem(
+  collectionName: string,
+  id: string,
+  data: any,
+) {
   try {
-    await db.collection(collectionName).doc(id).update({
-      ...data,
-      updatedAt: new Date()
-    });
+    await db
+      .collection(collectionName)
+      .doc(id)
+      .update({
+        ...data,
+        updatedAt: new Date(),
+      });
   } catch (error) {
     console.error(`Error updating ${collectionName}:`, error);
     throw error;
@@ -89,28 +100,33 @@ export async function deleteItem(collectionName: string, id: string) {
 }
 
 // Query with filters
-export async function queryItems(collectionName: string, filters: any[] = [], order: string = '', lim: number = 0) {
+export async function queryItems(
+  collectionName: string,
+  filters: any[] = [],
+  order: string = "",
+  lim: number = 0,
+) {
   try {
     let queryRef: CollectionReference | Query = db.collection(collectionName);
-    
+
     if (filters.length > 0) {
       filters.forEach(([field, op, value]) => {
         queryRef = (queryRef as Query).where(field, op, value);
       });
     }
-    
+
     if (order) {
       queryRef = (queryRef as Query).orderBy(order);
     }
-    
+
     if (lim > 0) {
       queryRef = (queryRef as Query).limit(lim);
     }
-    
+
     const snapshot = await (queryRef as Query).get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   } catch (error) {
     console.error(`Error querying ${collectionName}:`, error);
     return [];
   }
-} 
+}

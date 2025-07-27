@@ -1,75 +1,122 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search, UserPlus, Shield, User, Users, Mail, Calendar, Lock, Trash2 } from 'lucide-react';
+import { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Search,
+  UserPlus,
+  Shield,
+  User,
+  Users,
+  Mail,
+  Calendar,
+  Lock,
+  Trash2,
+} from "lucide-react";
 
 interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'counselor' | 'student';
-  status: 'active' | 'inactive' | 'pending';
+  role: "admin" | "counselor" | "student";
+  status: "active" | "inactive" | "pending";
   createdAt: string;
   lastLogin: string;
+  twoFAEnabled?: boolean;
 }
 
 export default function UsersManagement() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [roleFilter, setRoleFilter] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [roleFilter, setRoleFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isAddUserDialogOpen, setIsAddUserDialogOpen] = useState(false);
 
   // Fetch users from API
   useEffect(() => {
     setLoading(true);
-    fetch('/api/users')
-      .then(res => res.json())
-      .then(data => {
+    fetch("/api/users")
+      .then((res) => res.json())
+      .then((data) => {
         if (data.success) {
           setUsers(data.data);
         }
         setLoading(false);
       })
-      .catch(error => {
-        console.error('Error fetching users:', error);
+      .catch((error) => {
+        console.error("Error fetching users:", error);
         setLoading(false);
       });
   }, []);
 
-  const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = roleFilter === 'all' || user.role === roleFilter;
-    const matchesStatus = statusFilter === 'all' || user.status === statusFilter;
-    
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch =
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRole = roleFilter === "all" || user.role === roleFilter;
+    const matchesStatus =
+      statusFilter === "all" || user.status === statusFilter;
+
     return matchesSearch && matchesRole && matchesStatus;
   });
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case 'admin': return 'bg-red-100 text-red-800';
-      case 'counselor': return 'bg-blue-100 text-blue-800';
-      case 'student': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "admin":
+        return "bg-red-100 text-red-800";
+      case "counselor":
+        return "bg-blue-100 text-blue-800";
+      case "student":
+        return "bg-green-100 text-green-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800';
-      case 'inactive': return 'bg-gray-100 text-gray-800';
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "active":
+        return "bg-green-100 text-green-800";
+      case "inactive":
+        return "bg-gray-100 text-gray-800";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -77,28 +124,28 @@ export default function UsersManagement() {
     setLoading(true);
     try {
       if (selectedUser) {
-        const response = await fetch('/api/users', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(user)
+        const response = await fetch("/api/users", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(user),
         });
-        
+
         if (response.ok) {
-          const data = await fetch('/api/users');
+          const data = await fetch("/api/users");
           const result = await data.json();
           if (result.success) {
             setUsers(result.data);
           }
         }
       } else {
-        const response = await fetch('/api/users', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(user)
+        const response = await fetch("/api/users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(user),
         });
-        
+
         if (response.ok) {
-          const data = await fetch('/api/users');
+          const data = await fetch("/api/users");
           const result = await data.json();
           if (result.success) {
             setUsers(result.data);
@@ -106,9 +153,9 @@ export default function UsersManagement() {
         }
       }
     } catch (error) {
-      console.error('Error saving user:', error);
+      console.error("Error saving user:", error);
     }
-    
+
     setSelectedUser(null);
     setIsAddUserDialogOpen(false);
     setLoading(false);
@@ -118,18 +165,18 @@ export default function UsersManagement() {
     setLoading(true);
     try {
       const response = await fetch(`/api/users?id=${id}`, {
-        method: 'DELETE'
+        method: "DELETE",
       });
-      
+
       if (response.ok) {
-        const data = await fetch('/api/users');
+        const data = await fetch("/api/users");
         const result = await data.json();
         if (result.success) {
           setUsers(result.data);
         }
       }
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error("Error deleting user:", error);
     }
     setLoading(false);
   };
@@ -139,9 +186,14 @@ export default function UsersManagement() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Users Management</h1>
-          <p className="text-gray-600">Manage admin users, counselors, and staff members</p>
+          <p className="text-gray-600">
+            Manage admin users, counselors, and staff members
+          </p>
         </div>
-        <Dialog open={isAddUserDialogOpen} onOpenChange={setIsAddUserDialogOpen}>
+        <Dialog
+          open={isAddUserDialogOpen}
+          onOpenChange={setIsAddUserDialogOpen}
+        >
           <DialogTrigger asChild>
             <Button>
               <UserPlus className="w-4 h-4 mr-2" />
@@ -155,7 +207,10 @@ export default function UsersManagement() {
                 Create a new admin user account
               </DialogDescription>
             </DialogHeader>
-            <UserForm onSave={handleSave} onCancel={() => setIsAddUserDialogOpen(false)} />
+            <UserForm
+              onSave={handleSave}
+              onCancel={() => setIsAddUserDialogOpen(false)}
+            />
           </DialogContent>
         </Dialog>
       </div>
@@ -179,7 +234,7 @@ export default function UsersManagement() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {users.filter(u => u.role === 'admin').length}
+              {users.filter((u) => u.role === "admin").length}
             </div>
           </CardContent>
         </Card>
@@ -191,7 +246,7 @@ export default function UsersManagement() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {users.filter(u => u.role === 'counselor').length}
+              {users.filter((u) => u.role === "counselor").length}
             </div>
           </CardContent>
         </Card>
@@ -203,7 +258,7 @@ export default function UsersManagement() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {users.filter(u => u.status === 'active').length}
+              {users.filter((u) => u.status === "active").length}
             </div>
           </CardContent>
         </Card>
@@ -225,7 +280,7 @@ export default function UsersManagement() {
                 className="pl-10"
               />
             </div>
-            
+
             <Select value={roleFilter} onValueChange={setRoleFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="Filter by role" />
@@ -250,11 +305,14 @@ export default function UsersManagement() {
               </SelectContent>
             </Select>
 
-            <Button variant="outline" onClick={() => {
-              setSearchTerm('');
-              setRoleFilter('all');
-              setStatusFilter('all');
-            }}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSearchTerm("");
+                setRoleFilter("all");
+                setStatusFilter("all");
+              }}
+            >
               Clear Filters
             </Button>
           </div>
@@ -268,7 +326,9 @@ export default function UsersManagement() {
         </CardHeader>
         <CardContent>
           {loading ? (
-            <div className="text-center py-12 text-gray-500">Loading users...</div>
+            <div className="text-center py-12 text-gray-500">
+              Loading users...
+            </div>
           ) : (
             <Table>
               <TableHeader>
@@ -287,7 +347,9 @@ export default function UsersManagement() {
                     <TableCell>
                       <div>
                         <div className="font-medium">{user.name}</div>
-                        <div className="text-sm text-gray-500">{user.email}</div>
+                        <div className="text-sm text-gray-500">
+                          {user.email}
+                        </div>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -350,16 +412,21 @@ export default function UsersManagement() {
   );
 }
 
-function UserForm({ user, onSave, onCancel }: {
+function UserForm({
+  user,
+  onSave,
+  onCancel,
+}: {
   user?: User;
   onSave: (user: User) => void;
   onCancel: () => void;
 }) {
   const [formData, setFormData] = useState({
-    name: user?.name || '',
-    email: user?.email || '',
-    role: user?.role || 'counselor' as const,
-    status: user?.status || 'active' as const,
+    name: user?.name || "",
+    email: user?.email || "",
+    role: user?.role || ("counselor" as const),
+    status: user?.status || ("active" as const),
+    twoFAEnabled: user?.twoFAEnabled || false,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -371,18 +438,20 @@ function UserForm({ user, onSave, onCancel }: {
         name: formData.name,
         email: formData.email,
         role: formData.role,
-        status: formData.status
+        status: formData.status,
+        twoFAEnabled: formData.twoFAEnabled,
       });
     } else {
       // Create new user
       onSave({
-        id: '',
+        id: "",
         name: formData.name,
         email: formData.email,
         role: formData.role,
         status: formData.status,
         createdAt: new Date().toISOString(),
-        lastLogin: 'Never'
+        lastLogin: "Never",
+        twoFAEnabled: formData.twoFAEnabled,
       });
     }
   };
@@ -404,7 +473,9 @@ function UserForm({ user, onSave, onCancel }: {
           <Input
             type="email"
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
             placeholder="email@alpineedu.com"
             required
           />
@@ -416,7 +487,9 @@ function UserForm({ user, onSave, onCancel }: {
           <label className="text-sm font-medium">Role</label>
           <Select
             value={formData.role}
-            onValueChange={(value) => setFormData({ ...formData, role: value as any })}
+            onValueChange={(value) =>
+              setFormData({ ...formData, role: value as any })
+            }
           >
             <SelectTrigger>
               <SelectValue />
@@ -432,7 +505,9 @@ function UserForm({ user, onSave, onCancel }: {
           <label className="text-sm font-medium">Status</label>
           <Select
             value={formData.status}
-            onValueChange={(value) => setFormData({ ...formData, status: value as any })}
+            onValueChange={(value) =>
+              setFormData({ ...formData, status: value as any })
+            }
           >
             <SelectTrigger>
               <SelectValue />
@@ -446,14 +521,24 @@ function UserForm({ user, onSave, onCancel }: {
         </div>
       </div>
 
+      <div className="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          id="twoFAEnabled"
+          checked={formData.twoFAEnabled}
+          onChange={(e) => setFormData({ ...formData, twoFAEnabled: e.target.checked })}
+        />
+        <label htmlFor="twoFAEnabled" className="text-sm font-medium">
+          2FA Enabled
+        </label>
+      </div>
+
       <div className="flex justify-end space-x-2">
         <Button variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit">
-          {user ? 'Update' : 'Create'} User
-        </Button>
+        <Button type="submit">{user ? "Update" : "Create"} User</Button>
       </div>
     </form>
   );
-} 
+}
